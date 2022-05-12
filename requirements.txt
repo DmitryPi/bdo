@@ -1,0 +1,6 @@
+numpy==1.22.3
+opencv-python==4.5.5.64
+Pillow==9.1.0
+PyDirectInput==1.0.4
+pynput==1.7.6
+six==1.16.0

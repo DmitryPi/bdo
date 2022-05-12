@@ -1,6 +1,6 @@
 import logging
 
-from modules.db import Database
+from modules.keys import KeyListener
 from modules.utils import load_config
 
 
@@ -15,5 +15,5 @@ if __name__ == '__main__':
     else:
         pass
 
-    db = Database()
-    print(db)
+    key_listener = KeyListener()
+    key_listener.run()
