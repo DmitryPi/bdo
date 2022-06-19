@@ -444,7 +444,6 @@ class KeysWorker():
 
     # main function, process key's queue in loop
     def processQueue(self):
-
         # endless loop
         while True:
 
