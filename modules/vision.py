@@ -319,9 +319,11 @@ if __name__ == '__main__':
     # initialize the WindowCapture class
     wincap = WindowCapture('Black Desert - 418417')
     # initialize the Vision class
-    vision = Vision('assets/albion_limestone_processed.jpg')
+    vision = Vision('assets/humanoid.png')
     # initialize the trackbar window
     vision.init_control_gui()
+
+    hsv_filter = HsvFilter(80, 160, 0, 179, 255, 255, 0, 0, 255, 0)
 
     loop_time = time()
     while True:
@@ -331,10 +333,12 @@ if __name__ == '__main__':
 
         # pre-process the image
         processed_image = vision.apply_hsv_filter(screenshot)
+        # processed_image = vision.apply_hsv_filter(screenshot, hsv_filter)
+        # rectangles = vision.find(processed_image, 0.4)
+        # processed_image = vision.draw_rectangles(processed_image, rectangles)
 
         # display the processed image
         cv.imshow('Processed', processed_image)
-        # cv.imshow('Matches', output_image)
 
         # debug the loop rate
         print('FPS {}'.format(1 / (time() - loop_time)))
