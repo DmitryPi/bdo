@@ -304,7 +304,6 @@ class Keys(object):
 
     # parses keys string and adds keys to the queue
     def parseKeyString(self, string):
-
         # print keys
         if not self.standalone:
             self.common.info("Processing keys: %s" % string)
@@ -430,3 +429,114 @@ class Keys(object):
     # direct mouse move or button press
     def directMouse(self, dx=0, dy=0, buttons=0):
         self.keys_worker.sendMouse(dx, dy, buttons)
+
+
+class KeysWorker():
+    # keys object
+    keys = None
+
+    # queue of keys
+    key_queue = Queue()
+
+    # init
+    def __init__(self, keys):
+        self.keys = keys
+
+    # main function, process key's queue in loop
+    def processQueue(self):
+
+        # endless loop
+        while True:
+
+            # get one key
+            key = self.key_queue.get()
+
+            # terminate process if queue is empty
+            if key is None:
+                self.key_queue.task_done()
+                if self.key_queue.empty():
+                    return
+                continue
+            # print key
+            elif not self.keys.standalone:
+                self.keys.common.info("Key: \033[1;35m%s/%s\033[0;37m, duration: \033[1;35m%f\033[0;37m, direction: \033[1;35m%s\033[0;37m, type: \033[1;35m%s" % (
+                    key["okey"] if key["okey"] else "None",
+                    key["key"], key["time"],
+                    "UP" if key["up"] and not key["down"] else "DOWN" if not key["up"] and key["down"] else "BOTH" if key["up"] and key["down"] else "NONE",
+                    "None" if key["type"] is None else "DK" if key["type"] == self.keys.direct_keys else "VK"), "\033[0;35mKEY:    \033[0;37m"
+                )
+
+            # if it's a key
+            if key["key"]:
+
+                # press
+                if key["down"]:
+                    self.sendKey(key["key"], self.keys.key_press | key["type"])
+
+                # wait
+                sleep(key["time"])
+
+                # and release
+                if key["up"]:
+                    self.sendKey(key["key"], self.keys.key_release | key["type"])
+
+            # not an actual key, just pause
+            else:
+                sleep(key["time"])
+
+            # mark as done (decrement internal queue counter)
+            self.key_queue.task_done()
+
+    # send key
+    def sendKey(self, key, type):
+        self.SendInput(self.Keyboard(key, type))
+
+    # send mouse
+    def sendMouse(self, dx, dy, buttons):
+        if dx != 0 or dy != 0:
+            buttons |= self.keys.mouse_move
+        self.SendInput(self.Mouse(buttons, dx, dy))
+
+    # send input
+    def SendInput(self, *inputs):
+        nInputs = len(inputs)
+        LPINPUT = INPUT * nInputs
+        pInputs = LPINPUT(*inputs)
+        cbSize = ctypes.c_int(ctypes.sizeof(INPUT))
+        return ctypes.windll.user32.SendInput(nInputs, pInputs, cbSize)
+
+    # get input object
+    def Input(self, structure):
+        if isinstance(structure, MOUSEINPUT):
+            return INPUT(0, _INPUTunion(mi=structure))
+        if isinstance(structure, KEYBDINPUT):
+            return INPUT(1, _INPUTunion(ki=structure))
+        if isinstance(structure, HARDWAREINPUT):
+            return INPUT(2, _INPUTunion(hi=structure))
+        raise TypeError('Cannot create INPUT structure!')
+
+    # mouse input
+    def MouseInput(self, flags, x, y, data):
+        return MOUSEINPUT(x, y, data, flags, 0, None)
+
+    # keyboard input
+    def KeybdInput(self, code, flags):
+        return KEYBDINPUT(code, code, flags, 0, None)
+
+    # hardware input
+    def HardwareInput(self, message, parameter):
+        return HARDWAREINPUT(message & 0xFFFFFFFF,
+                             parameter & 0xFFFF,
+                             parameter >> 16 & 0xFFFF)
+
+    # mouse object
+    def Mouse(self, flags, x=0, y=0, data=0):
+        return self.Input(self.MouseInput(flags, x, y, data))
+
+    # keyboard object
+    def Keyboard(self, code, flags=0):
+        return self.Input(self.KeybdInput(code, flags))
+
+    # hardware object
+    def Hardware(self, message, parameter=0):
+        return self.Input(self.HardwareInput(message, parameter))
