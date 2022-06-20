@@ -1,9 +1,11 @@
+import cv2 as cv
 import json
 
 from enum import Enum, auto
 
 from .bdo import Ability
 from .utils import grab_screen
+from .vision import Vision, WindowCapture
 
 
 class BotState(Enum):
@@ -35,8 +37,17 @@ class BlackDesertBot:
             data = [Ability(*tuple(i.values())) for i in data]
             return data
 
-    def find_target(self):
-        pass
+    def find_target(self, tmplt):
+        while True:
+            screen = grab_screen(window_name='Black Desert - 418417')
+            screen = cv.cvtColor(screen, cv.COLOR_BGR2RGB)
+
+            screen = cv.resize(screen, (960, 540))
+            cv.imshow('screen', screen)
+
+            if cv.waitKey(1) == ord('q'):
+                cv.destroyAllWindows()
+                break
 
     def follow_target(self):
         pass

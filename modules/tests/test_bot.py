@@ -39,3 +39,6 @@ class TestBlackDesertBot(TestCase):
         assert isinstance(self.bot.buffs[0], Ability)
         assert isinstance(self.bot.foods[0], Ability)
         assert isinstance(self.bot.skills[0], Ability)
+
+    def test_find_target(self):
+        self.bot.find_target('test')

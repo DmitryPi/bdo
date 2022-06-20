@@ -45,10 +45,19 @@ def handle_error(error, to_file=False, to_sentry=False):
         raise error
 
 
-def grab_screen(region=None):
-    hwin = win32gui.GetDesktopWindow()
+def grab_screen(window_name=None, region=None):
+    if window_name:
+        hwin = win32gui.FindWindow(None, window_name)
+        if not hwin:
+            raise Exception('Window not found: {}'.format(window_name))
+    else:
+        hwin = win32gui.GetDesktopWindow()
 
-    if region:
+    if window_name:
+        left, top, width, height = win32gui.GetWindowRect(hwin)
+        width = width - left
+        height = height - left
+    elif region:
         left, top, x2, y2 = region
         width = x2 - left + 1
         height = y2 - top + 1
