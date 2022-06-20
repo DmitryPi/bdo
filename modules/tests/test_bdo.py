@@ -10,12 +10,12 @@ class TestAbilityType(TestCase):
         self.type_3 = AbilityType('skill')
 
     def test_types(self):
-        self.assertTrue(self.type_1.value == 'buff')
-        self.assertTrue(isinstance(self.type_1, AbilityType))
-        self.assertTrue(self.type_2.value == 'food')
-        self.assertTrue(isinstance(self.type_2, AbilityType))
-        self.assertTrue(self.type_3.value == 'skill')
-        self.assertTrue(isinstance(self.type_3, AbilityType))
+        assert self.type_1.value == 'buff'
+        assert isinstance(self.type_1, AbilityType)
+        assert self.type_2.value == 'food'
+        assert isinstance(self.type_2, AbilityType)
+        assert self.type_3.value == 'skill'
+        assert isinstance(self.type_3, AbilityType)
 
 
 class TestAbility(TestCase):
