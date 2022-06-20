@@ -24,14 +24,15 @@ class BlackDesertBot:
 
     def __init__(self):
         self.state = BotState.INIT
-        self.buffs = []
-        self.foods = []
-        self.skills = []
+        self.buffs = self.load_abilities(ability_type='buff')
+        self.foods = self.load_abilities(ability_type='food')
+        self.skills = self.load_abilities(ability_type='skill')
 
-    def load_abilities(self, ability_type='skill') -> list:
+    def load_abilities(self, ability_type='skill') -> list[Ability]:
         path = f'data/{ability_type}s.json'
         with open(path, 'r', encoding='utf-8') as f:
             data = json.load(f)
+            data = [Ability(*tuple(i.values())) for i in data]
             return data
 
     def find_target(self):

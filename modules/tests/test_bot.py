@@ -1,5 +1,6 @@
 from unittest import TestCase
 
+from modules.bdo import Ability
 from modules.bot import BotState, BlackDesertBot
 
 
@@ -35,3 +36,6 @@ class TestBlackDesertBot(TestCase):
         assert isinstance(buffs, list)
         assert isinstance(foods, list)
         assert isinstance(skills, list)
+        assert isinstance(self.bot.buffs[0], Ability)
+        assert isinstance(self.bot.foods[0], Ability)
+        assert isinstance(self.bot.skills[0], Ability)
