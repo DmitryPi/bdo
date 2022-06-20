@@ -63,11 +63,11 @@ while True:
         diff_frame = cv2.dilate(diff_frame, kernel, 1)
 
         # 5. Only take different areas that are different enough (>20 / 255)
-        thresh_frame = cv2.threshold(src=diff_frame, thresh=3, maxval=255, type=cv2.THRESH_BINARY)[1]
+        thresh_frame = cv2.threshold(src=diff_frame, thresh=5, maxval=255, type=cv2.THRESH_BINARY)[1]
 
         contours, _ = cv2.findContours(image=thresh_frame, mode=cv2.RETR_EXTERNAL, method=cv2.CHAIN_APPROX_SIMPLE)
         for contour in contours:
-            if cv2.contourArea(contour) < 1300:  # filter out small ones
+            if cv2.contourArea(contour) < 1000:  # filter out small ones
                 # too small: skip!
                 continue
             (x, y, w, h) = cv2.boundingRect(contour)
