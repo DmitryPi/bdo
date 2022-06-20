@@ -8,7 +8,7 @@ from utils import grab_screen
 
 keys = Keys()
 
-screen_sm = (-1920, 360, 0, 1440)
+screen_sm = (-1920, 350, 0, 1430)
 screen_lg = (0, 0, 2560, 1440)
 
 
