@@ -1,3 +1,5 @@
+import json
+
 from enum import Enum, auto
 
 from .bdo import Ability
@@ -23,11 +25,14 @@ class BlackDesertBot:
     def __init__(self):
         self.state = BotState.INIT
         self.buffs = []
-        self.food = []
+        self.foods = []
         self.skills = []
 
-    def load_abilities(self, type='skill'):
-        pass
+    def load_abilities(self, ability_type='skill') -> list:
+        path = f'data/{ability_type}s.json'
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            return data
 
     def find_target(self):
         pass
