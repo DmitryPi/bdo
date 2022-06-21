@@ -10,7 +10,16 @@ from .utils import grab_screen
 class Vision:
     def __init__(self, needle_img_path, method=cv.TM_CCOEFF_NORMED):
         self.debug = False
+        self.method = method
         self.needle_img, self.needle_w, self.needle_h = self.process_img(needle_img_path)
+
+    def debug_imshow(self, funcname: str, img: object) -> None:
+        """Show cv2 image if debug=True"""
+        if not self.debug:
+            return
+        img = cv.resize(img, (960, 540))
+        cv.imshow(funcname, img)
+        cv.waitKey(500)
 
     def process_img(self, img_path: str) -> tuple:
         """CV imread from path and return (img, width, height)"""
@@ -24,10 +33,8 @@ class Vision:
         self.debug_imshow(inspect.stack()[0][3], img_gray)
         return img_gray
 
-    def debug_imshow(self, funcname: str, img: object) -> None:
-        """Show cv2 image if debug=True"""
-        if not self.debug:
-            return
-        img = cv.resize(img, (960, 540))
-        cv.imshow(funcname, img)
-        cv.waitKey(500)
+    def match_template(self, haystack: object, needle: object, threshold=0.65):
+        """cv2 match template and return locations according to threshold"""
+        result = cv.matchTemplate(haystack, needle, self.method)
+        locations = np.where(result >= threshold)
+        return locations
