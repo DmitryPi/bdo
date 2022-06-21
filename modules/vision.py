@@ -1,10 +1,6 @@
 import cv2 as cv
 import numpy as np
 
-from time import time
-
-from .utils import grab_screen
-
 
 class Vision:
     def __init__(self, needle_img_path, method=cv.TM_CCOEFF_NORMED):

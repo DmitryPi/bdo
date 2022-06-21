@@ -31,6 +31,8 @@ if __name__ == '__main__':
             bot.update_screen(screen)
             bot.update_targets(result)
 
+            print(bot.ability_cooldowns)
+
             if bot.state == BotState.INIT:
                 pass
             elif bot.state == BotState.SEARCHING:

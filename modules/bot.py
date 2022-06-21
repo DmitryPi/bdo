@@ -1,6 +1,7 @@
 import json
 import random
 
+from datetime import datetime
 from time import sleep
 from threading import Thread, Lock
 from enum import Enum, auto
@@ -27,6 +28,7 @@ class BlackDesertBot:
     buff_queue = []
     food_queue = []
     skill_queue = []
+    ability_cooldowns = []
     main_loop_delay = 0.04
 
     def __init__(self):
@@ -82,16 +84,18 @@ class BlackDesertBot:
         """Press/Release key sequence or hold and release after completing key sequence
            Supports keys and mouse(lmb/rmb)
            '+' is a suffix for key holding"""
+        if ability.name in self.ability_cooldowns:
+            print('- Ability cooldown:', ability.name)
+            return None
+
+        pressed = []
         rnd_press_range = (0.1, 0.25)
         print(f'- Using {ability.type}:', ability.name)
-        pressed = []
         for key in ability.keybind:
             try:
                 sleep(key)
             except TypeError:
-                print('- Pressing:', key)
                 hold = True if '+' in key else False
-                print(key, hold)
                 key = key.replace('+', '')
                 if 'lmb' in key:
                     self.keys.directMouse(buttons=self.keys.mouse_lb_press)
@@ -118,6 +122,8 @@ class BlackDesertBot:
                 self.keys.directMouse(buttons=self.keys.mouse_lb_release)
             else:
                 self.keys.directKey(key, self.keys.key_release)
+        # update ability_cooldowns
+        self.ability_cooldowns.append((ability.name, ability.cooldown, datetime.now()))
         sleep(ability.duration)
 
     def start(self):
@@ -126,7 +132,7 @@ class BlackDesertBot:
         t.start()
 
     def set_state(self, state: BotState) -> None:
-        print('- State changed:', state.name)
+        print('\n- State changed:', state.name)
         self.state = state
 
     def stop(self):
@@ -138,8 +144,8 @@ class BlackDesertBot:
                 self.set_state(BotState.SEARCHING)
             elif self.state == BotState.SEARCHING:
                 if not self.targets:
-                    self.keys.directMouse(100, 0)
-                    sleep(0.2)
+                    self.keys.directMouse(50, 0)
+                    sleep(0.1)
                 else:
                     self.set_state(BotState.NAVIGATING)
             elif self.state == BotState.NAVIGATING:
