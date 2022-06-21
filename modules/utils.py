@@ -7,6 +7,8 @@ import win32ui
 import win32con
 import win32api
 
+from datetime import datetime
+
 
 def build_config(config_name='config.ini') -> None:
     config = configparser.ConfigParser()
@@ -85,6 +87,18 @@ def grab_screen(window_name=None, region=None):
     win32gui.DeleteObject(bmp.GetHandle())
 
     return cv2.cvtColor(img, cv2.COLOR_BGRA2RGB)
+
+
+def get_datetime_passed_seconds(time_stamp, time_now=None, reverse=False):
+    date_fmt = '%Y-%m-%d %H:%M:%S'
+    time_now = time_now if time_now else datetime.now()
+    time_now = datetime.strptime(str(time_now).split('.')[0], date_fmt)
+    time_stamp = datetime.strptime(str(time_stamp).split('.')[0], date_fmt)
+    if reverse:
+        time_passed = time_stamp - time_now
+    else:
+        time_passed = time_now - time_stamp
+    return int(time_passed.total_seconds())
 
 
 def wind_mouse(

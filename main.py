@@ -28,10 +28,10 @@ if __name__ == '__main__':
         while True:
             screen = grab_screen(window_name='Black Desert - 418417')
             result = vision.find(screen, threshold=0.7, crop=[420, 175, 1600, 900])
+
             bot.update_screen(screen)
             bot.update_targets(result)
-
-            print(bot.ability_cooldowns)
+            bot.filter_ability_cooldowns()
 
             if bot.state == BotState.INIT:
                 pass

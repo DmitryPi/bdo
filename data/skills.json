@@ -37,7 +37,7 @@
     },
     {
         "name": "Водоворот",
-        "keybind": ["space+", "lmb+", 2],
+        "keybind": ["space+", "lmb+", 1.5],
         "type": "skill",
         "icon": "",
         "cooldown": 6,

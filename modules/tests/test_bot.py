@@ -46,3 +46,18 @@ class TestBlackDesertBot(TestCase):
     def test_use_ability(self):
         for skill in self.bot.skills:
             self.bot.use_ability(skill)
+
+    def test_filter_ability_cooldowns(self):
+        ability_cooldowns = [
+            ('Проекция', 15, '2022-06-22 00:33:51.202546'),
+            ('Лавовое Озеро', 15, '2022-06-22 00:33:51.954306'),
+            ('Огненная Ярость', 6, '2022-06-22 00:33:53.622277'),
+            ('Очаг Пожара', 6, '2022-06-22 00:33:54.895727'),
+            ('Водоворот', 6, '2022-06-22 00:34:00.327718')]
+        self.bot.ability_cooldowns = ability_cooldowns
+        self.bot.filter_ability_cooldowns()
+        self.bot.filter_ability_cooldowns()
+        self.bot.filter_ability_cooldowns()
+        self.bot.filter_ability_cooldowns()
+        self.bot.filter_ability_cooldowns()
+        assert not self.bot.ability_cooldowns
