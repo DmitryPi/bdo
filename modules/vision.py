@@ -11,12 +11,6 @@ class Vision:
         self.method = method
         self.needle_img, self.needle_w, self.needle_h = self.process_img(needle_img_path)
 
-    def debug_imshow(self, img: object) -> None:
-        """Show cv2 image if debug=True"""
-        img = cv.resize(img, (960, 540))
-        cv.imshow('IMAGE', img)
-        cv.waitKey(500)
-
     def process_img(self, img_path: str) -> tuple:
         """CV imread from path and return (img, width, height)"""
         img = cv.imread(img_path, 0)
@@ -44,11 +38,6 @@ class Vision:
         if crop:
             screen = screen[crop[1]:crop[3], crop[0]:crop[2]]  # y1:y2, x1:x2
             screen_gray = screen_gray[crop[1]:crop[3], crop[0]:crop[2]]  # y1:y2, x1:x2
-
-        # debug imshow
-        if debug:
-            self.debug_imshow(screen)
-            self.debug_imshow(screen_gray)
 
         # find matches
         locations = self.match_template(screen_gray, self.needle_img, threshold=threshold)

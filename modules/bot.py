@@ -1,9 +1,9 @@
 import cv2 as cv
 import json
-import pydirectinput
 import random
 
 from time import sleep
+from threading import Thread, Lock
 from enum import Enum, auto
 
 from .bdo import Ability
@@ -20,21 +20,30 @@ class BotState(Enum):
 
 
 class BlackDesertBot:
-    state = None
-    buff_queue = []
-    food_queue = []
-    skill_queue = []
     # threading properties
     stopped = True
     lock = None
+    # properties
+    state = None
+    screen = None
+    targets = []
+    buff_queue = []
+    food_queue = []
+    skill_queue = []
+    main_loop_delay = 0.04
 
     def __init__(self):
-        self.state = BotState.INIT
-        self.keys = Keys()
+        # create a thread lock object
+        self.lock = Lock()
+
+        # Abilities init
         self.buffs = self.load_abilities(ability_type='buff')
         self.foods = self.load_abilities(ability_type='food')
         self.heals = self.load_abilities(ability_type='heal')
         self.skills = self.load_abilities(ability_type='skill')
+        # State and Keys init
+        self.state = BotState.INIT
+        self.keys = Keys()
 
     def load_abilities(self, ability_type='skill') -> list[Ability]:
         path = f'data/{ability_type}s.json'
@@ -76,7 +85,19 @@ class BlackDesertBot:
     def kill_target(self):
         pass
 
-    def use_ability(self, ability, keybind=None) -> None:
+    def update_targets(self, targets: list[tuple]) -> None:
+        """Threading method: update targets property"""
+        self.lock.acquire()
+        self.targets = targets
+        self.lock.release()
+
+    def update_screen(self, screen: object) -> None:
+        """Threading method: update screen property"""
+        self.lock.acquire()
+        self.screen = screen
+        self.lock.release()
+
+    def use_ability(self, ability: Ability, keybind=None) -> None:
         """Press/Release key sequence or hold and release after completing key sequence
            Supports keys and mouse(lmb/rmb)
            '+' is a suffix for key holding"""
@@ -117,5 +138,23 @@ class BlackDesertBot:
                     self.keys.directKey(key, self.keys.key_release)
             sleep(ability.duration)
 
+    def start(self):
+        self.stopped = False
+        t = Thread(target=self.run)
+        t.start()
+
+    def stop(self):
+        self.stopped = True
+
     def run(self):
-        pass
+        while not self.stopped:
+            print('- Inner loop working')
+            if self.state == BotState.INIT:
+                print(self.targets)
+            elif self.state == BotState.SEARCHING:
+                pass
+            elif self.state == BotState.NAVIGATING:
+                pass
+            elif self.state == BotState.KILLING:
+                pass
+            sleep(self.main_loop_delay)
