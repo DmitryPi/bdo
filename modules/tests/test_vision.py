@@ -26,5 +26,8 @@ class TestVision(TestCase):
         screen = grab_screen()
         screen_gray = self.vision.cvt_img_gray(screen)
         locations = self.vision.match_template(self.vision.needle_img, screen_gray, threshold=0.9)
-        assert isinstance(locations, object)
-        assert not locations[0]
+        assert not locations
+        locations = self.vision.match_template(self.vision.needle_img, screen_gray, threshold=0.3)
+        assert len(locations)
+        assert isinstance(locations[0], tuple)
+        assert len(locations[0]) == 2

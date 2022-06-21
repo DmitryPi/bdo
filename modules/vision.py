@@ -37,4 +37,5 @@ class Vision:
         """cv2 match template and return locations according to threshold"""
         result = cv.matchTemplate(haystack, needle, self.method)
         locations = np.where(result >= threshold)
+        locations = list(zip(*locations[::-1]))  # remove empty arrays
         return locations
