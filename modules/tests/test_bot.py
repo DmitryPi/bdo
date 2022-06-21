@@ -44,7 +44,5 @@ class TestBlackDesertBot(TestCase):
 
     @pytest.mark.slow
     def test_use_ability(self):
-        self.bot.use_ability()
-
-    def test_find_target(self):
-        self.bot.find_target()
+        for skill in self.bot.skills:
+            self.bot.use_ability(skill)

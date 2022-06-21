@@ -21,10 +21,5 @@ class TestVision(TestCase):
         assert isinstance(screen_gray, object)
         assert isinstance(screen_gray, object)
 
-    def test_match_template(self):
-        screen_gray = self.vision.cvt_img_gray(self.screen)
-        locations = self.vision.match_template(self.vision.needle_img, screen_gray, threshold=0.9)
-        assert not locations
-
     def test_find(self):
         self.vision.find(self.screen, crop=[0, 0, 500, 500], threshold=0.15)

@@ -1,20 +1,11 @@
 [
     {
-        "name": "Холодный Прилив",
-        "keybind": ["s+", "lmb+", "rmb+", 2],
-        "type": "skill",
-        "icon": "",
-        "cooldown": 0,
-        "duration": 0,
-        "disabled": false
-    },
-    {
         "name": "Уклонение",
         "keybind": ["space+", "s"],
         "type": "skill",
         "icon": "",
         "cooldown": 0,
-        "duration": 1,
+        "duration": 0.5,
         "disabled": false
     }
 ]

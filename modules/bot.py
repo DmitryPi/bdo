@@ -1,4 +1,3 @@
-import cv2 as cv
 import json
 import random
 
@@ -8,8 +7,6 @@ from enum import Enum, auto
 
 from .bdo import Ability
 from .keys import Keys
-from .utils import grab_screen
-from .vision import Vision
 
 
 class BotState(Enum):
@@ -51,22 +48,6 @@ class BlackDesertBot:
             data = json.load(f)
             data = [Ability(*tuple(i.values())) for i in data]
             return data
-
-    def find_target(self) -> None:
-        crop = [420, 175, 1600, 900]
-        vision = Vision('assets/boar.png')
-        while True:
-            screen = grab_screen(window_name='Black Desert - 418417')
-            result = vision.find(screen, threshold=0.7, crop=crop)
-            if result:
-                self.camera_follow_target(result[0])
-            screen = vision.draw_rectangles(screen, result)
-            screen = cv.resize(screen, (960, 540))
-            cv.imshow('Screen', screen)
-
-            if cv.waitKey(1) == ord('q'):
-                cv.destroyAllWindows()
-                break
 
     def camera_follow_target(self, rect: tuple) -> None:
         viewport_mp = (1920 / 2, 1080 / 3)
@@ -110,6 +91,7 @@ class BlackDesertBot:
             except TypeError:
                 print('- Pressing:', key)
                 hold = True if '+' in key else False
+                print(key, hold)
                 key = key.replace('+', '')
                 if 'lmb' in key:
                     self.keys.directMouse(buttons=self.keys.mouse_lb_press)
@@ -128,20 +110,24 @@ class BlackDesertBot:
                         self.keys.directKey(key, self.keys.key_release)
                 if hold:
                     pressed.append(key)
-            # release keys/mouse
-            for key in pressed:
-                if key in 'lmb':
-                    self.keys.directMouse(buttons=self.keys.mouse_rb_release)
-                elif key in 'rmb':
-                    self.keys.directMouse(buttons=self.keys.mouse_lb_release)
-                else:
-                    self.keys.directKey(key, self.keys.key_release)
-            sleep(ability.duration)
+        # release keys/mouse
+        for key in pressed:
+            if key in 'lmb':
+                self.keys.directMouse(buttons=self.keys.mouse_rb_release)
+            elif key in 'rmb':
+                self.keys.directMouse(buttons=self.keys.mouse_lb_release)
+            else:
+                self.keys.directKey(key, self.keys.key_release)
+        sleep(ability.duration)
 
     def start(self):
         self.stopped = False
         t = Thread(target=self.run)
         t.start()
+
+    def set_state(self, state: BotState) -> None:
+        print('- State changed:', state.name)
+        self.state = state
 
     def stop(self):
         self.stopped = True
@@ -150,11 +136,25 @@ class BlackDesertBot:
         while not self.stopped:
             print('- Inner loop working')
             if self.state == BotState.INIT:
-                print(self.targets)
+                self.set_state(BotState.SEARCHING)
             elif self.state == BotState.SEARCHING:
-                pass
+                if not self.targets:
+                    self.keys.directMouse(100, 0)
+                    sleep(0.2)
+                else:
+                    self.set_state(BotState.NAVIGATING)
             elif self.state == BotState.NAVIGATING:
-                pass
+                if not self.targets:
+                    self.set_state(BotState.SEARCHING)
+                    continue
+                self.camera_follow_target(self.targets[0])
+                self.set_state(BotState.KILLING)
             elif self.state == BotState.KILLING:
-                pass
+                if not self.targets:
+                    self.set_state(BotState.SEARCHING)
+                    continue
+                for skill in self.skills:
+                    if not self.targets:
+                        break
+                    self.use_ability(skill)
             sleep(self.main_loop_delay)
