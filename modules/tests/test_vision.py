@@ -9,7 +9,7 @@ from ..vision import Vision
 class TestVision(TestCase):
     def setUp(self):
         self.vision = Vision('assets/boar.png')
-        self.vision.debug = False
+        self.screen = grab_screen(region=(0, 0, 1920, 1080))
 
     def test_vision_init(self):
         assert isinstance(self.vision.needle_img, object)
@@ -17,17 +17,14 @@ class TestVision(TestCase):
         assert isinstance(self.vision.needle_h, int)
 
     def test_cvt_img_gray(self):
-        screen = grab_screen()
-        screen_gray = self.vision.cvt_img_gray(screen)
+        screen_gray = self.vision.cvt_img_gray(self.screen)
         assert isinstance(screen_gray, object)
         assert isinstance(screen_gray, object)
 
     def test_match_template(self):
-        screen = grab_screen()
-        screen_gray = self.vision.cvt_img_gray(screen)
+        screen_gray = self.vision.cvt_img_gray(self.screen)
         locations = self.vision.match_template(self.vision.needle_img, screen_gray, threshold=0.9)
         assert not locations
-        locations = self.vision.match_template(self.vision.needle_img, screen_gray, threshold=0.3)
-        assert len(locations)
-        assert isinstance(locations[0], tuple)
-        assert len(locations[0]) == 2
+
+    def test_find(self):
+        self.vision.find(self.screen, calc_mp=True, crop=[0, 0, 500, 500], threshold=0.15)
