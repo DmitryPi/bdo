@@ -2,8 +2,8 @@ import pytest
 
 from unittest import TestCase
 
-from modules.bdo import Ability
-from modules.bot import BotState, BlackDesertBot
+from ..bdo import Ability
+from ..bot import BotState, BlackDesertBot
 
 
 class TestBotState(TestCase):

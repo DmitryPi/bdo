@@ -8,7 +8,7 @@ from enum import Enum, auto
 from .bdo import Ability
 from .keys import Keys
 from .utils import grab_screen
-from .vision import Vision, WindowCapture
+from .vision import Vision
 
 
 class BotState(Enum):
