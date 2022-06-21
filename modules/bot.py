@@ -1,5 +1,6 @@
 import cv2 as cv
 import json
+import pydirectinput
 import random
 
 from time import sleep
@@ -42,12 +43,14 @@ class BlackDesertBot:
             data = [Ability(*tuple(i.values())) for i in data]
             return data
 
-    def find_target(self):
+    def find_target(self) -> None:
         crop = [420, 175, 1600, 900]
         vision = Vision('assets/boar.png')
         while True:
-            screen = grab_screen(region=(0, 0, 1920, 1080))
+            screen = grab_screen(window_name='Black Desert - 418417')
             result = vision.find(screen, threshold=0.7, crop=crop)
+            if result:
+                self.camera_follow_target(result[0])
             screen = vision.draw_rectangles(screen, result)
             screen = cv.resize(screen, (960, 540))
             cv.imshow('Screen', screen)
@@ -56,8 +59,16 @@ class BlackDesertBot:
                 cv.destroyAllWindows()
                 break
 
-    def follow_target(self):
-        pass
+    def camera_follow_target(self, rect: tuple) -> None:
+        viewport_mp = (1920 / 2, 1080 / 3)
+        x, y, w, h = rect
+        move_x = int(x - viewport_mp[0])
+        move_y = int(y - viewport_mp[1])
+        if x > viewport_mp[0]:
+            print('MORE', move_x)
+        elif x < viewport_mp[0]:
+            print('LESS', move_x)
+        self.keys.directMouse(move_x, move_y)
 
     def move_to_target(self):
         pass
