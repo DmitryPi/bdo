@@ -35,9 +35,8 @@ class Vision:
         locations = list(zip(*locations[::-1]))  # remove empty arrays
         return locations
 
-    def find(self, screen: object, threshold=0.65, calc_mp=False, crop=[], debug=False) -> list[tuple]:
+    def find(self, screen: object, threshold=0.65, crop=[], debug=False) -> list[tuple]:
         """Find grayscaled object on screen by given threshold
-           calc_mp - calculate needle middle points on screen
            crop - [x1, y1, x2, y2], screen region crop
            debug - show screen/screen_gray image"""
         screen_gray = self.cvt_img_gray(screen)
@@ -58,20 +57,21 @@ class Vision:
 
         for (x, y) in locations:
             if mask[y + self.needle_h // 2, x + self.needle_w // 2] != 255:
-                if calc_mp:  # calculate object middle points
-                    x_mp = int((x * 2 + self.needle_w) / 2)
-                    y_mp = int((y * 2 + self.needle_h) / 2)
-                    detected_objects.append((x_mp, y_mp, self.needle_w, self.needle_h))
-                else:  # append detected object
-                    detected_objects.append((x, y, self.needle_w, self.needle_h))
-            # mask out detected object
-            mask[y:y + self.needle_h, y:y + self.needle_w] = 255
+                detected_objects.append((x, y, self.needle_w, self.needle_h))
+            mask[y:y + self.needle_h, y:y + self.needle_w] = 255  # mask out detected object
 
         if crop:  # recalculate cropped region points
             for i, (x, y, w, h) in enumerate(detected_objects):
                 detected_objects[i] = (x + crop[0], y + crop[1], w, h)
 
         return detected_objects
+
+    def calc_rect_middle(self, rect: tuple[int]) -> tuple[int]:
+        """Calculate middle point of rectangle"""
+        x, y, w, h = rect
+        x = int((x * 2 + w) / 2)
+        y = int((y * 2 + h) / 2)
+        return (x, y, w, h)
 
     def draw_rectangles(self, haystack_img, rectangles):
         """given a list of [x, y, w, h] rectangles and a canvas image to draw on
