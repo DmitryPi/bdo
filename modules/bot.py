@@ -32,6 +32,7 @@ class BlackDesertBot:
         self.keys = Keys()
         self.buffs = self.load_abilities(ability_type='buff')
         self.foods = self.load_abilities(ability_type='food')
+        self.heals = self.load_abilities(ability_type='heals')
         self.skills = self.load_abilities(ability_type='skill')
 
     def load_abilities(self, ability_type='skill') -> list[Ability]:
@@ -64,7 +65,8 @@ class BlackDesertBot:
 
     def use_ability(self, ability, keybind=None) -> None:
         """Press/Release key sequence or hold and release after completing key sequence
-           Supports keys and mouse(lmb/rmb)"""
+           Supports keys and mouse(lmb/rmb)
+           '+' is a suffix for key holding"""
         rnd_press_range = (0.1, 0.25)
         print(f'- Using {ability.type}:', ability.name)
         pressed = []

@@ -5,6 +5,7 @@ from dataclasses import dataclass
 class AbilityType(Enum):
     BUFF = 'buff'
     FOOD = 'food'
+    HEAL = 'heal'
     SKILL = 'skill'
 
 

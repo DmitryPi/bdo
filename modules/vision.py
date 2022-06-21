@@ -323,7 +323,7 @@ if __name__ == '__main__':
     # initialize the trackbar window
     vision.init_control_gui()
 
-    hsv_filter = HsvFilter(80, 160, 0 179, 255, 255, 0,)
+    hsv_filter = HsvFilter(80, 160, 0, 179, 255, 255, 0,)
 
     loop_time = time()
     while True:
