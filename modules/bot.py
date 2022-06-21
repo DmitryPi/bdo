@@ -134,7 +134,6 @@ class BlackDesertBot:
 
     def run(self):
         while not self.stopped:
-            print('- Inner loop working')
             if self.state == BotState.INIT:
                 self.set_state(BotState.SEARCHING)
             elif self.state == BotState.SEARCHING:

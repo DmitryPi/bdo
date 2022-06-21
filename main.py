@@ -26,7 +26,6 @@ if __name__ == '__main__':
         bot.start()
 
         while True:
-            print('- Outer loop working')
             screen = grab_screen(window_name='Black Desert - 418417')
             result = vision.find(screen, threshold=0.7, crop=[420, 175, 1600, 900])
             bot.update_screen(screen)
