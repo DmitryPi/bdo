@@ -319,11 +319,11 @@ if __name__ == '__main__':
     # initialize the WindowCapture class
     wincap = WindowCapture('Black Desert - 418417')
     # initialize the Vision class
-    vision = Vision('assets/kzarka.png')
+    vision = Vision('assets/humanoid.png')
     # initialize the trackbar window
     vision.init_control_gui()
 
-    # hsv_filter = HsvFilter(80, 160, 0, 179, 255, 255, 0, 0, 255, 0)
+    hsv_filter = HsvFilter(80, 160, 0 179, 255, 255, 0,)
 
     loop_time = time()
     while True:
@@ -334,8 +334,8 @@ if __name__ == '__main__':
         # pre-process the image
         processed_image = vision.apply_hsv_filter(screenshot)
         # processed_image = vision.apply_hsv_filter(screenshot, hsv_filter)
-        rectangles = vision.find(processed_image, 0.55)
-        processed_image = vision.draw_rectangles(processed_image, rectangles)
+        # rectangles = vision.find(processed_image, 0.4)
+        # processed_image = vision.draw_rectangles(processed_image, rectangles)
 
         # display the processed image
         cv.imshow('Processed', processed_image)

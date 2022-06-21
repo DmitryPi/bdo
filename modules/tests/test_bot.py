@@ -1,3 +1,5 @@
+import pytest
+
 from unittest import TestCase
 
 from modules.bdo import Ability
@@ -40,9 +42,11 @@ class TestBlackDesertBot(TestCase):
         assert isinstance(self.bot.foods[0], Ability)
         assert isinstance(self.bot.skills[0], Ability)
 
+    @pytest.mark.slow
     def test_find_target(self):
         # self.bot.find_target('test')
         pass
 
-    def test_use_skill(self):
-        self.bot.use_skill()
+    @pytest.mark.slow
+    def test_use_ability(self):
+        self.bot.use_ability()

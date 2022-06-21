@@ -62,43 +62,36 @@ class BlackDesertBot:
     def kill_target(self):
         pass
 
-    def use_buff(self):
-        pass
-
-    def use_food(self):
-        pass
-
-    def use_skill(self, keybind=None) -> None:
+    def use_ability(self, ability, keybind=None) -> None:
         """Press/Release key sequence or hold and release after completing key sequence
            Supports keys and mouse(lmb/rmb)"""
         rnd_press_range = (0.1, 0.25)
-        for skill in self.skills:
-            print('- Using Skill:', skill.name)
-            pressed = []
-            for key in skill.keybind:
-                try:
-                    sleep(key)
-                except TypeError:
-                    print('- Pressing:', key)
-                    hold = True if '+' in key else False
-                    key = key.replace('+', '')
-                    if 'lmb' in key:
-                        self.keys.directMouse(buttons=self.keys.mouse_lb_press)
-                        if not hold:
-                            sleep(random.uniform(*rnd_press_range))
-                            self.keys.directMouse(buttons=self.keys.mouse_lb_release)
-                    elif 'rmb' in key:
-                        self.keys.directMouse(buttons=self.keys.mouse_rb_press)
-                        if not hold:
-                            sleep(random.uniform(*rnd_press_range))
-                            self.keys.directMouse(buttons=self.keys.mouse_rb_release)
-                    else:
-                        self.keys.directKey(key)
-                        if not hold:
-                            sleep(random.uniform(*rnd_press_range))
-                            self.keys.directKey(key, self.keys.key_release)
-                    if hold:
-                        pressed.append(key)
+        print(f'- Using {ability.type}:', ability.name)
+        pressed = []
+        for key in ability.keybind:
+            try:
+                sleep(key)
+            except TypeError:
+                print('- Pressing:', key)
+                hold = True if '+' in key else False
+                key = key.replace('+', '')
+                if 'lmb' in key:
+                    self.keys.directMouse(buttons=self.keys.mouse_lb_press)
+                    if not hold:
+                        sleep(random.uniform(*rnd_press_range))
+                        self.keys.directMouse(buttons=self.keys.mouse_lb_release)
+                elif 'rmb' in key:
+                    self.keys.directMouse(buttons=self.keys.mouse_rb_press)
+                    if not hold:
+                        sleep(random.uniform(*rnd_press_range))
+                        self.keys.directMouse(buttons=self.keys.mouse_rb_release)
+                else:
+                    self.keys.directKey(key)
+                    if not hold:
+                        sleep(random.uniform(*rnd_press_range))
+                        self.keys.directKey(key, self.keys.key_release)
+                if hold:
+                    pressed.append(key)
             # release keys/mouse
             for key in pressed:
                 if key in 'lmb':
@@ -107,7 +100,7 @@ class BlackDesertBot:
                     self.keys.directMouse(buttons=self.keys.mouse_lb_release)
                 else:
                     self.keys.directKey(key, self.keys.key_release)
-            sleep(skill.duration)
+            sleep(ability.duration)
 
     def run(self):
         pass
