@@ -43,10 +43,8 @@ class TestBlackDesertBot(TestCase):
         assert isinstance(self.bot.skills[0], Ability)
 
     @pytest.mark.slow
-    def test_find_target(self):
-        # self.bot.find_target('test')
-        pass
-
-    @pytest.mark.slow
     def test_use_ability(self):
         self.bot.use_ability()
+
+    def test_find_target(self):
+        self.bot.find_target()

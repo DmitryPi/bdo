@@ -13,8 +13,6 @@ class Vision:
 
     def debug_imshow(self, img: object) -> None:
         """Show cv2 image if debug=True"""
-        if not self.debug:
-            return
         img = cv.resize(img, (960, 540))
         cv.imshow('IMAGE', img)
         cv.waitKey(500)
@@ -63,14 +61,43 @@ class Vision:
                 if calc_mp:  # calculate object middle points
                     x_mp = int((x * 2 + self.needle_w) / 2)
                     y_mp = int((y * 2 + self.needle_h) / 2)
-                    detected_objects.append((x_mp, y_mp))
+                    detected_objects.append((x_mp, y_mp, self.needle_w, self.needle_h))
                 else:  # append detected object
-                    detected_objects.append((x, y))
+                    detected_objects.append((x, y, self.needle_w, self.needle_h))
             # mask out detected object
             mask[y:y + self.needle_h, y:y + self.needle_w] = 255
 
         if crop:  # recalculate cropped region points
-            for i, (x, y) in enumerate(detected_objects):
-                detected_objects[i] = (x + crop[0], y + crop[1])
+            for i, (x, y, w, h) in enumerate(detected_objects):
+                detected_objects[i] = (x + crop[0], y + crop[1], w, h)
 
         return detected_objects
+
+    def draw_rectangles(self, haystack_img, rectangles):
+        """given a list of [x, y, w, h] rectangles and a canvas image to draw on
+           return an image with all of those rectangles drawn"""
+        # these colors are actually BGR
+        line_color = (0, 255, 0)
+        line_type = cv.LINE_4
+
+        for (x, y, w, h) in rectangles:
+            # determine the box positions
+            top_left = (x, y)
+            bottom_right = (x + w, y + h)
+            # draw the box
+            cv.rectangle(haystack_img, top_left, bottom_right, line_color, lineType=line_type)
+
+        return haystack_img
+
+    def draw_crosshairs(self, haystack_img, points):
+        """given a list of [x, y] positions and a canvas image to draw on
+           return an image with all of those click points drawn on as crosshairs"""
+        # these colors are actually BGR
+        marker_color = (255, 0, 255)
+        marker_type = cv.MARKER_CROSS
+
+        for (center_x, center_y) in points:
+            # draw the center point
+            cv.drawMarker(haystack_img, (center_x, center_y), marker_color, marker_type)
+
+        return haystack_img

@@ -42,13 +42,15 @@ class BlackDesertBot:
             data = [Ability(*tuple(i.values())) for i in data]
             return data
 
-    def find_target(self, tmplt):
+    def find_target(self):
+        crop = [420, 175, 1600, 900]
+        vision = Vision('assets/boar.png')
         while True:
-            screen = grab_screen(region=(-1920, 350, 0, 1430))
-            screen = cv.cvtColor(screen, cv.COLOR_BGR2RGB)
-
+            screen = grab_screen(region=(0, 0, 1920, 1080))
+            result = vision.find(screen, threshold=0.7, crop=crop)
+            screen = vision.draw_rectangles(screen, result)
             screen = cv.resize(screen, (960, 540))
-            cv.imshow('screen', screen)
+            cv.imshow('Screen', screen)
 
             if cv.waitKey(1) == ord('q'):
                 cv.destroyAllWindows()
