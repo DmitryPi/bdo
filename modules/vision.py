@@ -38,9 +38,13 @@ class Vision:
         return locations
 
     def find(self, screen: object, threshold=0.65, calc_mp=False, crop=[], debug=False) -> list[tuple]:
+        """Find grayscaled object on screen by given threshold
+           calc_mp - calculate needle middle points on screen
+           crop - [x1, y1, x2, y2], screen region crop
+           debug - show screen/screen_gray image"""
         screen_gray = self.cvt_img_gray(screen)
 
-        if crop:  # crop format: [x1, y1, x2, y2]
+        if crop:
             screen = screen[crop[1]:crop[3], crop[0]:crop[2]]  # y1:y2, x1:x2
             screen_gray = screen_gray[crop[1]:crop[3], crop[0]:crop[2]]  # y1:y2, x1:x2
 
