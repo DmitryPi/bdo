@@ -32,7 +32,7 @@ class BlackDesertBot:
         self.keys = Keys()
         self.buffs = self.load_abilities(ability_type='buff')
         self.foods = self.load_abilities(ability_type='food')
-        self.heals = self.load_abilities(ability_type='heals')
+        self.heals = self.load_abilities(ability_type='heal')
         self.skills = self.load_abilities(ability_type='skill')
 
     def load_abilities(self, ability_type='skill') -> list[Ability]:
