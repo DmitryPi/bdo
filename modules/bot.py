@@ -148,9 +148,9 @@ class BlackDesertBot:
         # release keys/mouse
         for key in pressed:
             if 'lmb' in key:
-                self.keys.directMouse(buttons=self.keys.mouse_rb_release)
-            elif 'rmb' in key:
                 self.keys.directMouse(buttons=self.keys.mouse_lb_release)
+            elif 'rmb' in key:
+                self.keys.directMouse(buttons=self.keys.mouse_rb_release)
             else:
                 self.keys.directKey(key, self.keys.key_release)
         sleep(ability.duration)
