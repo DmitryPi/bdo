@@ -2,12 +2,14 @@ import configparser
 import codecs
 import cv2
 import numpy as np
+import pydirectinput
 import win32gui
 import win32ui
 import win32con
 import win32api
 
 from datetime import datetime
+from time import sleep
 
 
 def build_config(config_name='config.ini') -> None:
@@ -103,11 +105,11 @@ def get_datetime_passed_seconds(time_stamp, time_now=None, reverse=False):
 
 def wind_mouse(
         start_x, start_y, dest_x, dest_y,
-        G_0=9, W_0=3, M_0=10, D_0=12, delay=False, move_mouse=lambda x, y: None):
+        G_0=12, W_0=3, M_0=13, D_0=13, delay=False, move_mouse=lambda x, y: None):
     '''
     WindMouse algorithm. Calls the move_mouse kwarg with each new step.
     Released under the terms of the GPLv3 license.
-    G_0 - magnitude of the gravitational fornce
+    G_0 - magnitude of the gravitational force
     W_0 - magnitude of the wind force fluctuations
     M_0 - maximum step size (velocity clip threshold)
     D_0 - distance where wind behavior changes from random to damped
@@ -141,8 +143,20 @@ def wind_mouse(
         move_y = int(np.round(start_y))
         if current_x != move_x or current_y != move_y:
             # This should wait for the mouse polling interval
-            if delay:  # pyautogui func moveTo
+            try:
                 move_mouse(current_x := move_x, current_y := move_y)
-            else:  # win32api func SetCursorPos
+            except TypeError:
                 move_mouse((current_x := move_x, current_y := move_y))
+            if delay:
+                sleep(0.00001)
     return current_x, current_y
+
+
+def wind_mouse_move_camera(x: int, y: int, delay=True) -> None:
+    """Move from current position_x + x; current position_y + y"""
+    move_func = win32api.SetCursorPos
+    pos_x, pos_y = win32api.GetCursorPos()
+    x = x + pos_x
+    y = y + pos_y
+    print('- WIND MOUSE', 'pos_x', pos_x, 'pos_y', pos_y, 'x', x, 'y', y)
+    wind_mouse(pos_x, pos_y, x, y, move_mouse=move_func, delay=delay)
