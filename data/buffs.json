@@ -1,10 +1,28 @@
 [
     {
-        "name": "",
-        "keybind": [],
-        "type": "",
+        "name": "Ускорение",
+        "keybind": ["1", 1, "c"],
+        "type": "buff",
         "icon": "",
-        "cooldown": 0,
+        "cooldown": 50,
+        "duration": 0,
+        "disabled": false
+    },
+    {
+        "name": "Безумие Стихий",
+        "keybind": ["space+", "e"],
+        "type": "buff",
+        "icon": "",
+        "cooldown": 180,
+        "duration": 0,
+        "disabled": false
+    },
+    {
+        "name": "Гнев Духа",
+        "keybind": ["z", 1.5],
+        "type": "buff",
+        "icon": "",
+        "cooldown": 180,
         "duration": 0,
         "disabled": false
     }

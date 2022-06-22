@@ -41,6 +41,7 @@ class BlackDesertBot:
         self.foods = self.load_abilities(ability_type='food')
         self.heals = self.load_abilities(ability_type='heal')
         self.skills = self.load_abilities(ability_type='skill')
+        self.dodge_skills = self.load_abilities(ability_type='dodge')
         # State and Keys init
         self.state = BotState.INIT
         self.keys = Keys()
@@ -180,8 +181,7 @@ class BlackDesertBot:
                 if not self.targets:
                     self.set_state(BotState.SEARCHING)
                     continue
-                for skill in self.skills:
-                    if not self.targets or self.stopped:
-                        break
-                    self.use_ability(skill)
+                self.use_ability(random.choice(self.buffs))
+                self.use_ability(self.skills[0])
+                self.use_ability(random.choice(self.skills[1:]))
             sleep(self.main_loop_delay)
