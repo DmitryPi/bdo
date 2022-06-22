@@ -49,13 +49,11 @@ class TestBlackDesertBot(TestCase):
 
     def test_filter_ability_cooldowns(self):
         ability_cooldowns = [
-            ('Проекция', 15, '2022-06-22 00:33:51.202546'),
-            ('Лавовое Озеро', 15, '2022-06-22 00:33:51.954306'),
-            ('Огненная Ярость', 6, '2022-06-22 00:33:53.622277'),
-            ('Очаг Пожара', 6, '2022-06-22 00:33:54.895727'),
-            ('Водоворот', 6, '2022-06-22 00:34:00.327718')]
+            (Ability(name='Проекция', keybind=['t'], type='skill', icon='', cooldown=15, duration=0.5, disabled=False), '2022-06-22 15:56:17.800236'),
+            (Ability(name='Лавовое Озеро', keybind=['e'], type='skill', icon='', cooldown=15, duration=0.3, disabled=False), '2022-06-22 15:56:18.284364'),
+            (Ability(name='Огненная Ярость', keybind=['w+', 'f'], type='skill', icon='', cooldown=6, duration=1.5, disabled=False), '2022-06-22 15:56:20.052835'),
+            (Ability(name='Очаг Пожара', keybind=['space+', 'f'], type='skill', icon='', cooldown=6, duration=1, disabled=False), '2022-06-22 15:56:23.924626')]
         self.bot.ability_cooldowns = ability_cooldowns
-        self.bot.filter_ability_cooldowns()
         self.bot.filter_ability_cooldowns()
         self.bot.filter_ability_cooldowns()
         self.bot.filter_ability_cooldowns()

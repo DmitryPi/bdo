@@ -8,7 +8,7 @@ from enum import Enum, auto
 
 from .bdo import Ability
 from .keys import Keys
-from .utils import get_datetime_passed_seconds
+from .utils import get_datetime_passed_seconds, wind_mouse_move_camera, calc_rect_middle
 
 
 class BotState(Enum):
@@ -54,31 +54,22 @@ class BlackDesertBot:
 
     def camera_follow_target(self, rect: tuple) -> None:
         viewport_mp = (1920 / 2, 1080 / 3)
-        x, y, w, h = rect
+        x, y, w, h = calc_rect_middle(rect)
         move_x = int(x - viewport_mp[0])
         move_y = int(y - viewport_mp[1])
-        if x > viewport_mp[0]:
-            print('MORE', move_x)
-        elif x < viewport_mp[0]:
-            print('LESS', move_x)
-        self.keys.directMouse(move_x, move_y)
-
-    def move_to_target(self):
-        pass
-
-    def kill_target(self):
-        pass
+        if abs(move_x) < 50 and abs(move_y) < 50:
+            return None
+        overhead = 35
+        move_x = move_x + overhead if move_x > 0 else move_x - overhead
+        wind_mouse_move_camera(move_x, move_y)
 
     def filter_ability_cooldowns(self) -> None:
         """Filter by abilities by timestamp;
            Remove ability from cooldowns - delete_ability_cooldown"""
-        for i, ability in enumerate(self.ability_cooldowns):
-            name = ability[0]
-            cooldown = ability[1]
-            timestamp = ability[2]
+        for i, (ability, timestamp) in enumerate(self.ability_cooldowns):
             passed_sec = get_datetime_passed_seconds(timestamp)
-            if passed_sec >= cooldown:
-                print('- OFF COOLDOWN', name)
+            if passed_sec >= ability.cooldown:
+                print('- OFF COOLDOWN', ability.name)
                 self.delete_ability_cooldown(i)
                 break
 
@@ -110,7 +101,7 @@ class BlackDesertBot:
         """Press/Release key sequence or hold and release after completing key sequence
            Supports keys and mouse(lmb/rmb)
            '+' is a suffix for key holding"""
-        ability_cooldowns = [i[0] for i in self.ability_cooldowns]  # names
+        ability_cooldowns = [ability[0].name for ability in self.ability_cooldowns]  # names
 
         if ability.name in ability_cooldowns:
             print('- Ability cooldown:', ability.name)
@@ -155,8 +146,7 @@ class BlackDesertBot:
                 self.keys.directKey(key, self.keys.key_release)
         sleep(ability.duration)
         # update ability_cooldowns
-        self.update_ability_cooldowns(
-            (ability.name, ability.cooldown, str(datetime.now())))
+        self.update_ability_cooldowns((ability, str(datetime.now())))
 
     def start(self):
         self.stopped = False
@@ -176,22 +166,22 @@ class BlackDesertBot:
                 self.set_state(BotState.SEARCHING)
             elif self.state == BotState.SEARCHING:
                 if not self.targets:
-                    # elf.keys.directMouse(50, 0)
-                    sleep(0.1)
+                    # wind_mouse_move_camera(300, 0, delay=True)
+                    pass
                 else:
                     self.set_state(BotState.NAVIGATING)
             elif self.state == BotState.NAVIGATING:
                 if not self.targets:
                     self.set_state(BotState.SEARCHING)
                     continue
-                self.camera_follow_target(self.targets[0])
+                self.camera_follow_target(random.choice(self.targets))
                 self.set_state(BotState.KILLING)
             elif self.state == BotState.KILLING:
                 if not self.targets:
                     self.set_state(BotState.SEARCHING)
                     continue
                 for skill in self.skills:
-                    if not self.targets:
+                    if not self.targets or self.stopped:
                         break
                     self.use_ability(skill)
             sleep(self.main_loop_delay)

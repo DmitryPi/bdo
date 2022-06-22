@@ -160,3 +160,11 @@ def wind_mouse_move_camera(x: int, y: int, delay=True) -> None:
     y = y + pos_y
     print('- WIND MOUSE', 'pos_x', pos_x, 'pos_y', pos_y, 'x', x, 'y', y)
     wind_mouse(pos_x, pos_y, x, y, move_mouse=move_func, delay=delay)
+
+
+def calc_rect_middle(rect: tuple[int]) -> tuple[int]:
+    """Calculate middle point of rectangle"""
+    x, y, w, h = rect
+    x = int((x * 2 + w) / 2)
+    y = int((y * 2 + h) / 2)
+    return (x, y, w, h)

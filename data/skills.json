@@ -14,7 +14,7 @@
         "type": "skill",
         "icon": "",
         "cooldown": 15,
-        "duration": 0.5,
+        "duration": 0.3,
         "disabled": false
     },
     {

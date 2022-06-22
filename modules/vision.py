@@ -51,13 +51,6 @@ class Vision:
 
         return detected_objects
 
-    def calc_rect_middle(self, rect: tuple[int]) -> tuple[int]:
-        """Calculate middle point of rectangle"""
-        x, y, w, h = rect
-        x = int((x * 2 + w) / 2)
-        y = int((y * 2 + h) / 2)
-        return (x, y, w, h)
-
     def draw_rectangles(self, haystack_img, rectangles):
         """given a list of [x, y, w, h] rectangles and a canvas image to draw on
            return an image with all of those rectangles drawn"""
