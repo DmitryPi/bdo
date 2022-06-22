@@ -15,6 +15,7 @@ class Camera:
     # properties
     state = None
     screen = None
+    screen_size = (1920, 1080)
     targets = []
     character_position = []
     main_loop_delay = 0.04
@@ -28,15 +29,18 @@ class Camera:
 
     def follow_target(self, rect: tuple) -> None:
         """Camera follow given target coords"""
-        viewport_mp = (1920 / 2, 1080 / 3)
+        screen_w, screen_h = self.screen_size
         x, y, w, h = calc_rect_middle(rect)
-        move_x = int(x - viewport_mp[0])
-        move_y = int(y - viewport_mp[1])
+        move_x = int(x - (screen_w / 2))
+        move_y = int(y - (screen_h / 3))
         if abs(move_x) < 50 and abs(move_y) < 50:
             return None
         overhead = 35
         move_x = move_x + overhead if move_x > 0 else move_x - overhead
         wind_mouse_move_camera(move_x, move_y)
+
+    def adjust_camera(self, rect: tuple) -> None:
+        pass
 
     def update_targets(self, targets: list[tuple]) -> None:
         """Threading method: update targets property"""
@@ -61,7 +65,12 @@ class Camera:
     def run(self):
         sleep(self.INITIALIZING_SECONDS)
         while not self.stopped:
+            # camera adjustment by target
             if self.targets:
                 self.follow_target(random.choice(self.targets))
+            # camera adjustment by character
             self.character_position = self.character.find(self.screen, threshold=0.8)
+            if self.character_position:
+                self.adjust_camera(self.character_position[0])
+
             sleep(self.main_loop_delay)
