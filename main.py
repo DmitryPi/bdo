@@ -4,6 +4,7 @@ import random
 import sys
 
 from modules.bot import BotState, BlackDesertBot
+from modules.camera import Camera
 from modules.vision import Vision
 from modules.keys import KeyListener
 from modules.utils import load_config, grab_screen
@@ -22,16 +23,22 @@ if __name__ == '__main__':
         pass
 
     if 'bot' in sys.argv:
-        vision = Vision('assets/kzarka.png')
+        vision = Vision('assets/boar.png')
         bot = BlackDesertBot()
+        camera = Camera(Vision('assets/character.png'))
         bot.start()
+        camera.start()
 
         while True:
             screen = grab_screen(window_name='Black Desert - 419022')
-            result = vision.find(screen, threshold=0.7, crop=[420, 175, 1600, 900])
+            targets = vision.find(screen, threshold=0.7, crop=[420, 175, 1600, 900])
+            result = targets + camera.character_position
 
             bot.update_screen(screen)
-            bot.update_targets(result)
+            bot.update_targets(targets)
+            camera.update_screen(screen)
+            camera.update_targets(targets)
+
             bot.filter_ability_cooldowns()
 
             if bot.state == BotState.INIT:
@@ -49,6 +56,7 @@ if __name__ == '__main__':
                 cv.imshow('Screen', screen)
                 if cv.waitKey(1) == ord('q'):
                     bot.stop()
+                    camera.stop()
                     cv.destroyAllWindows()
                     break
     else:

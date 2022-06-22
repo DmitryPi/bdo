@@ -8,7 +8,7 @@ from enum import Enum, auto
 
 from .bdo import Ability
 from .keys import Keys
-from .utils import get_datetime_passed_seconds, wind_mouse_move_camera, calc_rect_middle
+from .utils import get_datetime_passed_seconds
 
 
 class BotState(Enum):
@@ -30,6 +30,8 @@ class BlackDesertBot:
     food_queue = []  # when killing check food icon; add to queue
     ability_cooldowns = []
     main_loop_delay = 0.04
+    # constants
+    INITIALIZING_SECONDS = 1
 
     def __init__(self):
         # create a thread lock object
@@ -51,17 +53,6 @@ class BlackDesertBot:
             data = json.load(f)
             data = [Ability(*tuple(i.values())) for i in data]
             return data
-
-    def camera_follow_target(self, rect: tuple) -> None:
-        viewport_mp = (1920 / 2, 1080 / 3)
-        x, y, w, h = calc_rect_middle(rect)
-        move_x = int(x - viewport_mp[0])
-        move_y = int(y - viewport_mp[1])
-        if abs(move_x) < 50 and abs(move_y) < 50:
-            return None
-        overhead = 35
-        move_x = move_x + overhead if move_x > 0 else move_x - overhead
-        wind_mouse_move_camera(move_x, move_y)
 
     def filter_ability_cooldowns(self) -> None:
         """Filter by abilities by timestamp;
@@ -148,12 +139,12 @@ class BlackDesertBot:
         # update ability_cooldowns
         self.update_ability_cooldowns((ability, str(datetime.now())))
 
-    def start(self):
+    def start(self) -> None:
         self.stopped = False
         t = Thread(target=self.run)
         t.start()
 
-    def stop(self):
+    def stop(self) -> None:
         self.stopped = True
 
     def set_state(self, state: BotState) -> None:
@@ -163,19 +154,15 @@ class BlackDesertBot:
     def run(self):
         while not self.stopped:
             if self.state == BotState.INIT:
+                sleep(self.INITIALIZING_SECONDS)
                 self.set_state(BotState.SEARCHING)
             elif self.state == BotState.SEARCHING:
                 if not self.targets:
-                    wind_mouse_move_camera(200, 0, step=18, delay=True)
-                    self.use_ability(self.skills[0])  # Use Проекция
+                    pass
                 else:
-                    self.set_state(BotState.NAVIGATING)
+                    self.set_state(BotState.KILLING)
             elif self.state == BotState.NAVIGATING:
-                if not self.targets:
-                    self.set_state(BotState.SEARCHING)
-                    continue
-                self.camera_follow_target(random.choice(self.targets))
-                self.set_state(BotState.KILLING)
+                pass
             elif self.state == BotState.KILLING:
                 if not self.targets:
                     self.set_state(BotState.SEARCHING)
