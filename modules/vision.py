@@ -1,6 +1,11 @@
 import cv2 as cv
 import numpy as np
 
+from time import sleep
+from threading import Thread
+
+from .utils import wind_mouse_move_camera, calc_rect_middle
+
 
 class Vision:
     def __init__(self, needle_img_path, method=cv.TM_CCOEFF_NORMED):
@@ -79,3 +84,26 @@ class Vision:
             cv.drawMarker(haystack_img, (center_x, center_y), marker_color, marker_type)
 
         return haystack_img
+
+
+class Camera:
+    """Manage ingame bot camera"""
+    # threading properties
+    stopped = True
+    lock = None
+    # properties
+    state = None
+    screen = None
+    main_loop_delay = 0.04
+
+    def start(self):
+        self.stopped = False
+        t = Thread(target=self.run)
+        t.start()
+
+    def stop(self):
+        self.stopped = True
+
+    def run(self):
+        while not self.stopped:
+            sleep(self.main_loop_delay)

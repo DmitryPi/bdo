@@ -26,9 +26,8 @@ class BlackDesertBot:
     state = None
     screen = None
     targets = []
-    buff_queue = []
-    food_queue = []
-    skill_queue = []
+    buff_queue = []  # when killing check buff icon; add to queue
+    food_queue = []  # when killing check food icon; add to queue
     ability_cooldowns = []
     main_loop_delay = 0.04
 
@@ -154,12 +153,12 @@ class BlackDesertBot:
         t = Thread(target=self.run)
         t.start()
 
+    def stop(self):
+        self.stopped = True
+
     def set_state(self, state: BotState) -> None:
         print('\n- State changed:', state.name)
         self.state = state
-
-    def stop(self):
-        self.stopped = True
 
     def run(self):
         while not self.stopped:
