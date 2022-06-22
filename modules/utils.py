@@ -2,7 +2,6 @@ import configparser
 import codecs
 import cv2
 import numpy as np
-import pydirectinput
 import win32gui
 import win32ui
 import win32con
@@ -152,14 +151,15 @@ def wind_mouse(
     return current_x, current_y
 
 
-def wind_mouse_move_camera(x: int, y: int, delay=True) -> None:
-    """Move from current position_x + x; current position_y + y"""
+def wind_mouse_move_camera(x: int, y: int, step=13, delay=True) -> None:
+    """Move from current position_x + x; current position_y + y
+       Increase step to accelerate"""
     move_func = win32api.SetCursorPos
     pos_x, pos_y = win32api.GetCursorPos()
     x = x + pos_x
     y = y + pos_y
     print('- WIND MOUSE', 'pos_x', pos_x, 'pos_y', pos_y, 'x', x, 'y', y)
-    wind_mouse(pos_x, pos_y, x, y, move_mouse=move_func, delay=delay)
+    wind_mouse(pos_x, pos_y, x, y, M_0=step, D_0=step, move_mouse=move_func, delay=delay)
 
 
 def calc_rect_middle(rect: tuple[int]) -> tuple[int]:

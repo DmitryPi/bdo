@@ -5,7 +5,7 @@
         "type": "skill",
         "icon": "",
         "cooldown": 1,
-        "duration": 0.5,
+        "duration": 0,
         "disabled": false
     },
     {
@@ -14,7 +14,7 @@
         "type": "skill",
         "icon": "",
         "cooldown": 1,
-        "duration": 0.5,
+        "duration": 0,
         "disabled": false
     }
 ]

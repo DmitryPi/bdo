@@ -41,7 +41,7 @@ class BlackDesertBot:
         self.foods = self.load_abilities(ability_type='food')
         self.heals = self.load_abilities(ability_type='heal')
         self.skills = self.load_abilities(ability_type='skill')
-        self.dodge_skills = self.load_abilities(ability_type='dodge')
+        self.dodges = self.load_abilities(ability_type='dodge')
         # State and Keys init
         self.state = BotState.INIT
         self.keys = Keys()
@@ -167,8 +167,8 @@ class BlackDesertBot:
                 self.set_state(BotState.SEARCHING)
             elif self.state == BotState.SEARCHING:
                 if not self.targets:
-                    # wind_mouse_move_camera(300, 0, delay=True)
-                    pass
+                    wind_mouse_move_camera(200, 0, step=18, delay=True)
+                    self.use_ability(self.skills[0])  # Use Проекция
                 else:
                     self.set_state(BotState.NAVIGATING)
             elif self.state == BotState.NAVIGATING:
@@ -182,6 +182,6 @@ class BlackDesertBot:
                     self.set_state(BotState.SEARCHING)
                     continue
                 self.use_ability(random.choice(self.buffs))
-                self.use_ability(self.skills[0])
+                self.use_ability(self.skills[0])  # Use Проекция
                 self.use_ability(random.choice(self.skills[1:]))
             sleep(self.main_loop_delay)

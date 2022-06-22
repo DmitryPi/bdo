@@ -54,6 +54,15 @@
         "disabled": false
     },
     {
+        "name": "Всплеск Лавы",
+        "keybind": ["s+", "rmb+", 1],
+        "type": "skill",
+        "icon": "",
+        "cooldown": 7,
+        "duration": 0,
+        "disabled": false
+    },
+    {
         "name": "Холодный Прилив",
         "keybind": ["s+", "lmb+", "rmb+", 2.8],
         "type": "skill",
@@ -63,7 +72,7 @@
         "disabled": false
     },
     {
-        "name": "Пламя Разрушения",
+        "name": "Очищение Водой",
         "keybind": ["w+", "rmb+", 0.5],
         "type": "skill",
         "icon": "",
