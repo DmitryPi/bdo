@@ -1,6 +1,5 @@
 import cv2 as cv
 import logging
-import random
 import sys
 
 from modules.bot import BotState, BlackDesertBot

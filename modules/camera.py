@@ -39,8 +39,21 @@ class Camera:
         move_x = move_x + overhead if move_x > 0 else move_x - overhead
         wind_mouse_move_camera(move_x, move_y)
 
-    def adjust_camera(self, rect: tuple) -> None:
-        pass
+    def move_around(self) -> None:
+        """Move camera around"""
+        move_range = random.randint(-300, 250)
+        wind_mouse_move_camera(move_range, 0, step=15)
+
+    def adjust_angle(self, rect: tuple) -> None:
+        """Adjust camera angle by character position on screen"""
+        x, y, w, h = calc_rect_middle(rect)
+        target_y = 467
+        move_y = -int(y - target_y)
+        if abs(move_y) <= 4:
+            return
+        overhead = 70
+        move_y = move_y + overhead if move_y > 0 else move_y - overhead
+        wind_mouse_move_camera(0, move_y)
 
     def update_targets(self, targets: list[tuple]) -> None:
         """Threading method: update targets property"""
@@ -68,9 +81,9 @@ class Camera:
             # camera adjustment by target
             if self.targets:
                 self.follow_target(random.choice(self.targets))
+            else:
+                self.move_around()
             # camera adjustment by character
-            self.character_position = self.character.find(self.screen, threshold=0.8)
+            self.character_position = self.character.find(self.screen, threshold=0.7)
             if self.character_position:
-                self.adjust_camera(self.character_position[0])
-
-            sleep(self.main_loop_delay)
+                self.adjust_angle(self.character_position[0])

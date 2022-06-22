@@ -158,7 +158,6 @@ def wind_mouse_move_camera(x: int, y: int, step=13, delay=True) -> None:
     pos_x, pos_y = win32api.GetCursorPos()
     x = x + pos_x
     y = y + pos_y
-    print('- WIND MOUSE', 'pos_x', pos_x, 'pos_y', pos_y, 'x', x, 'y', y)
     wind_mouse(pos_x, pos_y, x, y, M_0=step, D_0=step, move_mouse=move_func, delay=delay)
 
 
