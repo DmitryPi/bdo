@@ -135,9 +135,8 @@ class BlackDesertBot:
                 self.keys.directMouse(buttons=self.keys.mouse_rb_release)
             else:
                 self.keys.directKey(key, self.keys.key_release)
-        sleep(ability.duration)
-        # update ability_cooldowns
         self.update_ability_cooldowns((ability, str(datetime.now())))
+        sleep(ability.duration)
 
     def start(self) -> None:
         self.stopped = False
@@ -152,14 +151,15 @@ class BlackDesertBot:
         self.state = state
 
     def run(self):
+        sleep(1)
         while not self.stopped:
             if self.state == BotState.INIT:
                 sleep(self.INITIALIZING_SECONDS)
                 self.set_state(BotState.SEARCHING)
             elif self.state == BotState.SEARCHING:
                 if not self.targets:
-                    self.use_ability(random.choice(self.heals))
-                    self.use_ability(self.skills[0])
+                    # self.use_ability(random.choice(self.heals))
+                    self.use_ability(self.skills[1])  # Всплеск Инферно
                 else:
                     self.set_state(BotState.KILLING)
             elif self.state == BotState.NAVIGATING:
@@ -169,6 +169,7 @@ class BlackDesertBot:
                     self.set_state(BotState.SEARCHING)
                     continue
                 self.use_ability(random.choice(self.buffs))
-                self.use_ability(random.choice(self.skills))
-                self.use_ability(random.choice(self.heals))
+                self.use_ability(self.skills[0])  # Доблестный Удар
+                self.use_ability(random.choice(self.skills[:1]))
+                # self.use_ability(random.choice(self.heals))
             sleep(self.main_loop_delay)

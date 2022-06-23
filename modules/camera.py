@@ -49,7 +49,7 @@ class Camera:
     def adjust_angle(self, rect: tuple) -> None:
         """Adjust camera angle by character position on screen"""
         x, y, w, h = calc_rect_middle(rect)
-        target_y = 485
+        target_y = 505
         move_y = -int(y - target_y)
         if abs(move_y) <= 4:
             return
