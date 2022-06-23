@@ -87,9 +87,11 @@ class Camera:
         self.stopped = False
         t = Thread(target=self.run)
         t.start()
+        print(f'- {__class__.__name__} started')
 
     def stop(self):
         self.stopped = True
+        print(f'- {__class__.__name__} stopped')
 
     def run(self):
         sleep(self.INITIALIZING_SECONDS)

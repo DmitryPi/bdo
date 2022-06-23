@@ -37,11 +37,11 @@
     },
     {
         "name": "Драконья Пасть",
-        "keybind": ["space+", "lmb+", 1.7],
+        "keybind": ["space+", "lmb+", 1.5],
         "type": "skill",
         "icon": "",
         "cooldown": 14,
-        "duration": 1.5,
+        "duration": 1,
         "disabled": false
     }
 ]

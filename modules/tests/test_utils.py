@@ -17,4 +17,4 @@ class TestUtils(TestCase):
             (-2000, 0)]
         sleep(1)
         for (x, y) in movements:
-            wind_mouse_move_camera(x, y, step=40)
+            wind_mouse_move_camera(x, y, step=20)

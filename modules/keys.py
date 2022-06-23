@@ -1,5 +1,4 @@
 import ctypes
-import logging
 import pydirectinput
 import random
 
@@ -10,7 +9,8 @@ from queue import Queue
 
 
 class KeyListener:
-    def __init__(self):
+    def __init__(self, to_stop=[]):
+        self.to_stop = to_stop
         self.buff_keys = ['f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12']
 
     def on_press(self, key):
@@ -18,7 +18,8 @@ class KeyListener:
 
     def on_release(self, key):
         if key == keyboard.Key.end:
-            logging.info(f'{__class__.__name__} stopped')
+            [thread.stop() for thread in self.to_stop]
+            print(f'- {__class__.__name__} stopped')
             return False
         elif key == keyboard.Key.insert:
             Thread(target=self.press_keys, args=(self.buff_keys,), daemon=True).start()
@@ -37,8 +38,12 @@ class KeyListener:
             pydirectinput.press(key, interval=random.uniform(0.05, 0.12))
             time.sleep(delay)
 
+    def start(self):
+        t = Thread(target=self.run)
+        t.start()
+
     def run(self):
-        logging.info(f'{__class__.__name__} started')
+        print(f'- {__class__.__name__} started')
         with mouse.Listener(
                 on_move=self.on_move,
                 on_click=self.on_click,

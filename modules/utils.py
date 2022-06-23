@@ -166,6 +166,9 @@ def wind_mouse_move_camera(x: int, y: int, step=13, delay=True, screen_size=(192
         x = 0
     # run wind_mouse - increase step for speed
     wind_mouse(pos_x, pos_y, x, y, M_0=step, D_0=step, move_mouse=move_func, delay=delay)
+    # prevent camera clipping by setting camera update manually
+    if x == screen_w:
+        move_func((0, y))
 
 
 def calc_rect_middle(rect: tuple[int]) -> tuple[int]:

@@ -4,7 +4,7 @@
         "keybind": ["space+", "s"],
         "type": "skill",
         "icon": "",
-        "cooldown": 10,
+        "cooldown": 9,
         "duration": 0.5,
         "disabled": false
     },

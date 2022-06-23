@@ -1,8 +1,9 @@
 import cv2 as cv
 import logging
-import sys
 
-from modules.bot import BotState, BlackDesertBot
+from threading import Thread
+
+from modules.bot import BlackDesertBot
 from modules.camera import Camera
 from modules.vision import Vision
 from modules.keys import KeyListener
@@ -11,7 +12,7 @@ from modules.utils import load_config, grab_screen
 
 if __name__ == '__main__':
     config = load_config()
-    DEBUG = config['MAIN']['DEBUG']
+    DEBUG = config.getboolean('MAIN', 'DEBUG')
 
     if config['MAIN']['DEBUG']:
         logging.basicConfig(
@@ -21,52 +22,48 @@ if __name__ == '__main__':
     else:
         pass
 
-    if 'bot' in sys.argv:
-        vision = Vision('assets/kzarka.png')
-        bot = BlackDesertBot('guard')
-        camera = Camera(Vision('assets/character.png'))
-        bot.start()
-        camera.start()
+    vision = Vision('assets/kzarka.png')
+    bot = BlackDesertBot('guard')
+    camera = Camera(Vision('assets/character.png'))
+    key_listener = KeyListener(to_stop=[bot, camera])
+    bot.start()
+    camera.start()
 
-        while True:
-            try:
-                screen = grab_screen(window_name='Black Desert - 419022')
-                targets = vision.find(screen, threshold=0.65, crop=[425, 210, 1600, 940])
-                character_position = camera.character_position
+    running = False
+    while True:
+        try:
+            screen = grab_screen(window_name='Black Desert - 419022')
+            targets = vision.find(screen, threshold=0.65, crop=[425, 210, 1600, 940])
+            character_position = camera.character_position
+
+            bot.update_screen(screen)
+            bot.update_targets(targets)
+            bot.update_character_position(character_position)
+
+            camera.update_state(bot.state)
+            camera.update_screen(screen)
+            camera.update_targets(targets)
+
+            bot.filter_ability_cooldowns()
+
+            if DEBUG:
                 result = targets + character_position
-
-                bot.update_screen(screen)
-                bot.update_targets(targets)
-                bot.update_character_position(character_position)
-
-                camera.update_state(bot.state)
-                camera.update_screen(screen)
-                camera.update_targets(targets)
-
-                bot.filter_ability_cooldowns()
-
-                if bot.state == BotState.INIT:
-                    pass
-                elif bot.state == BotState.SEARCHING:
-                    pass
-                elif bot.state == BotState.NAVIGATING:
-                    pass
-                elif bot.state == BotState.KILLING:
-                    pass
-
-                if DEBUG:
-                    screen = vision.draw_rectangles(cv.cvtColor(screen, cv.COLOR_BGR2RGB), result)
-                    screen = cv.resize(screen, (1200, 675))
-                    cv.imshow('Screen', screen)
-                    if cv.waitKey(1) == ord('q'):
-                        bot.stop()
-                        camera.stop()
-                        cv.destroyAllWindows()
-                        break
-            except Exception as e:
-                bot.stop()
-                camera.stop()
-                raise e
-    else:
-        key_listener = KeyListener()
-        key_listener.run()
+                screen = vision.draw_rectangles(cv.cvtColor(screen, cv.COLOR_BGR2RGB), result)
+                screen = cv.resize(screen, (1200, 675))
+                cv.imshow('Screen', screen)
+                if cv.waitKey(1) == ord('q'):
+                    bot.stop()
+                    camera.stop()
+                    cv.destroyAllWindows()
+                    break
+            else:
+                if not running:
+                    key_listener.start()
+                    running = True
+                if bot.stopped:
+                    print('- Main loop stopped')
+                    break
+        except Exception as e:
+            bot.stop()
+            camera.stop()
+            raise e

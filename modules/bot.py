@@ -160,9 +160,11 @@ class BlackDesertBot:
         self.stopped = False
         t = Thread(target=self.run)
         t.start()
+        print(f'- {__class__.__name__} started')
 
-    def stop(self) -> None:
+    def stop(self):
         self.stopped = True
+        print(f'- {__class__.__name__} stopped')
 
     def set_state(self, state: BotState) -> None:
         print('\n- State changed:', state.name)
