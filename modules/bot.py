@@ -26,6 +26,7 @@ class BlackDesertBot:
     state = None
     screen = None
     targets = []
+    character_position = []
     buff_queue = []  # when killing check buff icon; add to queue
     food_queue = []  # when killing check food icon; add to queue
     ability_cooldowns = []
@@ -70,6 +71,12 @@ class BlackDesertBot:
         self.targets = targets
         self.lock.release()
 
+    def update_character_position(self, character_position: list[tuple]) -> None:
+        """Threading method: update character_position property"""
+        self.lock.acquire()
+        self.character_position = character_position
+        self.lock.release()
+
     def update_screen(self, screen: object) -> None:
         """Threading method: update screen property"""
         self.lock.acquire()
@@ -88,6 +95,15 @@ class BlackDesertBot:
         del self.ability_cooldowns[index]
         self.lock.release()
 
+    def dodge_back(self) -> None:
+        """If target below character_position (behind character) - dodge back"""
+        if self.character_position and self.targets:
+            char_pos_y = self.character_position[0][1]
+            # check if target_y below character_position_y
+            targets_y = [i[1] for i in self.targets if char_pos_y < i[1]]
+            if targets_y:
+                self.use_ability(self.dodges[0])
+
     def use_ability(self, ability: Ability, keybind=None) -> None:
         """Press/Release key sequence or hold and release after completing key sequence
            Supports keys and mouse(lmb/rmb)
@@ -103,6 +119,9 @@ class BlackDesertBot:
 
         pressed = []
         rnd_press_range = (0.1, 0.25)
+        # update ability_cooldowns
+        self.update_ability_cooldowns((ability, str(datetime.now())))
+        # use ability
         print(f'- Using {ability.type}:', ability.name)
         for key in ability.keybind:
             try:
@@ -135,7 +154,6 @@ class BlackDesertBot:
                 self.keys.directMouse(buttons=self.keys.mouse_rb_release)
             else:
                 self.keys.directKey(key, self.keys.key_release)
-        self.update_ability_cooldowns((ability, str(datetime.now())))
         sleep(ability.duration)
 
     def start(self) -> None:
@@ -151,7 +169,6 @@ class BlackDesertBot:
         self.state = state
 
     def run(self):
-        sleep(1)
         while not self.stopped:
             if self.state == BotState.INIT:
                 sleep(self.INITIALIZING_SECONDS)
@@ -168,8 +185,9 @@ class BlackDesertBot:
                 if not self.targets:
                     self.set_state(BotState.SEARCHING)
                     continue
+                self.dodge_back()
                 self.use_ability(random.choice(self.buffs))
                 self.use_ability(self.skills[0])  # Доблестный Удар
-                self.use_ability(random.choice(self.skills[:1]))
+                self.use_ability(random.choice(self.skills))
                 # self.use_ability(random.choice(self.heals))
             sleep(self.main_loop_delay)

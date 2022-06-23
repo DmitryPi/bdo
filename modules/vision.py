@@ -25,10 +25,9 @@ class Vision:
         locations = list(zip(*locations[::-1]))  # remove empty arrays
         return locations
 
-    def find(self, screen: object, threshold=0.65, crop=[], debug=False) -> list[tuple]:
+    def find(self, screen: object, threshold=0.65, crop=[]) -> list[tuple]:
         """Find grayscaled object on screen by given threshold
-           crop - [x1, y1, x2, y2], screen region crop
-           debug - show screen/screen_gray image"""
+           crop - [x1, y1, x2, y2], screen region crop"""
         screen_gray = self.cvt_img_gray(screen)
 
         if crop:
