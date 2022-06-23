@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     if 'bot' in sys.argv:
         vision = Vision('assets/kzarka.png')
-        bot = BlackDesertBot()
+        bot = BlackDesertBot('guard')
         camera = Camera(Vision('assets/character.png'))
         bot.start()
         camera.start()

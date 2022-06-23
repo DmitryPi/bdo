@@ -1,15 +1,6 @@
 [
     {
-        "name": "Ускорение",
-        "keybind": ["1+", "d+", 0.5, "c+", 0.3],
-        "type": "buff",
-        "icon": "",
-        "cooldown": 50,
-        "duration": 0,
-        "disabled": false
-    },
-    {
-        "name": "Безумие Стихий",
+        "name": "Длань Омуа",
         "keybind": ["space+", "e", 0.5],
         "type": "buff",
         "icon": "",

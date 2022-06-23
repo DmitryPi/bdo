@@ -1,11 +1,1 @@
-[
-    {
-        "name": "Лечение",
-        "keybind": ["3"],
-        "type": "skill",
-        "icon": "",
-        "cooldown": 11,
-        "duration": 0.5,
-        "disabled": false
-    }
-]
+[]

@@ -33,16 +33,16 @@ class BlackDesertBot:
     # constants
     INITIALIZING_SECONDS = 1
 
-    def __init__(self):
+    def __init__(self, character='guard'):
         # create a thread lock object
         self.lock = Lock()
 
         # Abilities init
-        self.buffs = self.load_abilities(ability_type='buff')
-        self.foods = self.load_abilities(ability_type='food')
-        self.heals = self.load_abilities(ability_type='heal')
-        self.skills = self.load_abilities(ability_type='skill')
-        self.dodges = self.load_abilities(ability_type='dodge')
+        self.buffs = self.load_abilities(ability_type=f'{character}_buff')
+        self.foods = self.load_abilities(ability_type=f'{character}_food')
+        self.heals = self.load_abilities(ability_type=f'{character}_heal')
+        self.skills = self.load_abilities(ability_type=f'{character}_skill')
+        self.dodges = self.load_abilities(ability_type=f'{character}_dodge')
         # State and Keys init
         self.state = BotState.INIT
         self.keys = Keys()
