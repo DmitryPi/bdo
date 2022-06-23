@@ -22,7 +22,7 @@ if __name__ == '__main__':
         pass
 
     if 'bot' in sys.argv:
-        vision = Vision('assets/boar.png')
+        vision = Vision('assets/kzarka.png')
         bot = BlackDesertBot('guard')
         camera = Camera(Vision('assets/character.png'))
         bot.start()
@@ -31,7 +31,7 @@ if __name__ == '__main__':
         while True:
             try:
                 screen = grab_screen(window_name='Black Desert - 419022')
-                targets = vision.find(screen, threshold=0.65, crop=[170, 175, 1600, 940])
+                targets = vision.find(screen, threshold=0.65, crop=[425, 210, 1600, 940])
                 character_position = camera.character_position
                 result = targets + character_position
 

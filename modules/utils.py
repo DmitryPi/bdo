@@ -151,13 +151,20 @@ def wind_mouse(
     return current_x, current_y
 
 
-def wind_mouse_move_camera(x: int, y: int, step=13, delay=True) -> None:
+def wind_mouse_move_camera(x: int, y: int, step=13, delay=True, screen_size=(1920, 1080)) -> None:
     """Move from current position_x + x; current position_y + y
        Increase step to accelerate"""
     move_func = win32api.SetCursorPos
     pos_x, pos_y = win32api.GetCursorPos()
-    x = x + pos_x
-    y = y + pos_y
+    screen_w, screen_h = screen_size
+    x += pos_x
+    y += pos_y
+    # prevent camera clipping by limiting destination_xy
+    if x > screen_w:
+        x = screen_w
+    if y > screen_h:
+        y = screen_h
+    # run wind_mouse - increase step for speed
     wind_mouse(pos_x, pos_y, x, y, M_0=step, D_0=step, move_mouse=move_func, delay=delay)
 
 

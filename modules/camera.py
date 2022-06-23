@@ -96,8 +96,7 @@ class Camera:
         while not self.stopped:
             # camera adjustment by target
             if self.targets:
-                target = self.choose_target(self.targets)
-                self.follow_target(target)
+                self.follow_target(self.choose_target(self.targets))
                 sleep(0.3)
             else:
                 pass
