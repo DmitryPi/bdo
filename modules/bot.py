@@ -158,7 +158,8 @@ class BlackDesertBot:
                 self.set_state(BotState.SEARCHING)
             elif self.state == BotState.SEARCHING:
                 if not self.targets:
-                    pass
+                    self.use_ability(random.choice(self.heals))
+                    self.use_ability(self.skills[0])  # Use Проекция
                 else:
                     self.set_state(BotState.KILLING)
             elif self.state == BotState.NAVIGATING:
@@ -168,6 +169,6 @@ class BlackDesertBot:
                     self.set_state(BotState.SEARCHING)
                     continue
                 self.use_ability(random.choice(self.buffs))
-                self.use_ability(self.skills[0])  # Use Проекция
-                self.use_ability(random.choice(self.skills[1:]))
+                self.use_ability(random.choice(self.skills))
+                self.use_ability(random.choice(self.heals))
             sleep(self.main_loop_delay)

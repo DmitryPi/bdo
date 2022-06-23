@@ -3,6 +3,7 @@ import random
 from time import sleep
 from threading import Thread, Lock
 
+from .bot import BotState
 from .vision import Vision
 from .utils import wind_mouse_move_camera, calc_rect_middle
 
@@ -23,9 +24,10 @@ class Camera:
     INITIALIZING_SECONDS = 1
 
     def __init__(self, character: Vision):
-        # create a thread lock object
-        self.character = character
+        # create a thread lock
         self.lock = Lock()
+        # properties
+        self.character = character
 
     def follow_target(self, rect: tuple) -> None:
         """Camera follow given target coords"""
@@ -37,7 +39,7 @@ class Camera:
             return None
         overhead = 35
         move_x = move_x + overhead if move_x > 0 else move_x - overhead
-        wind_mouse_move_camera(move_x, move_y)
+        wind_mouse_move_camera(move_x, 0, step=20)
 
     def move_around(self) -> None:
         """Move camera around"""
@@ -47,7 +49,7 @@ class Camera:
     def adjust_angle(self, rect: tuple) -> None:
         """Adjust camera angle by character position on screen"""
         x, y, w, h = calc_rect_middle(rect)
-        target_y = 467
+        target_y = 471
         move_y = -int(y - target_y)
         if abs(move_y) <= 4:
             return
@@ -67,6 +69,12 @@ class Camera:
         self.screen = screen
         self.lock.release()
 
+    def update_state(self, state: object) -> None:
+        """Threading method: update screen property"""
+        self.lock.acquire()
+        self.state = state
+        self.lock.release()
+
     def start(self):
         self.stopped = False
         t = Thread(target=self.run)
@@ -82,8 +90,18 @@ class Camera:
             if self.targets:
                 self.follow_target(random.choice(self.targets))
             else:
-                self.move_around()
+                pass
+                # self.move_around()
             # camera adjustment by character
             self.character_position = self.character.find(self.screen, threshold=0.7)
             if self.character_position:
                 self.adjust_angle(self.character_position[0])
+
+            if self.state == BotState.INIT:
+                pass
+            elif self.state == BotState.SEARCHING:
+                pass
+            elif self.state == BotState.NAVIGATING:
+                pass
+            elif self.state == BotState.KILLING:
+                pass
