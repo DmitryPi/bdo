@@ -159,11 +159,11 @@ def wind_mouse_move_camera(x: int, y: int, step=13, delay=True, screen_size=(192
     screen_w, screen_h = screen_size
     x += pos_x
     y += pos_y
-    # prevent camera clipping by limiting destination_xy
-    if x > screen_w:
+    # prevent camera clipping by limiting destination_x
+    if x > screen_w:  # positive
         x = screen_w
-    if y > screen_h:
-        y = screen_h
+    elif x < 0:  # negative
+        x = 0
     # run wind_mouse - increase step for speed
     wind_mouse(pos_x, pos_y, x, y, M_0=step, D_0=step, move_mouse=move_func, delay=delay)
 

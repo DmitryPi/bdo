@@ -10,10 +10,10 @@
     },
     {
         "name": "Гнев Духа",
-        "keybind": ["z", 1],
+        "keybind": ["z+", 0.5],
         "type": "buff",
         "icon": "",
-        "cooldown": 30,
+        "cooldown": 20,
         "duration": 0,
         "disabled": false
     }

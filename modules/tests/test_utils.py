@@ -14,7 +14,7 @@ class TestUtils(TestCase):
     @pytest.mark.slow
     def test_wind_mouse_move_camera(self):
         movements = [
-            (2000, 0)]
+            (-2000, 0)]
         sleep(1)
         for (x, y) in movements:
             wind_mouse_move_camera(x, y, step=40)
