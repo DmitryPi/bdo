@@ -175,7 +175,6 @@ class BlackDesertBot:
                 self.set_state(BotState.SEARCHING)
             elif self.state == BotState.SEARCHING:
                 if not self.targets:
-                    # self.use_ability(random.choice(self.heals))
                     self.use_ability(self.skills[1])  # Всплеск Инферно
                 else:
                     self.set_state(BotState.KILLING)
@@ -189,5 +188,4 @@ class BlackDesertBot:
                 self.use_ability(random.choice(self.buffs))
                 self.use_ability(self.skills[0])  # Доблестный Удар
                 self.use_ability(random.choice(self.skills))
-                # self.use_ability(random.choice(self.heals))
             sleep(self.main_loop_delay)

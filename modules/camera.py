@@ -1,6 +1,8 @@
+import math
 import random
 
 from time import sleep
+
 from threading import Thread, Lock
 
 from .bot import BotState
@@ -28,6 +30,12 @@ class Camera:
         self.lock = Lock()
         # properties
         self.character = character
+
+    def choose_target(self, targets: list[tuple]) -> tuple:
+        """Choose middle target from targets"""
+        index = math.floor(len(targets) / 2)
+        index = index - 1 if len(targets) % 2 == 0 else index
+        return targets[index]
 
     def follow_target(self, rect: tuple) -> None:
         """Camera follow given target coords"""
@@ -88,7 +96,8 @@ class Camera:
         while not self.stopped:
             # camera adjustment by target
             if self.targets:
-                self.follow_target(random.choice(self.targets))
+                target = self.choose_target(self.targets)
+                self.follow_target(target)
                 sleep(0.3)
             else:
                 pass

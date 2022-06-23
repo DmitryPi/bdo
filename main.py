@@ -31,13 +31,14 @@ if __name__ == '__main__':
         while True:
             try:
                 screen = grab_screen(window_name='Black Desert - 419022')
-                targets = vision.find(screen, threshold=0.65, crop=[420, 175, 1600, 900])
+                targets = vision.find(screen, threshold=0.65, crop=[170, 175, 1600, 940])
                 character_position = camera.character_position
                 result = targets + character_position
 
                 bot.update_screen(screen)
                 bot.update_targets(targets)
                 bot.update_character_position(character_position)
+
                 camera.update_state(bot.state)
                 camera.update_screen(screen)
                 camera.update_targets(targets)
