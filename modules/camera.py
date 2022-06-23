@@ -1,5 +1,6 @@
 import math
 import random
+import win32api
 
 from time import sleep
 
@@ -38,16 +39,14 @@ class Camera:
         return targets[index]
 
     def follow_target(self, rect: tuple) -> None:
-        """Camera follow given target coords"""
+        """Camera follow given target coords
+           move_y = int(y - (screen_h / 3))  #  and abs(move_y) < 50"""
         screen_w, screen_h = self.screen_size
         x, y, w, h = calc_rect_middle(rect)
         move_x = int(x - (screen_w / 2))
-        move_y = int(y - (screen_h / 3))
-        if abs(move_x) < 50 and abs(move_y) < 50:
+        if abs(move_x) < 40:
             return None
-        overhead = 35
-        move_x = move_x + overhead if move_x > 0 else move_x - overhead
-        wind_mouse_move_camera(move_x, 0, step=20)
+        wind_mouse_move_camera(move_x, 0, step=15)
 
     def move_around(self) -> None:
         """Move camera around"""
@@ -58,12 +57,13 @@ class Camera:
         """Adjust camera angle by character position on screen"""
         x, y, w, h = calc_rect_middle(rect)
         target_y = 465
+        pos_x, pos_y = win32api.GetCursorPos()
         move_y = -int(y - target_y)
         if abs(move_y) <= 4:
             return
         overhead = 70
         move_y = move_y + overhead if move_y > 0 else move_y - overhead
-        wind_mouse_move_camera(0, move_y)
+        wind_mouse_move_camera(pos_x, move_y)
 
     def update_targets(self, targets: list[tuple]) -> None:
         """Threading method: update targets property"""
@@ -102,7 +102,6 @@ class Camera:
                 sleep(0.3)
             else:
                 pass
-                # self.move_around()
             # camera adjustment by character
             self.character_position = self.character.find(self.screen, threshold=0.8)
             if self.character_position:
