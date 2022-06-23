@@ -11,7 +11,7 @@ class TestUtils(TestCase):
     def setUp(self):
         self.keys = Keys()
 
-    # @pytest.mark.slow
+    @pytest.mark.slow
     def test_wind_mouse_move_camera(self):
         movements = [
             (2000, 0)]
