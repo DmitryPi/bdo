@@ -39,14 +39,18 @@ class Camera:
         return targets[index]
 
     def follow_target(self, rect: tuple) -> None:
+        """1786 1907
+            - Using skill: Доблестный Удар
+            20 0
+            1900 1828"""
         """Camera follow given target coords
            move_y = int(y - (screen_h / 3))  #  and abs(move_y) < 50"""
         screen_w, screen_h = self.screen_size
         x, y, w, h = calc_rect_middle(rect)
         move_x = int(x - (screen_w / 2))
-        if abs(move_x) < 40:
+        if abs(move_x) < 50:
             return None
-        wind_mouse_move_camera(move_x, 0, step=15)
+        wind_mouse_move_camera(move_x, 0, step=27)
 
     def move_around(self) -> None:
         """Move camera around"""
@@ -96,16 +100,10 @@ class Camera:
     def run(self):
         sleep(self.INITIALIZING_SECONDS)
         while not self.stopped:
-            # camera adjustment by target
-            if self.targets:
-                self.follow_target(self.choose_target(self.targets))
-                sleep(0.3)
-            else:
-                pass
             # camera adjustment by character
-            self.character_position = self.character.find(self.screen, threshold=0.8)
-            if self.character_position:
-                self.adjust_angle(self.character_position[0])
+            # self.character_position = self.character.find(self.screen, threshold=0.8)
+            # if self.character_position:
+            #     self.adjust_angle(self.character_position[0])
 
             if self.state == BotState.INIT:
                 pass
@@ -114,4 +112,7 @@ class Camera:
             elif self.state == BotState.NAVIGATING:
                 pass
             elif self.state == BotState.KILLING:
-                pass
+                if self.targets:
+                    self.follow_target(self.choose_target(self.targets))
+                    sleep(0.5)
+            sleep(self.main_loop_delay)

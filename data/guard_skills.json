@@ -19,10 +19,10 @@
     },
     {
         "name": "Укус Дракона",
-        "keybind": ["space+", "rmb+", 3.5],
+        "keybind": ["space+", "rmb+", 3],
         "type": "skill",
         "icon": "",
-        "cooldown": 7,
+        "cooldown": 8,
         "duration": 0,
         "disabled": false
     },
@@ -42,14 +42,14 @@
         "icon": "",
         "cooldown": 13,
         "duration": 1.2,
-        "disabled": false
+        "disabled": true
     },
     {
         "name": "Истощение",
         "keybind": ["2", 1],
         "type": "skill",
         "icon": "",
-        "cooldown": 8,
+        "cooldown": 14,
         "duration": 0,
         "disabled": true
     }
