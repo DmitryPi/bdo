@@ -79,5 +79,23 @@
         "cooldown": 11,
         "duration": 0,
         "disabled": false
+    },
+    {
+        "name": "Водяные кандалы",
+        "keybind": ["space+", "q+"],
+        "type": "skill",
+        "icon": "",
+        "cooldown": 11,
+        "duration": 0.5,
+        "disabled": false
+    },
+    {
+        "name": "Водяные кандалы",
+        "keybind": ["s+", "q+"],
+        "type": "skill",
+        "icon": "",
+        "cooldown": 11,
+        "duration": 0.5,
+        "disabled": false
     }
 ]

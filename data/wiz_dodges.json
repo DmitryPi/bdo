@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Уклонение Влево",
+        "keybind": ["space+", "a"],
+        "type": "skill",
+        "icon": "",
+        "cooldown": 1,
+        "duration": 0,
+        "disabled": false
+    },
+    {
+        "name": "Уклонение Вправо",
+        "keybind": ["space+", "d"],
+        "type": "skill",
+        "icon": "",
+        "cooldown": 1,
+        "duration": 0,
+        "disabled": false
+    }
+]

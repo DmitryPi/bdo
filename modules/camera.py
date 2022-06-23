@@ -49,7 +49,7 @@ class Camera:
     def adjust_angle(self, rect: tuple) -> None:
         """Adjust camera angle by character position on screen"""
         x, y, w, h = calc_rect_middle(rect)
-        target_y = 471
+        target_y = 485
         move_y = -int(y - target_y)
         if abs(move_y) <= 4:
             return
@@ -89,11 +89,12 @@ class Camera:
             # camera adjustment by target
             if self.targets:
                 self.follow_target(random.choice(self.targets))
+                sleep(0.3)
             else:
                 pass
                 # self.move_around()
             # camera adjustment by character
-            self.character_position = self.character.find(self.screen, threshold=0.7)
+            self.character_position = self.character.find(self.screen, threshold=0.8)
             if self.character_position:
                 self.adjust_angle(self.character_position[0])
 

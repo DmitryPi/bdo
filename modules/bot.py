@@ -60,7 +60,7 @@ class BlackDesertBot:
         for i, (ability, timestamp) in enumerate(self.ability_cooldowns):
             passed_sec = get_datetime_passed_seconds(timestamp)
             if passed_sec >= ability.cooldown:
-                print('- OFF COOLDOWN', ability.name)
+                # print('- OFF COOLDOWN', ability.name)
                 self.delete_ability_cooldown(i)
                 break
 
@@ -95,10 +95,10 @@ class BlackDesertBot:
         ability_cooldowns = [ability[0].name for ability in self.ability_cooldowns]  # names
 
         if ability.name in ability_cooldowns:
-            print('- Ability cooldown:', ability.name)
+            # print('- Ability cooldown:', ability.name)
             return None
         if ability.disabled:
-            print('- Ability disabled:', ability.name)
+            # print('- Ability disabled:', ability.name)
             return None
 
         pressed = []
@@ -159,7 +159,7 @@ class BlackDesertBot:
             elif self.state == BotState.SEARCHING:
                 if not self.targets:
                     self.use_ability(random.choice(self.heals))
-                    self.use_ability(self.skills[0])  # Use Проекция
+                    self.use_ability(self.skills[0])
                 else:
                     self.set_state(BotState.KILLING)
             elif self.state == BotState.NAVIGATING:
