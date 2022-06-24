@@ -111,8 +111,6 @@ class Camera:
                 if not self.targets:
                     self.move_camera_around()
                     sleep(0.5)
-            elif self.state == BotState.NAVIGATING:
-                pass
             elif self.state == BotState.KILLING:
                 if self.targets:
                     self.follow_target(self.targets[0])

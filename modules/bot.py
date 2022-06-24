@@ -246,8 +246,7 @@ class BlackDesertBot:
                     continue
                 if self.buff_queue:
                     self.use_ability(random.choice(self.buff_queue))
-                self.use_dodge_back(self.dodges[0])  # will set cooldown for all if used
-                self.use_ability(random.choice(self.dodges[:1]))  # same name Уклонение
+                self.use_ability(random.choice(self.dodges))  # same name Уклонение
                 self.use_ability(self.skills[0])  # Доблестный Удар
                 self.use_ability(random.choice(self.skills))
             sleep(self.main_loop_delay)
