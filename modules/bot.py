@@ -28,7 +28,6 @@ class BlackDesertBot:
     targets = []
     character_position = []
     buff_queue = []  # when killing check buff icon; add to queue
-    food_queue = []  # when killing check food icon; add to queue
     ability_cooldowns = []
     main_loop_delay = 0.04
     # constants
@@ -95,21 +94,13 @@ class BlackDesertBot:
         del self.ability_cooldowns[index]
         self.lock.release()
 
-    def use_dodge(self, dodge: Ability) -> None:
-        """All dodges have same cooldown; synch cooldowns on all dodge skills"""
-        self.use_ability(dodge)
-        for _dodge in self.dodges:
-            if _dodge.name == dodge.name:
-                continue
-            self.update_ability_cooldowns((_dodge, str(datetime.now())))
-
-    def use_dodge_back(self) -> None:
+    def use_dodge_back(self, dodge: Ability) -> None:
         """If target below character_position (behind character) - dodge back"""
         if self.targets:
             pos_y = 685  # check if target_y below character_position_y
             targets_y = [i for i in self.targets if pos_y < i[1]]
             if len(targets_y) >= 2:
-                self.use_dodge(self.dodges[0])
+                self.use_ability(dodge)
 
     def use_ability(self, ability: Ability, keybind=None) -> None:
         """Press/Release key sequence or hold and release after completing key sequence
@@ -163,6 +154,10 @@ class BlackDesertBot:
                 self.keys.directKey(key, self.keys.key_release)
         sleep(ability.duration)
 
+    def set_state(self, state: BotState) -> None:
+        print('\n- State changed:', state.name)
+        self.state = state
+
     def start(self) -> None:
         self.stopped = False
         t = Thread(target=self.run)
@@ -172,10 +167,6 @@ class BlackDesertBot:
     def stop(self):
         self.stopped = True
         print(f'- {__class__.__name__} stopped')
-
-    def set_state(self, state: BotState) -> None:
-        print('\n- State changed:', state.name)
-        self.state = state
 
     def run(self):
         while not self.stopped:
@@ -193,8 +184,8 @@ class BlackDesertBot:
                 if not self.targets:
                     self.set_state(BotState.SEARCHING)
                     continue
-                self.use_dodge_back()  # will set cooldown on all if used
-                self.use_dodge(random.choice(self.dodges[1:]))
+                self.use_dodge_back(self.dodges[0])  # will set cooldown for all if used
+                self.use_ability(random.choice(self.dodges[:1]))  # same name Уклонение
                 self.use_ability(random.choice(self.buffs))
                 self.use_ability(self.skills[0])  # Доблестный Удар
                 self.use_ability(random.choice(self.skills))

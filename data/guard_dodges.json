@@ -1,6 +1,6 @@
 [
     {
-        "name": "Уклонение Назад",
+        "name": "Уклонение",
         "keybind": ["space+", "s+", 0.5],
         "type": "skill",
         "icon": "",
@@ -9,7 +9,7 @@
         "disabled": false
     },
     {
-        "name": "Уклонение Влево",
+        "name": "Уклонение",
         "keybind": ["space+", "a+", 0.5],
         "type": "skill",
         "icon": "",
@@ -18,7 +18,7 @@
         "disabled": false
     },
     {
-        "name": "Уклонение Вправо",
+        "name": "Уклонение",
         "keybind": ["space+", "d+", 0.5],
         "type": "skill",
         "icon": "",

@@ -1,7 +1,7 @@
 import cv2 as cv
 import logging
 
-from threading import Thread
+from time import sleep
 
 from modules.bot import BlackDesertBot
 from modules.camera import Camera
@@ -63,6 +63,7 @@ if __name__ == '__main__':
                 if bot.stopped:
                     print('- Main loop stopped')
                     break
+            sleep(bot.main_loop_delay)
         except Exception as e:
             bot.stop()
             camera.stop()
