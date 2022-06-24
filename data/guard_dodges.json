@@ -2,7 +2,7 @@
     {
         "name": "Уклонение",
         "keybind": ["space+", "s+", 0.5],
-        "type": "skill",
+        "type": "dodge",
         "icon": "",
         "cooldown": 5,
         "duration": 0,
@@ -11,7 +11,7 @@
     {
         "name": "Уклонение",
         "keybind": ["space+", "a+", 0.5],
-        "type": "skill",
+        "type": "dodge",
         "icon": "",
         "cooldown": 5,
         "duration": 0,
@@ -20,7 +20,7 @@
     {
         "name": "Уклонение",
         "keybind": ["space+", "d+", 0.5],
-        "type": "skill",
+        "type": "dodge",
         "icon": "",
         "cooldown": 5,
         "duration": 0,
