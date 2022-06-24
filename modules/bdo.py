@@ -1,5 +1,5 @@
 from enum import Enum
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 class AbilityType(Enum):
@@ -14,7 +14,7 @@ class Ability:
     name: str
     keybind: list[str]
     type: AbilityType
-    icon: str = ''
+    icon: list() = field(default_factory=[])  # icon + threshold
     cooldown: int = 0
     duration: int = 0
     disabled: bool = False

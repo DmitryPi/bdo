@@ -13,6 +13,8 @@ from .utils import wind_mouse_move_camera, calc_rect_middle
 
 class Camera:
     """Manage ingame bot camera by giving Vision character object"""
+    # constants
+    INITIALIZING_SECONDS = 1
     # threading properties
     stopped = True
     lock = None
@@ -23,8 +25,6 @@ class Camera:
     targets = []
     character_position = []
     main_loop_delay = 0.04
-    # constants
-    INITIALIZING_SECONDS = 1
 
     def __init__(self, vision: Vision):
         # create a thread lock

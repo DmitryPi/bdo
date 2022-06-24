@@ -3,7 +3,7 @@ import logging
 
 from time import sleep
 
-from modules.bot import BlackDesertBot
+from modules.bot import BlackDesertBot, BotBuffer
 from modules.camera import Camera
 from modules.vision import Vision
 from modules.keys import KeyListener
@@ -24,6 +24,7 @@ if __name__ == '__main__':
 
     vision = Vision()
     bot = BlackDesertBot()
+    bot_buffer = BotBuffer(bot.buffs + bot.foods, vision)
     camera = Camera(vision)
     key_listener = KeyListener(to_stop=[bot, camera])
     bot.start()

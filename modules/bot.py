@@ -7,6 +7,7 @@ from threading import Thread, Lock
 from enum import Enum, auto
 
 from .bdo import Ability
+from .vision import Vision
 from .keys import Keys
 from .utils import get_datetime_passed_seconds
 
@@ -18,7 +19,43 @@ class BotState(Enum):
     KILLING = auto()
 
 
+class BotBuffer:
+    # constants
+    INITIALIZING_SECONDS = 0
+    # threading properties
+    stopped = True
+    lock = None
+    # properties
+    buff_queue = []
+    buff_list = []
+    main_loop_delay = 0.5
+
+    def __init__(self, buffs: list[Ability], vision: Vision):
+        self.buffs = buffs
+        self.vision = vision
+
+    def search_for_buffs(self):
+        pass
+
+    def start(self) -> None:
+        self.stopped = False
+        t = Thread(target=self.run)
+        t.start()
+        print(f'- {__class__.__name__} started')
+
+    def stop(self):
+        self.stopped = True
+        print(f'- {__class__.__name__} stopped')
+
+    def run(self):
+        sleep(self.INITIALIZING_SECONDS)
+        while not self.stopped:
+            sleep(self.main_loop_delay)
+
+
 class BlackDesertBot:
+    # constants
+    INITIALIZING_SECONDS = 1
     # threading properties
     stopped = True
     lock = None
@@ -30,8 +67,6 @@ class BlackDesertBot:
     buff_queue = []  # when killing check buff icon; add to queue
     ability_cooldowns = []
     main_loop_delay = 0.04
-    # constants
-    INITIALIZING_SECONDS = 1
 
     def __init__(self, character='guard'):
         # create a thread lock object
@@ -183,6 +218,9 @@ class BlackDesertBot:
             elif self.state == BotState.KILLING:
                 if not self.targets:
                     self.set_state(BotState.SEARCHING)
+                    continue
+                if self.buff_queue:
+                    self.set_state(BotState.BUFFING)
                     continue
                 self.use_dodge_back(self.dodges[0])  # will set cooldown for all if used
                 self.use_ability(random.choice(self.dodges[:1]))  # same name Уклонение

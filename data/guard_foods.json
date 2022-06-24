@@ -1,11 +1,11 @@
 [
     {
-        "name": "",
-        "keybind": [],
-        "type": "",
-        "icon": "",
+        "name": "Обычный ужин крон",
+        "keybind": ["num8"],
+        "type": "food",
+        "icon": ["assets/foods/meal.png", 0.7],
         "cooldown": 0,
         "duration": 0,
-        "disabled": false
+        "disabled": true
     }
 ]
