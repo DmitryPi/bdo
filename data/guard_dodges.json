@@ -1,29 +1,29 @@
 [
     {
         "name": "Уклонение Назад",
-        "keybind": ["space+", "s"],
+        "keybind": ["space+", "s+", 0.5],
         "type": "skill",
         "icon": "",
-        "cooldown": 8,
-        "duration": 0.5,
+        "cooldown": 5,
+        "duration": 0,
         "disabled": false
     },
     {
         "name": "Уклонение Влево",
-        "keybind": ["space+", "a"],
+        "keybind": ["space+", "a+", 0.5],
         "type": "skill",
         "icon": "",
-        "cooldown": 6,
-        "duration": 0.5,
+        "cooldown": 5,
+        "duration": 0,
         "disabled": false
     },
     {
         "name": "Уклонение Вправо",
-        "keybind": ["space+", "d"],
+        "keybind": ["space+", "d+", 0.5],
         "type": "skill",
         "icon": "",
         "cooldown": 5,
-        "duration": 0.5,
+        "duration": 0,
         "disabled": true
     }
 ]

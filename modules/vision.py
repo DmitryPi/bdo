@@ -3,9 +3,8 @@ import numpy as np
 
 
 class Vision:
-    def __init__(self, needle_img_path, method=cv.TM_CCOEFF_NORMED):
+    def __init__(self, method=cv.TM_CCOEFF_NORMED):
         self.method = method
-        self.needle_img, self.needle_w, self.needle_h = self.process_img(needle_img_path)
 
     def process_img(self, img_path: str) -> tuple:
         """CV imread from path and return (img, width, height)"""
@@ -25,9 +24,10 @@ class Vision:
         locations = list(zip(*locations[::-1]))  # remove empty arrays
         return locations
 
-    def find(self, screen: object, threshold=0.65, crop=[]) -> list[tuple]:
+    def find(self, needle_img_path: str, screen: object, threshold=0.65, crop=[]) -> list[tuple]:
         """Find grayscaled object on screen by given threshold
            crop - [x1, y1, x2, y2], screen region crop"""
+        needle_img, needle_w, needle_h = self.process_img(needle_img_path)
         screen_gray = self.cvt_img_gray(screen)
 
         if crop:
@@ -35,14 +35,14 @@ class Vision:
             screen_gray = screen_gray[crop[1]:crop[3], crop[0]:crop[2]]  # y1:y2, x1:x2
 
         # find matches
-        locations = self.match_template(screen_gray, self.needle_img, threshold=threshold)
+        locations = self.match_template(screen_gray, needle_img, threshold=threshold)
         mask = np.zeros(screen.shape[:2], np.uint8)
         detected_objects = []
 
         for (x, y) in locations:
-            if mask[y + self.needle_h // 2, x + self.needle_w // 2] != 255:
-                detected_objects.append((x, y, self.needle_w, self.needle_h))
-            mask[y:y + self.needle_h, y:y + self.needle_w] = 255  # mask out detected object
+            if mask[y + needle_h // 2, x + needle_w // 2] != 255:
+                detected_objects.append((x, y, needle_w, needle_h))
+            mask[y:y + needle_h, y:y + needle_w] = 255  # mask out detected object
 
         if crop:  # recalculate cropped region points
             for i, (x, y, w, h) in enumerate(detected_objects):
@@ -50,17 +50,25 @@ class Vision:
 
         return detected_objects
 
-    def find_boar(self, screen: object, threshold=0.65, crop=[]) -> None:
-        pass
+    def find_boar(self, screen: object, threshold=0.65, crop=[]) -> list[tuple]:
+        needle_img_path = 'assets/boar.png'
+        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
+        return result
 
-    def find_character(self, screen: object, threshold=0.65, crop=[]) -> None:
-        pass
+    def find_character(self, screen: object, threshold=0.8, crop=[]) -> list[tuple]:
+        needle_img_path = 'assets/character.png'
+        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
+        return result
 
-    def find_kzarka(self, screen: object, threshold=0.65, crop=[]) -> None:
-        pass
+    def find_kzarka(self, screen: object, threshold=0.75, crop=[450, 210, 1585, 930]) -> list[tuple]:
+        needle_img_path = 'assets/kzarka.png'
+        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
+        return result
 
-    def find_vessel(self, screen: object, threshold=0.65, crop=[]) -> None:
-        pass
+    def find_vessel(self, screen: object, threshold=0.73, crop=[0, 0, 1585, 380]) -> list[tuple]:
+        needle_img_path = 'assets/vessel.png'
+        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
+        return result
 
     def draw_rectangles(self, haystack_img, rectangles):
         """given a list of [x, y, w, h] rectangles and a canvas image to draw on

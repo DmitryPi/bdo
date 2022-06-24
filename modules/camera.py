@@ -26,11 +26,11 @@ class Camera:
     # constants
     INITIALIZING_SECONDS = 1
 
-    def __init__(self, character: Vision):
+    def __init__(self, vision: Vision):
         # create a thread lock
         self.lock = Lock()
         # properties
-        self.character = character
+        self.vision = vision
 
     def choose_target(self, targets: list[tuple]) -> tuple:
         """Choose middle target from targets"""
@@ -52,15 +52,15 @@ class Camera:
             return None
         wind_mouse_move_camera(move_x, 0, step=27)
 
-    def move_around(self) -> None:
+    def move_camera_around(self) -> None:
         """Move camera around"""
-        move_range = random.randint(-300, 250)
-        wind_mouse_move_camera(move_range, 0, step=15)
+        move_range = random.randint(-200, 700)
+        wind_mouse_move_camera(move_range, 0, step=20)
 
     def adjust_angle(self, rect: tuple) -> None:
         """Adjust camera angle by character position on screen"""
         x, y, w, h = calc_rect_middle(rect)
-        target_y = 465
+        target_y = 680
         pos_x, pos_y = win32api.GetCursorPos()
         move_y = -int(y - target_y)
         if abs(move_y) <= 4:
@@ -101,18 +101,19 @@ class Camera:
         sleep(self.INITIALIZING_SECONDS)
         while not self.stopped:
             # camera adjustment by character
-            # self.character_position = self.character.find(self.screen, threshold=0.8)
-            # if self.character_position:
-            #     self.adjust_angle(self.character_position[0])
+            self.character_position = self.vision.find_character(self.screen, threshold=0.8)
+            if self.character_position:
+                self.adjust_angle(self.character_position[0])
 
             if self.state == BotState.INIT:
                 pass
             elif self.state == BotState.SEARCHING:
-                pass
+                if not self.targets:
+                    self.move_camera_around()
+                    sleep(0.5)
             elif self.state == BotState.NAVIGATING:
                 pass
             elif self.state == BotState.KILLING:
                 if self.targets:
-                    self.follow_target(self.choose_target(self.targets))
-                    # sleep(0.3)
+                    self.follow_target(self.targets[0])
             sleep(self.main_loop_delay)
