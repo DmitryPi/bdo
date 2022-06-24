@@ -3,7 +3,7 @@
         "name": "Длань Омуа",
         "keybind": ["space+", "e", 0.5],
         "type": "buff",
-        "icon": ["assets/buffs/guard_e.png", 0.7],
+        "icon": ["assets/buffs/guard_e.png", 0.9],
         "cooldown": 0,
         "duration": 0,
         "disabled": false
@@ -12,7 +12,7 @@
         "name": "Гнев Духа",
         "keybind": ["z+", 0.5],
         "type": "buff",
-        "icon": ["assets/buffs/100.png", 0.7],
+        "icon": ["assets/buffs/100.png", 0.75],
         "cooldown": 0,
         "duration": 0,
         "disabled": false

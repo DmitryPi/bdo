@@ -15,27 +15,47 @@ from .utils import get_datetime_passed_seconds
 class BotState(Enum):
     INIT = auto()
     SEARCHING = auto()
-    NAVIGATING = auto()
     KILLING = auto()
 
 
 class BotBuffer:
     # constants
-    INITIALIZING_SECONDS = 0
+    INITIALIZING_SECONDS = 0.5
     # threading properties
     stopped = True
     lock = None
     # properties
+    screen = None
     buff_queue = []
-    buff_list = []
-    main_loop_delay = 0.5
+    main_loop_delay = 0.3
 
     def __init__(self, buffs: list[Ability], vision: Vision):
+        # create a thread lock object
+        self.lock = Lock()
+        # properties
         self.buffs = buffs
         self.vision = vision
 
-    def search_for_buffs(self):
-        pass
+    def search_for_buffs(self, crop=[1440, 580, 1810, 925]) -> None:
+        """Find buff icons in cropped areas; update buff_queue"""
+        if not len(self.screen):
+            return None
+        found_buffs = []
+        for buff in self.buffs:
+            if buff.disabled:
+                continue
+            needle_img = buff.icon[0]
+            threshold = buff.icon[1]
+            result = self.vision.find(needle_img, self.screen, threshold=threshold, crop=crop)
+            if result:
+                found_buffs.append(buff)
+        self.buff_queue = found_buffs
+
+    def update_screen(self, screen: object) -> None:
+        """Threading method: update screen property"""
+        self.lock.acquire()
+        self.screen = screen
+        self.lock.release()
 
     def start(self) -> None:
         self.stopped = False
@@ -50,6 +70,7 @@ class BotBuffer:
     def run(self):
         sleep(self.INITIALIZING_SECONDS)
         while not self.stopped:
+            self.search_for_buffs()
             sleep(self.main_loop_delay)
 
 
@@ -71,15 +92,15 @@ class BlackDesertBot:
     def __init__(self, character='guard'):
         # create a thread lock object
         self.lock = Lock()
-
         # Abilities init
         self.buffs = self.load_abilities(ability_type=f'{character}_buff')
         self.foods = self.load_abilities(ability_type=f'{character}_food')
         self.heals = self.load_abilities(ability_type=f'{character}_heal')
         self.skills = self.load_abilities(ability_type=f'{character}_skill')
         self.dodges = self.load_abilities(ability_type=f'{character}_dodge')
-        # State and Keys init
+        # state
         self.state = BotState.INIT
+        # properties
         self.keys = Keys()
 
     def load_abilities(self, ability_type='skill') -> list[Ability]:
@@ -121,6 +142,12 @@ class BlackDesertBot:
         """Threading method: update ability_cooldowns property"""
         self.lock.acquire()
         self.ability_cooldowns.append(ability)
+        self.lock.release()
+
+    def update_buff_queue(self, buff_queue: list[Ability]) -> None:
+        """Threading method: update buff_queue property"""
+        self.lock.acquire()
+        self.buff_queue = buff_queue
         self.lock.release()
 
     def delete_ability_cooldown(self, index: int) -> None:
@@ -213,18 +240,14 @@ class BlackDesertBot:
                     self.use_ability(self.skills[1])  # Всплеск Инферно
                 else:
                     self.set_state(BotState.KILLING)
-            elif self.state == BotState.NAVIGATING:
-                pass
             elif self.state == BotState.KILLING:
                 if not self.targets:
                     self.set_state(BotState.SEARCHING)
                     continue
                 if self.buff_queue:
-                    self.set_state(BotState.BUFFING)
-                    continue
+                    self.use_ability(random.choice(self.buff_queue))
                 self.use_dodge_back(self.dodges[0])  # will set cooldown for all if used
                 self.use_ability(random.choice(self.dodges[:1]))  # same name Уклонение
-                self.use_ability(random.choice(self.buffs))
                 self.use_ability(self.skills[0])  # Доблестный Удар
                 self.use_ability(random.choice(self.skills))
             sleep(self.main_loop_delay)

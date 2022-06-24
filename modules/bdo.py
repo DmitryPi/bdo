@@ -14,7 +14,7 @@ class Ability:
     name: str
     keybind: list[str]
     type: AbilityType
-    icon: list() = field(default_factory=[])  # icon + threshold
+    icon: list[str, int] = field(default_factory=list)  # icon + threshold
     cooldown: int = 0
     duration: int = 0
     disabled: bool = False

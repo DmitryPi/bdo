@@ -26,20 +26,26 @@ if __name__ == '__main__':
     bot = BlackDesertBot()
     bot_buffer = BotBuffer(bot.buffs + bot.foods, vision)
     camera = Camera(vision)
-    key_listener = KeyListener(to_stop=[bot, camera])
+    to_stop = [bot, bot_buffer, camera]
+    key_listener = KeyListener(to_stop=to_stop)
     bot.start()
-    camera.start()
+    bot_buffer.start()
+    # camera.start()
 
     running = False
     while True:
         try:
             screen = grab_screen(window_name='Black Desert - 419022')
+            buff_queue = bot_buffer.buff_queue
             targets = vision.find_vessel(screen) + vision.find_kzarka(screen)
             character_position = camera.character_position
 
             bot.update_screen(screen)
+            bot.update_buff_queue(buff_queue)
             bot.update_targets(targets)
             bot.update_character_position(character_position)
+
+            bot_buffer.update_screen(screen)
 
             camera.update_state(bot.state)
             camera.update_screen(screen)
@@ -53,8 +59,7 @@ if __name__ == '__main__':
                 screen = cv.resize(screen, (1200, 675))
                 cv.imshow('Screen', screen)
                 if cv.waitKey(1) == ord('q'):
-                    bot.stop()
-                    camera.stop()
+                    [thread.stop() for thread in to_stop]
                     cv.destroyAllWindows()
                     break
             else:
@@ -66,6 +71,5 @@ if __name__ == '__main__':
                     break
             sleep(bot.main_loop_delay)
         except Exception as e:
-            bot.stop()
-            camera.stop()
+            [thread.stop() for thread in to_stop]
             raise e
