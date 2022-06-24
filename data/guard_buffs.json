@@ -4,7 +4,7 @@
         "keybind": ["space+", "e", 0.5],
         "type": "buff",
         "icon": "",
-        "cooldown": 180,
+        "cooldown": 30,
         "duration": 0,
         "disabled": false
     },

@@ -4,7 +4,7 @@
         "keybind": ["space+", "s"],
         "type": "skill",
         "icon": "",
-        "cooldown": 10,
+        "cooldown": 8,
         "duration": 0.5,
         "disabled": false
     },
@@ -13,7 +13,7 @@
         "keybind": ["space+", "a"],
         "type": "skill",
         "icon": "",
-        "cooldown": 4,
+        "cooldown": 6,
         "duration": 0.5,
         "disabled": false
     },
@@ -22,8 +22,8 @@
         "keybind": ["space+", "d"],
         "type": "skill",
         "icon": "",
-        "cooldown": 4,
+        "cooldown": 5,
         "duration": 0.5,
-        "disabled": false
+        "disabled": true
     }
 ]

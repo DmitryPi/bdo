@@ -22,7 +22,7 @@ if __name__ == '__main__':
     else:
         pass
 
-    vision = Vision('assets/kzarka.png')
+    vision = Vision('assets/vessel.png')
     bot = BlackDesertBot('guard')
     camera = Camera(Vision('assets/character.png'))
     key_listener = KeyListener(to_stop=[bot, camera])
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     while True:
         try:
             screen = grab_screen(window_name='Black Desert - 419022')
-            targets = vision.find(screen, threshold=0.65, crop=[425, 210, 1600, 940])
+            targets = vision.find(screen, threshold=0.73, crop=[0, 0, 1920, 600])
             character_position = camera.character_position
 
             bot.update_screen(screen)

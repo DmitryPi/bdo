@@ -114,5 +114,5 @@ class Camera:
             elif self.state == BotState.KILLING:
                 if self.targets:
                     self.follow_target(self.choose_target(self.targets))
-                    sleep(0.5)
+                    # sleep(0.3)
             sleep(self.main_loop_delay)

@@ -1,25 +1,7 @@
 [
     {
         "name": "Доблестный Удар",
-        "keybind": ["s+", "lmb+", 0.8],
-        "type": "skill",
-        "icon": "",
-        "cooldown": 9,
-        "duration": 0,
-        "disabled": false
-    },
-    {
-        "name": "Всплеск Инферно",
-        "keybind": ["space+", "q+", 3.8],
-        "type": "skill",
-        "icon": "",
-        "cooldown": 9,
-        "duration": 0,
-        "disabled": false
-    },
-    {
-        "name": "Укус Дракона",
-        "keybind": ["space+", "rmb+", 3],
+        "keybind": ["s+", "lmb+", 0.7],
         "type": "skill",
         "icon": "",
         "cooldown": 8,
@@ -27,11 +9,29 @@
         "disabled": false
     },
     {
-        "name": "Пламя Очищения",
-        "keybind": ["space+", "f+", 1],
+        "name": "Всплеск Инферно",
+        "keybind": ["space+", "q+", 3.6],
+        "type": "skill",
+        "icon": "",
+        "cooldown": 8,
+        "duration": 0,
+        "disabled": false
+    },
+    {
+        "name": "Укус Дракона",
+        "keybind": ["space+", "rmb+", 3.5],
         "type": "skill",
         "icon": "",
         "cooldown": 7,
+        "duration": 0,
+        "disabled": false
+    },
+    {
+        "name": "Пламя Очищения",
+        "keybind": ["space+", "f+", 1.4],
+        "type": "skill",
+        "icon": "",
+        "cooldown": 6,
         "duration": 0,
         "disabled": false
     },
@@ -42,15 +42,6 @@
         "icon": "",
         "cooldown": 13,
         "duration": 1.2,
-        "disabled": true
-    },
-    {
-        "name": "Истощение",
-        "keybind": ["2", 1],
-        "type": "skill",
-        "icon": "",
-        "cooldown": 14,
-        "duration": 0,
         "disabled": true
     }
 ]

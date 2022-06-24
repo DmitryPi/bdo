@@ -11,7 +11,7 @@ from queue import Queue
 class KeyListener:
     def __init__(self, to_stop=[]):
         self.to_stop = to_stop
-        self.buff_keys = ['f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12']
+        self.buff_keys = ['f5', 'f6', 'f7', 'f8', 'f9']
 
     def on_press(self, key):
         pass

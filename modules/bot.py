@@ -186,8 +186,8 @@ class BlackDesertBot:
                 if not self.targets:
                     self.set_state(BotState.SEARCHING)
                     continue
-                # self.dodge_back()
-                self.use_ability(self.dodges[0])
+                # self.use_ability(self.dodges[0])
+                self.use_ability(random.choice(self.dodges))
                 self.use_ability(random.choice(self.buffs))
                 self.use_ability(self.skills[0])  # Доблестный Удар
                 self.use_ability(random.choice(self.skills))

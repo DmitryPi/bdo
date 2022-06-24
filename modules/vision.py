@@ -50,6 +50,18 @@ class Vision:
 
         return detected_objects
 
+    def find_boar(self, screen: object, threshold=0.65, crop=[]) -> None:
+        pass
+
+    def find_character(self, screen: object, threshold=0.65, crop=[]) -> None:
+        pass
+
+    def find_kzarka(self, screen: object, threshold=0.65, crop=[]) -> None:
+        pass
+
+    def find_vessel(self, screen: object, threshold=0.65, crop=[]) -> None:
+        pass
+
     def draw_rectangles(self, haystack_img, rectangles):
         """given a list of [x, y, w, h] rectangles and a canvas image to draw on
            return an image with all of those rectangles drawn"""
