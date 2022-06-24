@@ -95,17 +95,21 @@ class BlackDesertBot:
         del self.ability_cooldowns[index]
         self.lock.release()
 
-    def dodge_back(self) -> bool:
+    def use_dodge(self, dodge: Ability) -> None:
+        """All dodges have same cooldown; synch cooldowns on all dodge skills"""
+        self.use_ability(dodge)
+        for _dodge in self.dodges:
+            if _dodge.name == dodge.name:
+                continue
+            self.update_ability_cooldowns((_dodge, str(datetime.now())))
+
+    def use_dodge_back(self) -> None:
         """If target below character_position (behind character) - dodge back"""
         if self.targets:
-            pos_y = 685
-            # check if target_y below character_position_y
+            pos_y = 685  # check if target_y below character_position_y
             targets_y = [i for i in self.targets if pos_y < i[1]]
             if len(targets_y) >= 2:
-                self.use_ability(self.dodges[0])
-                # all dodges have same cooldown, add other ones
-                [self.update_ability_cooldowns((i, str(datetime.now()))) for i in self.dodges[1:]]
-                return True
+                self.use_dodge(self.dodges[0])
 
     def use_ability(self, ability: Ability, keybind=None) -> None:
         """Press/Release key sequence or hold and release after completing key sequence
@@ -189,8 +193,8 @@ class BlackDesertBot:
                 if not self.targets:
                     self.set_state(BotState.SEARCHING)
                     continue
-                if not self.dodge_back():
-                    self.use_ability(random.choice(self.dodges[1:]))
+                self.use_dodge_back()  # will set cooldown on all if used
+                self.use_dodge(random.choice(self.dodges[1:]))
                 self.use_ability(random.choice(self.buffs))
                 self.use_ability(self.skills[0])  # Доблестный Удар
                 self.use_ability(random.choice(self.skills))

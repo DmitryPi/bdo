@@ -59,3 +59,12 @@ class TestBlackDesertBot(TestCase):
         self.bot.filter_ability_cooldowns()
         self.bot.filter_ability_cooldowns()
         assert not self.bot.ability_cooldowns
+
+    @pytest.mark.slow  # prevent keyboard use
+    def test_use_dodge(self):
+        dodges = [
+            Ability(name='Уклонение Назад', keybind=['space+', 's+', 0.5], type='skill', icon='', cooldown=5, duration=0, disabled=False),
+            Ability(name='Уклонение Влево', keybind=['space+', 'a+', 0.5], type='skill', icon='', cooldown=5, duration=0, disabled=False),
+            Ability(name='Уклонение Вправо', keybind=['space+', 'd+', 0.5], type='skill', icon='', cooldown=5, duration=0, disabled=False)]
+        self.bot.use_dodge(dodges[1])
+        assert len(self.bot.ability_cooldowns) == 3

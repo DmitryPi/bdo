@@ -24,6 +24,6 @@
         "icon": "",
         "cooldown": 5,
         "duration": 0,
-        "disabled": true
+        "disabled": false
     }
 ]
