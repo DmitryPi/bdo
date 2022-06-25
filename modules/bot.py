@@ -231,14 +231,19 @@ class BlackDesertBot:
         print(f'- {__class__.__name__} stopped')
 
     def run(self):
+        i = 0
         while not self.stopped:
             if self.state == BotState.INIT:
                 sleep(self.INITIALIZING_SECONDS)
                 self.set_state(BotState.SEARCHING)
             elif self.state == BotState.SEARCHING:
                 if not self.targets:
+                    i += 1
                     self.use_ability(self.skills[1])  # Всплеск Инферно
+                    if i >= 200:
+                        sleep(15)
                 else:
+                    i = 0
                     self.set_state(BotState.KILLING)
             elif self.state == BotState.KILLING:
                 if not self.targets:

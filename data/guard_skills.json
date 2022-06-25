@@ -36,12 +36,12 @@
         "disabled": false
     },
     {
-        "name": "Драконья Пасть",
-        "keybind": ["space+", "lmb+", 1.5],
+        "name": "Ледяной Ветер",
+        "keybind": ["w+", "rmb+", 0.5],
         "type": "skill",
         "icon": "",
-        "cooldown": 13,
-        "duration": 1.2,
-        "disabled": true
+        "cooldown": 10,
+        "duration": 0,
+        "disabled": false
     }
 ]

@@ -4,7 +4,16 @@
         "keybind": ["space+", "s+", 0.5],
         "type": "dodge",
         "icon": "",
-        "cooldown": 5,
+        "cooldown": 4,
+        "duration": 0,
+        "disabled": false
+    },
+    {
+        "name": "Уклонение",
+        "keybind": ["space+", "s+", 0.5],
+        "type": "dodge",
+        "icon": "",
+        "cooldown": 4,
         "duration": 0,
         "disabled": false
     },
@@ -13,7 +22,7 @@
         "keybind": ["space+", "a+", 0.5],
         "type": "dodge",
         "icon": "",
-        "cooldown": 5,
+        "cooldown": 4,
         "duration": 0,
         "disabled": false
     },
@@ -22,7 +31,7 @@
         "keybind": ["space+", "d+", 0.5],
         "type": "dodge",
         "icon": "",
-        "cooldown": 5,
+        "cooldown": 4,
         "duration": 0,
         "disabled": false
     }

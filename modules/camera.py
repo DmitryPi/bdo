@@ -14,7 +14,7 @@ from .utils import wind_mouse_move_camera, calc_rect_middle
 class Camera:
     """Manage ingame bot camera by giving Vision character object"""
     # constants
-    INITIALIZING_SECONDS = 1
+    INITIALIZING_SECONDS = 0.5
     # threading properties
     stopped = True
     lock = None
@@ -50,12 +50,12 @@ class Camera:
         move_x = int(x - (screen_w / 2))
         if abs(move_x) < 50:
             return None
-        wind_mouse_move_camera(move_x, 0, step=27)
+        wind_mouse_move_camera(move_x, 0, step=35)
 
     def move_camera_around(self) -> None:
         """Move camera around"""
-        move_range = random.randint(-200, 700)
-        wind_mouse_move_camera(move_range, 0, step=20)
+        move_range = random.randint(100, 700)
+        wind_mouse_move_camera(move_range, 0, step=30)
 
     def adjust_angle(self, rect: tuple) -> None:
         """Adjust camera angle by character position on screen"""
