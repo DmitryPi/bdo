@@ -53,6 +53,7 @@ class BotBuffer:
         self.buff_queue = found_buffs  # replace buff_queue
 
     def search_buff(self, buff: Ability, crop=[]) -> list[Ability]:
+        """cv2 search buff/food icon"""
         needle_img = buff.icon[0]
         threshold = buff.icon[1]
         result = self.vision.find(needle_img, self.screen, threshold=threshold, crop=crop)
