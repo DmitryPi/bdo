@@ -37,7 +37,8 @@ if __name__ == '__main__':
         try:
             screen = grab_screen(window_name='Black Desert - 419022')
             buff_queue = bot_buffer.buff_queue
-            targets = vision.find_vessel(screen) + vision.find_kzarka(screen)
+            # targets = vision.find_vessel(screen) + vision.find_kzarka(screen)
+            targets = vision.find_vessel(screen)
             character_position = camera.character_position
 
             bot.update_screen(screen)

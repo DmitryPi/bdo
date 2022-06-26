@@ -36,20 +36,27 @@ class BotBuffer:
         self.buffs = buffs
         self.vision = vision
 
-    def search_for_buffs(self, crop=[1440, 580, 1810, 925]) -> None:
-        """Find buff icons in cropped areas; update buff_queue"""
-        if not len(self.screen):
-            return None
+    def search_for_buffs(self) -> None:
+        """Find buff/food icons in cropped areas; update buff_queue"""
         found_buffs = []
         for buff in self.buffs:
             if buff.disabled:
                 continue
-            needle_img = buff.icon[0]
-            threshold = buff.icon[1]
-            result = self.vision.find(needle_img, self.screen, threshold=threshold, crop=crop)
-            if result:
-                found_buffs.append(buff)
-        self.buff_queue = found_buffs
+            if buff.type == 'buff':
+                result = self.search_buff(buff, crop=[1440, 580, 1810, 925])
+                if result:  # check if buff found
+                    found_buffs.append(buff)
+            elif buff.type == 'food':
+                result = self.search_buff(buff, crop=[820, 960, 1370, 1050])
+                if not result:  # check if food not found
+                    found_buffs.append(buff)
+        self.buff_queue = found_buffs  # replace buff_queue
+
+    def search_buff(self, buff: Ability, crop=[]) -> list[Ability]:
+        needle_img = buff.icon[0]
+        threshold = buff.icon[1]
+        result = self.vision.find(needle_img, self.screen, threshold=threshold, crop=crop)
+        return result
 
     def update_screen(self, screen: object) -> None:
         """Threading method: update screen property"""

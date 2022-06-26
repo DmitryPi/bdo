@@ -1,11 +1,20 @@
 [
     {
         "name": "Обычный ужин крон",
-        "keybind": ["num8"],
+        "keybind": ["NUMPAD8"],
         "type": "food",
-        "icon": ["assets/foods/meal.png", 0.7],
-        "cooldown": 0,
+        "icon": ["assets/foods/meal.png", 0.8],
+        "cooldown": 7000,
         "duration": 0,
-        "disabled": true
+        "disabled": false
+    },
+    {
+        "name": "Эликсиры",
+        "keybind": ["q", "f5", 1.2, "f6", 1.2, "f7", 1.2, "f8", 1.2, "f9"],
+        "type": "food",
+        "icon": ["assets/foods/elixir_1.png", 0.8],
+        "cooldown": 850,
+        "duration": 0,
+        "disabled": false
     }
 ]
