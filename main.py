@@ -28,14 +28,14 @@ if __name__ == '__main__':
     camera = Camera(vision)
     to_stop = [bot, bot_buffer, camera]
     key_listener = KeyListener(to_stop=to_stop)
-    bot.start()
-    bot_buffer.start()
-    camera.start()
+    # bot.start()
+    # bot_buffer.start()
+    # camera.start()
 
     running = False
     while True:
         try:
-            screen = grab_screen(window_name='Black Desert - 419022')
+            screen = grab_screen(region=[0, 0, 1920, 1080])  # window_name='Black Desert - 419022'
             buff_queue = bot_buffer.buff_queue
             # targets = vision.find_vessel(screen) + vision.find_kzarka(screen)
             targets = vision.find_vessel(screen)
@@ -70,7 +70,7 @@ if __name__ == '__main__':
                 if bot.stopped:
                     print('- Main loop stopped')
                     break
-            sleep(bot.main_loop_delay)
+            # sleep(bot.main_loop_delay)
         except Exception as e:
             [thread.stop() for thread in to_stop]
             raise e
