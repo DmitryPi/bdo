@@ -28,9 +28,9 @@ if __name__ == '__main__':
     camera = Camera(vision)
     to_stop = [bot, bot_buffer, camera]
     key_listener = KeyListener(to_stop=to_stop)
-    # bot.start()
-    # bot_buffer.start()
-    # camera.start()
+    bot.start()
+    bot_buffer.start()
+    camera.start()
 
     running = False
     while True:
