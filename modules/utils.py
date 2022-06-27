@@ -16,9 +16,6 @@ def build_config(config_name='config.ini') -> None:
     config['MAIN'] = {
         'debug': True,
     }
-    config['BINANCE'] = {
-        'api_key': '',
-    }
     config['DB'] = {
         'table': 'bdo',
     }
