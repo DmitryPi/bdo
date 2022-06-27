@@ -70,7 +70,7 @@ if __name__ == '__main__':
                 if bot.stopped:
                     print('- Main loop stopped')
                     break
-            # sleep(bot.main_loop_delay)
+            sleep(bot.main_loop_delay)
         except Exception as e:
             [thread.stop() for thread in to_stop]
             raise e
