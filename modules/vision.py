@@ -50,11 +50,6 @@ class Vision:
 
         return detected_objects
 
-    def find_boar(self, screen: object, threshold=0.65, crop=[]) -> list[tuple]:
-        needle_img_path = 'assets/boar.png'
-        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
-        return result
-
     def find_character(self, screen: object, threshold=0.8, crop=[]) -> list[tuple]:
         needle_img_path = 'assets/character.png'
         result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
@@ -65,7 +60,7 @@ class Vision:
         result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
         return result
 
-    def find_vessel(self, screen: object, threshold=0.72, crop=[0, 0, 1900, 380]) -> list[tuple]:
+    def find_vessel(self, screen: object, threshold=0.71, crop=[0, 0, 1900, 380]) -> list[tuple]:
         needle_img_path = 'assets/vessel.png'
         result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
         return result

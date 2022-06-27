@@ -54,8 +54,8 @@ class Camera:
 
     def move_camera_around(self) -> None:
         """Move camera around"""
-        move_range = random.randint(200, 700)
-        wind_mouse_move_camera(move_range, 0, step=32)
+        move_range = random.randint(200, 1000)
+        wind_mouse_move_camera(move_range, 0, step=35)
 
     def adjust_angle(self, rect: tuple) -> None:
         """Adjust camera angle by character position on screen"""
