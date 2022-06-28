@@ -249,11 +249,7 @@ class BlackDesertBot:
                     i += 1
                     self.use_ability(self.skills[1])  # Всплеск Инферно
                     if i >= 200:
-                        for i in range(20):
-                            if self.targets:
-                                self.set_state(BotState.KILLING)
-                                break
-                            sleep(1)
+                        sleep(15)
                 else:
                     i = 0
                     self.set_state(BotState.KILLING)
