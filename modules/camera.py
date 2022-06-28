@@ -2,13 +2,14 @@ import math
 import random
 import win32api
 
-from time import sleep
 
+from datetime import datetime
+from time import sleep
 from threading import Thread, Lock
 
 from .bot import BotState
 from .vision import Vision
-from .utils import wind_mouse_move_camera, calc_rect_middle
+from .utils import get_datetime_passed_seconds, wind_mouse_move_camera, calc_rect_middle
 
 
 class Camera:
@@ -23,6 +24,7 @@ class Camera:
     screen = None
     screen_size = (1920, 1080)
     targets = []
+    targets_found_at = None
     character_position = []
     main_loop_delay = 0.04
 
@@ -73,6 +75,7 @@ class Camera:
         """Threading method: update targets property"""
         self.lock.acquire()
         self.targets = targets
+        self.targets_found_at = str(datetime.now())
         self.lock.release()
 
     def update_screen(self, screen: object) -> None:
@@ -109,8 +112,10 @@ class Camera:
                 pass
             elif self.state == BotState.SEARCHING:
                 if not self.targets:
+                    if get_datetime_passed_seconds(self.targets_found_at) >= 15:
+                        print('- Last target was found 15 seconds ago')
+                        sleep(2)
                     self.move_camera_around()
-                    # sleep(0.5)
             elif self.state == BotState.KILLING:
                 if self.targets:
                     self.follow_target(self.targets[0])
