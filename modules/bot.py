@@ -245,14 +245,17 @@ class BlackDesertBot:
                 sleep(self.INITIALIZING_SECONDS)
                 self.set_state(BotState.SEARCHING)
             elif self.state == BotState.SEARCHING:
-                if not self.targets:
-                    i += 1
-                    self.use_ability(self.skills[1])  # Всплеск Инферно
+                while not self.targets:
                     if i >= 200:
-                        sleep(15)
-                else:
-                    i = 0
-                    self.set_state(BotState.KILLING)
+                        i = 0
+                        self.use_ability(self.skills[1])  # Всплеск Инферно
+                        for i in range(30):
+                            if self.targets:
+                                self.set_state(BotState.KILLING)
+                                break
+                            sleep(1)
+                    i += 1
+                    sleep(self.main_loop_delay)
             elif self.state == BotState.KILLING:
                 if not self.targets:
                     self.set_state(BotState.SEARCHING)
