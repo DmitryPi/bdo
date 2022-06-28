@@ -10,6 +10,8 @@ from queue import Queue
 
 class KeyListener:
     def __init__(self, to_stop=[]):
+        self.stopped = False
+        self.pause = False
         self.to_stop = to_stop
         self.buff_keys = ['f5', 'f6', 'f7', 'f8', 'f9']
 
@@ -19,10 +21,15 @@ class KeyListener:
     def on_release(self, key):
         if key == keyboard.Key.end:
             [thread.stop() for thread in self.to_stop]
-            print(f'- {__class__.__name__} stopped')
+            self.stop()
             return False
-        elif key == keyboard.Key.insert:
-            Thread(target=self.press_keys, args=(self.buff_keys,), daemon=True).start()
+        elif key == keyboard.Key.delete:
+            if self.pause:
+                [thread.start() for thread in self.to_stop]
+                self.pause = False
+            else:
+                [thread.stop() for thread in self.to_stop]
+                self.pause = True
 
     def on_move(self, x, y):
         pass
@@ -41,6 +48,10 @@ class KeyListener:
     def start(self):
         t = Thread(target=self.run)
         t.start()
+
+    def stop(self):
+        self.stopped = True
+        print(f'- {__class__.__name__} stopped')
 
     def run(self):
         print(f'- {__class__.__name__} started')

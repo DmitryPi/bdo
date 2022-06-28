@@ -67,7 +67,10 @@ if __name__ == '__main__':
                 if not running:
                     key_listener.start()
                     running = True
-                if bot.stopped:
+                if key_listener.pause:
+                    print('- Pause')
+                    sleep(1)
+                if key_listener.stopped:
                     print('- Main loop stopped')
                     break
             sleep(bot.main_loop_delay)

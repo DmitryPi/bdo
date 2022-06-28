@@ -14,7 +14,7 @@ from .utils import wind_mouse_move_camera, calc_rect_middle
 class Camera:
     """Manage ingame bot camera by giving Vision character object"""
     # constants
-    INITIALIZING_SECONDS = 0.5
+    INITIALIZING_SECONDS = 2
     # threading properties
     stopped = True
     lock = None
@@ -110,7 +110,7 @@ class Camera:
             elif self.state == BotState.SEARCHING:
                 if not self.targets:
                     self.move_camera_around()
-                    sleep(0.5)
+                    # sleep(0.5)
             elif self.state == BotState.KILLING:
                 if self.targets:
                     self.follow_target(self.targets[0])
