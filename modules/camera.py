@@ -24,7 +24,6 @@ class Camera:
     screen = None
     screen_size = (1920, 1080)
     targets = []
-    targets_found_at = None
     character_position = []
     main_loop_delay = 0.04
 
@@ -75,7 +74,6 @@ class Camera:
         """Threading method: update targets property"""
         self.lock.acquire()
         self.targets = targets
-        self.targets_found_at = str(datetime.now())
         self.lock.release()
 
     def update_screen(self, screen: object) -> None:
@@ -112,9 +110,6 @@ class Camera:
                 pass
             elif self.state == BotState.SEARCHING:
                 if not self.targets:
-                    if get_datetime_passed_seconds(self.targets_found_at) >= 15:
-                        print('- Last target was found 15 seconds ago')
-                        sleep(2)
                     self.move_camera_around()
             elif self.state == BotState.KILLING:
                 if self.targets:
