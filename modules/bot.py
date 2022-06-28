@@ -251,6 +251,7 @@ class BlackDesertBot:
                     if i >= 200:
                         for i in range(20):
                             if self.targets:
+                                self.set_state(BotState.KILLING)
                                 break
                             sleep(1)
                 else:
