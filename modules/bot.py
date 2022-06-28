@@ -190,7 +190,7 @@ class BlackDesertBot:
         # update ability_cooldowns
         self.update_ability_cooldowns((ability, str(datetime.now())))
         # use ability
-        print(f'- Using {ability.type}:', ability.name)
+        # print(f'- Using {ability.type}:', ability.name)
         for key in ability.keybind:
             try:
                 sleep(key)
