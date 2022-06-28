@@ -29,9 +29,9 @@ class TestBlackDesertBot(TestCase):
         assert self.bot.state == BotState.INIT
 
     def test_load_abilities(self):
-        buffs = self.bot.load_abilities(ability_type='wiz_buff')
-        foods = self.bot.load_abilities(ability_type='wiz_food')
-        skills = self.bot.load_abilities(ability_type='wiz_skill')
+        buffs = self.bot.load_abilities(ability_type='guard_buff')
+        foods = self.bot.load_abilities(ability_type='guard_food')
+        skills = self.bot.load_abilities(ability_type='guard_skill')
         assert isinstance(buffs, list)
         assert isinstance(foods, list)
         assert isinstance(skills, list)

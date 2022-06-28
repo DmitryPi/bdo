@@ -61,7 +61,7 @@ class Vision:
         return result
 
     def find_vessel(self, screen: object, threshold=0.69, crop=[0, 0, 1900, 380]) -> list[tuple]:
-        needle_img_path = 'assets/vessel.png'
+        needle_img_path = 'assets/vessel_1.png'
         result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
         return result
 

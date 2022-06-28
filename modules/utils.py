@@ -137,6 +137,18 @@ def wind_mouse(
         start_y += v_y
         move_x = int(np.round(start_x))
         move_y = int(np.round(start_y))
+
+        if move_x > 1900:  # fluid transition from 1920-0; 0-1920
+            pos_x, pos_y = win32api.GetCursorPos()
+            win32api.SetCursorPos((1920, pos_y))  # resets cursor at 0
+            sleep(.1)
+            break
+        elif move_x < 20:
+            pos_x, pos_y = win32api.GetCursorPos()
+            win32api.SetCursorPos((0, pos_y))  # resets cursor at 1920
+            sleep(.1)
+            break
+
         if current_x != move_x or current_y != move_y:
             # This should wait for the mouse polling interval
             try:
@@ -156,14 +168,8 @@ def wind_mouse_move_camera(x: int, y: int, step=13, delay=True, screen_size=(192
     screen_w, screen_h = screen_size
     x += pos_x
     y += pos_y
-    # prevent camera clipping by limiting destination_x
-    if x >= screen_w:  # positive
-        x = screen_w
-    elif x < 0:  # negative
-        x = 0
-    # run wind_mouse - increase step for speed
+    print(pos_x, pos_y, x, y)
     wind_mouse(pos_x, pos_y, x, y, M_0=step, D_0=step, move_mouse=move_func, delay=delay)
-    # prevent camera clipping by setting camera update manually
 
 
 def calc_rect_middle(rect: tuple[int]) -> tuple[int]:

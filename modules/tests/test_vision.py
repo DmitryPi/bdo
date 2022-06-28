@@ -17,4 +17,4 @@ class TestVision(TestCase):
         assert isinstance(screen_gray, object)
 
     def test_find(self):
-        self.vision.find_boar(self.screen, crop=[0, 0, 500, 500], threshold=0.15)
+        self.vision.find_vessel(self.screen, crop=[0, 0, 500, 500], threshold=0.15)
