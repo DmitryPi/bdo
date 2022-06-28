@@ -101,9 +101,9 @@ class Camera:
         sleep(self.INITIALIZING_SECONDS)
         while not self.stopped:
             # camera adjustment by character
-            self.character_position = self.vision.find_character(self.screen, threshold=0.8)
-            if self.character_position:
-                self.adjust_angle(self.character_position[0])
+            # self.character_position = self.vision.find_character(self.screen, threshold=0.8)
+            # if self.character_position:
+            #     self.adjust_angle(self.character_position[0])
 
             if self.state == BotState.INIT:
                 pass
