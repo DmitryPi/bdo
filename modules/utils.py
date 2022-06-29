@@ -185,14 +185,15 @@ def send_telegram_msg(msg: str, photo_path='') -> None:
     try:
         chat_id = 5156307333
         bot = Bot('5563804245:AAHK0-VXb4D3FlBwQiFi9w6pJzio_ZqnbhU')
-        bot.send_message(
-            chat_id, msg,
-            parse_mode=ParseMode.HTML,
-            disable_web_page_preview=True,
-            protect_content=True,
-        )
         if photo_path:
-            bot.send_photo(chat_id, open(photo_path, 'rb'))
+            bot.send_photo(chat_id, open(photo_path, 'rb'), caption=msg)
+        else:
+            bot.send_message(
+                chat_id, msg,
+                parse_mode=ParseMode.HTML,
+                disable_web_page_preview=True,
+                protect_content=True,
+            )
     except BadRequest as e:
         print('- Error BadRequest:', e.message)
     except Exception as e:
