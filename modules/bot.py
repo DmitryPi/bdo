@@ -255,7 +255,7 @@ class BlackDesertBot:
                         if not self.telegram_msg_sent:
                             screen_path = 'assets/last_screen.jpg'
                             cv.imwrite(screen_path, cv.cvtColor(self.screen, cv.COLOR_BGR2RGB))
-                            send_telegram_msg('Cant find target', photo_path=screen_path)
+                            send_telegram_msg('\nCant find target', photo_path=screen_path)
                         self.telegram_msg_sent = True
                         sleep(15)
                 else:
