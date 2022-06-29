@@ -108,7 +108,6 @@ class BlackDesertBot:
         self.heals = self.load_abilities(ability_type=f'{character}_heal')
         self.skills = self.load_abilities(ability_type=f'{character}_skill')
         self.dodges = self.load_abilities(ability_type=f'{character}_dodge')
-        self.telegram_msg_sent = False
         # state
         self.state = BotState.INIT
         # properties
@@ -242,6 +241,7 @@ class BlackDesertBot:
         print(f'- {__class__.__name__} stopped')
 
     def run(self):
+        telegram_msg_sent = False
         i = 0
         while not self.stopped:
             if self.state == BotState.INIT:
@@ -252,15 +252,15 @@ class BlackDesertBot:
                     i += 1
                     self.use_ability(self.skills[1])  # Всплеск Инферно
                     if i >= 200:
-                        if not self.telegram_msg_sent:
+                        if not telegram_msg_sent:
                             screen_path = 'assets/last_screen.jpg'
                             cv.imwrite(screen_path, cv.cvtColor(self.screen, cv.COLOR_BGR2RGB))
                             send_telegram_msg('\nCant find target', photo_path=screen_path)
-                        self.telegram_msg_sent = True
+                        telegram_msg_sent = True
                         sleep(15)
                 else:
                     i = 0
-                    self.telegram_msg_sent = False
+                    telegram_msg_sent = False
                     self.set_state(BotState.KILLING)
             elif self.state == BotState.KILLING:
                 if not self.targets:
