@@ -1,3 +1,5 @@
+import cv2 as cv
+import os
 import json
 import random
 
@@ -251,7 +253,9 @@ class BlackDesertBot:
                     self.use_ability(self.skills[1])  # Всплеск Инферно
                     if i >= 200:
                         if not self.telegram_msg_sent:
-                            send_telegram_msg('Cant find target')
+                            screen_path = 'assets/last_screen.jpg'
+                            cv.imwrite(screen_path, cv.cvtColor(self.screen, cv.COLOR_BGR2RGB))
+                            send_telegram_msg('Cant find target', photo_path=screen_path)
                         self.telegram_msg_sent = True
                         sleep(15)
                 else:
