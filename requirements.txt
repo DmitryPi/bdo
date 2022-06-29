@@ -7,3 +7,4 @@ six==1.16.0
 pywin32==304
 pytest
 pytest-sugar
+python-telegram-bot
