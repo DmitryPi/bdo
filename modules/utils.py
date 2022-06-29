@@ -9,6 +9,8 @@ import win32api
 
 from datetime import datetime
 from time import sleep
+from telegram import Bot, ParseMode
+from telegram.error import BadRequest
 
 
 def build_config(config_name='config.ini') -> None:
@@ -177,3 +179,18 @@ def calc_rect_middle(rect: tuple[int]) -> tuple[int]:
     x = int((x * 2 + w) / 2)
     y = int((y * 2 + h) / 2)
     return (x, y, w, h)
+
+
+def send_telegram_msg(msg: str) -> None:
+    try:
+        bot = Bot('5563804245:AAHK0-VXb4D3FlBwQiFi9w6pJzio_ZqnbhU')
+        bot.send_message(
+            5156307333, msg,
+            parse_mode=ParseMode.HTML,
+            disable_web_page_preview=True,
+            protect_content=True,
+        )
+    except BadRequest as e:
+        print('- Error BadRequest:', e.message)
+    except Exception as e:
+        print('- Error Unknown:', repr(e))

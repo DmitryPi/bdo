@@ -9,7 +9,7 @@ from enum import Enum, auto
 from .bdo import Ability
 from .vision import Vision
 from .keys import Keys
-from .utils import get_datetime_passed_seconds
+from .utils import get_datetime_passed_seconds, send_telegram_msg
 
 
 class BotState(Enum):
@@ -106,6 +106,7 @@ class BlackDesertBot:
         self.heals = self.load_abilities(ability_type=f'{character}_heal')
         self.skills = self.load_abilities(ability_type=f'{character}_skill')
         self.dodges = self.load_abilities(ability_type=f'{character}_dodge')
+        self.telegram_msg_sent = False
         # state
         self.state = BotState.INIT
         # properties
@@ -249,9 +250,13 @@ class BlackDesertBot:
                     i += 1
                     self.use_ability(self.skills[1])  # Всплеск Инферно
                     if i >= 200:
+                        if not self.telegram_msg_sent:
+                            send_telegram_msg('Cant find target')
+                        self.telegram_msg_sent = True
                         sleep(15)
                 else:
                     i = 0
+                    self.telegram_msg_sent = False
                     self.set_state(BotState.KILLING)
             elif self.state == BotState.KILLING:
                 if not self.targets:
