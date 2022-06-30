@@ -45,7 +45,7 @@ class BotBuffer:
             if buff.disabled:
                 continue
             if buff.type == 'buff':
-                result = self.search_buff(buff, crop=[1440, 580, 1810, 925])
+                result = self.search_buff(buff, crop=[1440, 580, 1900, 925])
                 if result:  # check if buff found
                     found_buffs.append(buff)
             elif buff.type == 'food':
