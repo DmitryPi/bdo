@@ -24,6 +24,7 @@ class Camera:
     screen = None
     screen_size = (1920, 1080)
     targets = []
+    camera_lock = False
     character_position = []
     main_loop_delay = 0.04
 
@@ -82,6 +83,12 @@ class Camera:
         self.screen = screen
         self.lock.release()
 
+    def update_camera_lock(self, camera_lock: bool) -> None:
+        """Threading method: update camera_lock property"""
+        self.lock.acquire()
+        self.camera_lock = camera_lock
+        self.lock.release()
+
     def update_state(self, state: object) -> None:
         """Threading method: update screen property"""
         self.lock.acquire()
@@ -106,12 +113,14 @@ class Camera:
             # if self.character_position:
             #     self.adjust_angle(self.character_position[0])
 
+            if self.targets:
+                self.follow_target(self.targets[0])
+
             if self.state == BotState.INIT:
                 pass
             elif self.state == BotState.SEARCHING:
-                if not self.targets:
+                if not self.targets and not self.camera_lock:
                     self.move_camera_around()
             elif self.state == BotState.KILLING:
-                if self.targets:
-                    self.follow_target(self.targets[0])
+                pass
             sleep(self.main_loop_delay)

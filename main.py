@@ -7,7 +7,7 @@ from modules.bot import BlackDesertBot, BotBuffer
 from modules.camera import Camera
 from modules.vision import Vision
 from modules.keys import KeyListener
-from modules.utils import load_config, grab_screen
+from modules.utils import load_config, grab_screen, send_telegram_msg
 
 
 if __name__ == '__main__':
@@ -32,6 +32,7 @@ if __name__ == '__main__':
     bot_buffer.start()
     camera.start()
 
+    i = 0
     running = False
     while True:
         try:
@@ -54,6 +55,12 @@ if __name__ == '__main__':
 
             bot.filter_ability_cooldowns()
 
+            if not i % 100:  # send msg if armor durability low or weight limit
+                if vision.find_durability(screen):
+                    send_telegram_msg('Durability low')
+                if vision.find_weight_limit(screen):
+                    send_telegram_msg('Weight limit')
+
             if DEBUG:
                 result = targets + character_position
                 screen = vision.draw_rectangles(cv.cvtColor(screen, cv.COLOR_BGR2RGB), result)
@@ -73,6 +80,7 @@ if __name__ == '__main__':
                 if key_listener.stopped:
                     print('- Main loop stopped')
                     break
+            i += 1
             sleep(bot.main_loop_delay)
         except Exception as e:
             [thread.stop() for thread in to_stop]

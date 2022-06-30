@@ -65,6 +65,18 @@ class Vision:
         result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
         return result
 
+    def find_weight_limit(
+            self, screen: object, threshold=0.68, crop=[1335, 195, 1390, 240]) -> list[tuple]:
+        needle_img_path = 'assets/weight_limit.png'
+        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
+        return result
+
+    def find_durability(
+            self, screen: object, threshold=0.8, crop=[1530, 150, 1600, 200]) -> list[tuple]:
+        needle_img_path = 'assets/armor_durability.png'
+        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
+        return result
+
     def draw_rectangles(self, haystack_img, rectangles):
         """given a list of [x, y, w, h] rectangles and a canvas image to draw on
            return an image with all of those rectangles drawn"""
