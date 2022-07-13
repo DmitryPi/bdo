@@ -42,7 +42,7 @@ class Vision:
         for (x, y) in locations:
             if mask[y + needle_h // 2, x + needle_w // 2] != 255:
                 detected_objects.append((x, y, needle_w, needle_h))
-            mask[y:y + needle_h, y:y + needle_w] = 255  # mask out detected object
+            mask[y:y + needle_h, x:x + needle_w] = 255  # mask out detected object
 
         if crop:  # recalculate cropped region points
             for i, (x, y, w, h) in enumerate(detected_objects):
