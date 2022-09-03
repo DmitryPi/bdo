@@ -24,8 +24,8 @@ if __name__ == '__main__':
 
     vision = Vision()
     bot = BlackDesertBot()
-    bot_buffer = BotBuffer(bot.buffs + bot.foods, vision)
-    camera = Camera(vision)
+    bot_buffer = BotBuffer(bot.buffs + bot.foods)
+    camera = Camera()
     to_stop = [bot, bot_buffer, camera]
     key_listener = KeyListener(to_stop=to_stop)
     # bot.start()
@@ -38,9 +38,7 @@ if __name__ == '__main__':
         try:
             screen = grab_screen(region=[0, 0, 1920, 1080])  # window_name='Black Desert - 419022'
             buff_queue = bot_buffer.buff_queue
-            # targets = vision.find_vessel(screen) + vision.find_kzarka(screen)
             targets = vision.find_vessel(screen)
-            targets = vision.find_loot(screen)
             character_position = camera.character_position
 
             bot.update_screen(screen)

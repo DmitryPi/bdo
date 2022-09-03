@@ -2,8 +2,6 @@ import math
 import random
 import win32api
 
-
-from datetime import datetime
 from time import sleep
 from threading import Thread, Lock
 
@@ -28,11 +26,11 @@ class Camera:
     character_position = []
     main_loop_delay = 0.04
 
-    def __init__(self, vision: Vision):
+    def __init__(self):
         # create a thread lock
         self.lock = Lock()
         # properties
-        self.vision = vision
+        self.vision = Vision()
 
     def choose_target(self, targets: list[tuple]) -> tuple:
         """Choose middle target from targets"""

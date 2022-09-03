@@ -1,7 +1,7 @@
 import cv2 as cv
-import os
 import json
 import random
+import win32api
 
 from datetime import datetime
 from time import sleep
@@ -11,7 +11,7 @@ from enum import Enum, auto
 from .bdo import Ability
 from .vision import Vision
 from .keys import Keys
-from .utils import get_datetime_passed_seconds, send_telegram_msg
+from .utils import get_datetime_passed_seconds, send_telegram_msg, wind_mouse
 
 
 class BotState(Enum):
@@ -31,12 +31,12 @@ class BotBuffer:
     buff_queue = []
     main_loop_delay = 0.3
 
-    def __init__(self, buffs: list[Ability], vision: Vision):
+    def __init__(self, buffs: list[Ability]):
         # create a thread lock object
         self.lock = Lock()
         # properties
         self.buffs = buffs
-        self.vision = vision
+        self.vision = Vision()
 
     def search_for_buffs(self) -> None:
         """Find buff/food icons in cropped areas; update buff_queue"""
@@ -112,6 +112,7 @@ class BlackDesertBot:
         self.state = BotState.INIT
         # properties
         self.keys = Keys()
+        self.rnd_press_range = (0.1, 0.25)
 
     def load_abilities(self, ability_type='skill') -> list[Ability]:
         path = f'data/{ability_type}s.json'
@@ -188,7 +189,6 @@ class BlackDesertBot:
             return None
 
         pressed = []
-        rnd_press_range = (0.1, 0.25)
         # update ability_cooldowns
         self.update_ability_cooldowns((ability, str(datetime.now())))
         # use ability
@@ -202,17 +202,17 @@ class BlackDesertBot:
                 if 'lmb' in key:
                     self.keys.directMouse(buttons=self.keys.mouse_lb_press)
                     if not hold:
-                        sleep(random.uniform(*rnd_press_range))
+                        sleep(random.uniform(*self.rnd_press_range))
                         self.keys.directMouse(buttons=self.keys.mouse_lb_release)
                 elif 'rmb' in key:
                     self.keys.directMouse(buttons=self.keys.mouse_rb_press)
                     if not hold:
-                        sleep(random.uniform(*rnd_press_range))
+                        sleep(random.uniform(*self.rnd_press_range))
                         self.keys.directMouse(buttons=self.keys.mouse_rb_release)
                 else:
                     self.keys.directKey(key)
                     if not hold:
-                        sleep(random.uniform(*rnd_press_range))
+                        sleep(random.uniform(*self.rnd_press_range))
                         self.keys.directKey(key, self.keys.key_release)
                 if hold:
                     pressed.append(key)
@@ -225,6 +225,71 @@ class BlackDesertBot:
             else:
                 self.keys.directKey(key, self.keys.key_release)
         sleep(ability.duration)
+
+    def chest_open(self) -> None:
+        # show mouse
+        self.keys.directKey('i')
+        sleep(random.uniform(*self.rnd_press_range))
+        self.keys.directKey('i', self.keys.key_release)
+        sleep(0.3)
+        # move mouse to chest icon
+        pos_x, pos_y = win32api.GetCursorPos()
+        wind_mouse(pos_x, pos_y, 285, 135, move_mouse=win32api.SetCursorPos)
+        sleep(0.2)
+        self.keys.directMouse(buttons=self.keys.mouse_lb_press)
+        sleep(random.uniform(*self.rnd_press_range))
+        self.keys.directMouse(buttons=self.keys.mouse_lb_release)
+        sleep(0.3)
+        # open chest
+        pos_x, pos_y = win32api.GetCursorPos()
+        wind_mouse(pos_x, pos_y, 625, 725, move_mouse=win32api.SetCursorPos)
+        sleep(0.2)
+        self.keys.directMouse(buttons=self.keys.mouse_lb_press)
+        sleep(random.uniform(*self.rnd_press_range))
+        self.keys.directMouse(buttons=self.keys.mouse_lb_release)
+
+    def camp_open(self) -> None:
+        # show mouse
+        self.keys.directKey('i')
+        sleep(random.uniform(*self.rnd_press_range))
+        self.keys.directKey('i', self.keys.key_release)
+        sleep(0.3)
+        # move mouse to camp icon
+        pos_x, pos_y = win32api.GetCursorPos()
+        wind_mouse(pos_x, pos_y, 340, 135, move_mouse=win32api.SetCursorPos)
+        sleep(0.2)
+        self.keys.directMouse(buttons=self.keys.mouse_lb_press)
+        sleep(random.uniform(*self.rnd_press_range))
+        self.keys.directMouse(buttons=self.keys.mouse_lb_release)
+        sleep(0.3)
+        # open camp
+        pos_x, pos_y = win32api.GetCursorPos()
+        wind_mouse(pos_x, pos_y, 660, 535, move_mouse=win32api.SetCursorPos)
+        sleep(0.2)
+        self.keys.directMouse(buttons=self.keys.mouse_lb_press)
+        sleep(random.uniform(*self.rnd_press_range))
+        self.keys.directMouse(buttons=self.keys.mouse_lb_release)
+        sleep(0.3)
+
+    def camp_run_to(self) -> None:
+        # run to camp
+        self.keys.directKey('n')
+        sleep(random.uniform(*self.rnd_press_range))
+        self.keys.directKey('n', self.keys.key_release)
+
+    def camp_repair(self) -> None:
+        # move mouse to camp rapair icon
+        pos_x, pos_y = win32api.GetCursorPos()
+        wind_mouse(pos_x, pos_y, 860, 1038, move_mouse=win32api.SetCursorPos)
+        sleep(0.2)
+        # repair
+        self.keys.directMouse(buttons=self.keys.mouse_lb_press)
+        sleep(random.uniform(*self.rnd_press_range))
+        self.keys.directMouse(buttons=self.keys.mouse_lb_release)
+        sleep(0.2)
+        self.keys.directKey('space')
+        sleep(random.uniform(*self.rnd_press_range))
+        self.keys.directKey('space', self.keys.key_release)
 
     def set_state(self, state: BotState) -> None:
         print('\n- State changed:', state.name)

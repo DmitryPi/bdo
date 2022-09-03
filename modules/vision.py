@@ -90,6 +90,12 @@ class Vision:
         result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
         return result
 
+    def find_camp(
+            self, screen: object, threshold=0.8, crop=[15, 170, 1435, 830]) -> list[list[int]]:
+        needle_img_path = 'assets/ui/camp.png'
+        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
+        return result
+
     def find_loot(
             self, screen: object, threshold=0.85, crop=[1460, 400, 1900, 745]) -> list[list[int]]:
         end_result = []
