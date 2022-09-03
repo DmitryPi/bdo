@@ -6,7 +6,7 @@
         "icon": ["assets/foods/meal.png", 0.8],
         "cooldown": 7000,
         "duration": 0,
-        "disabled": false
+        "disabled": true
     },
     {
         "name": "Эликсиры",
@@ -15,6 +15,6 @@
         "icon": ["assets/foods/elixir_1.png", 0.8],
         "cooldown": 850,
         "duration": 0,
-        "disabled": false
+        "disabled": true
     }
 ]

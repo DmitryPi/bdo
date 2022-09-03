@@ -1,24 +1,6 @@
 [
     {
         "name": "Уклонение",
-        "keybind": ["space+", "s+", 0.5],
-        "type": "dodge",
-        "icon": "",
-        "cooldown": 4,
-        "duration": 0,
-        "disabled": false
-    },
-    {
-        "name": "Уклонение",
-        "keybind": ["space+", "s+", 0.5],
-        "type": "dodge",
-        "icon": "",
-        "cooldown": 4,
-        "duration": 0,
-        "disabled": false
-    },
-    {
-        "name": "Уклонение",
         "keybind": ["space+", "a+", 0.5],
         "type": "dodge",
         "icon": "",

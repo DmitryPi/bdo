@@ -40,7 +40,7 @@
         "keybind": ["w+", "rmb+", 0.5],
         "type": "skill",
         "icon": "",
-        "cooldown": 10,
+        "cooldown": 9,
         "duration": 0,
         "disabled": false
     }
