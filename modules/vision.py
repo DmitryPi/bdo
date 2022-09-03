@@ -24,7 +24,7 @@ class Vision:
         locations = list(zip(*locations[::-1]))  # remove empty arrays
         return locations
 
-    def find(self, needle_img_path: str, screen: object, threshold=0.65, crop=[]) -> list[tuple]:
+    def find(self, needle_img_path: str, screen: object, threshold=0.65, crop=[]) -> list[list[int]]:
         """Find grayscaled object on screen by given threshold
            crop - [x1, y1, x2, y2], screen region crop"""
         needle_img, needle_w, needle_h = self.process_img(needle_img_path)
@@ -41,39 +41,51 @@ class Vision:
 
         for (x, y) in locations:
             if mask[y + needle_h // 2, x + needle_w // 2] != 255:
-                detected_objects.append((x, y, needle_w, needle_h))
+                detected_objects.append([x, y, needle_w, needle_h])
             mask[y:y + needle_h, x:x + needle_w] = 255  # mask out detected object
 
         if crop:  # recalculate cropped region points
             for i, (x, y, w, h) in enumerate(detected_objects):
-                detected_objects[i] = (x + crop[0], y + crop[1], w, h)
+                detected_objects[i] = [x + crop[0], y + crop[1], w, h]
 
         return detected_objects
 
-    def find_character(self, screen: object, threshold=0.8, crop=[]) -> list[tuple]:
+    def find_character(self, screen: object, threshold=0.8, crop=[]) -> list[list[int]]:
         needle_img_path = 'assets/character.png'
         result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
         return result
 
-    def find_kzarka(self, screen: object, threshold=0.75, crop=[450, 210, 1585, 930]) -> list[tuple]:
+    def find_kzarka(self, screen: object, threshold=0.75, crop=[450, 210, 1585, 930]) -> list[list[int]]:
         needle_img_path = 'assets/kzarka.png'
         result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
         return result
 
-    def find_vessel(self, screen: object, threshold=0.62, crop=[0, 0, 1900, 500]) -> list[tuple]:
+    def find_vessel(self, screen: object, threshold=0.62, crop=[0, 0, 1900, 500]) -> list[list[int]]:
         needle_img_path = 'assets/vessel.png'
         result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
         return result
 
     def find_weight_limit(
-            self, screen: object, threshold=0.68, crop=[1335, 195, 1390, 240]) -> list[tuple]:
-        needle_img_path = 'assets/weight_limit.png'
+            self, screen: object, threshold=0.68, crop=[1335, 195, 1390, 240]) -> list[list[int]]:
+        needle_img_path = 'assets/ui/weight_limit.png'
         result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
         return result
 
     def find_durability(
-            self, screen: object, threshold=0.8, crop=[1530, 150, 1600, 200]) -> list[tuple]:
-        needle_img_path = 'assets/armor_durability.png'
+            self, screen: object, threshold=0.8, crop=[1530, 150, 1600, 200]) -> list[list[int]]:
+        needle_img_path = 'assets/ui/armor_durability.png'
+        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
+        return result
+
+    def find_inventory(
+            self, screen: object, threshold=0.8, crop=[928, 130, 1690, 200]) -> list[list[int]]:
+        needle_img_path = 'assets/ui/inventory.png'
+        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
+        return result
+
+    def find_chest(
+            self, screen: object, threshold=0.8, crop=[928, 130, 1690, 200]) -> list[list[int]]:
+        needle_img_path = 'assets/ui/chest.png'
         result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
         return result
 
