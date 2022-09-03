@@ -1,3 +1,4 @@
+import os
 import cv2 as cv
 import numpy as np
 
@@ -88,6 +89,17 @@ class Vision:
         needle_img_path = 'assets/ui/chest.png'
         result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
         return result
+
+    def find_loot(
+            self, screen: object, threshold=0.85, crop=[1460, 400, 1900, 745]) -> list[list[int]]:
+        end_result = []
+        for i in range(99):
+            needle_img_path = f'assets/loot/{i}.png'
+            if not os.path.exists(needle_img_path):
+                break
+            result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
+            end_result += result
+        return end_result
 
     def draw_rectangles(self, haystack_img, rectangles):
         """given a list of [x, y, w, h] rectangles and a canvas image to draw on

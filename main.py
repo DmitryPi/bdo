@@ -40,6 +40,7 @@ if __name__ == '__main__':
             buff_queue = bot_buffer.buff_queue
             # targets = vision.find_vessel(screen) + vision.find_kzarka(screen)
             targets = vision.find_vessel(screen)
+            targets = vision.find_loot(screen)
             character_position = camera.character_position
 
             bot.update_screen(screen)
