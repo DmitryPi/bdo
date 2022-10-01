@@ -12,10 +12,11 @@ from .bdo import Ability
 from .vision import Vision
 from .keys import Keys
 from .utils import (
+    mouse_move_to,
+    mouse_click_lb,
     calc_rect_middle,
     get_datetime_passed_seconds,
     send_telegram_msg,
-    wind_mouse,
     show_cursor,
 )
 
@@ -233,15 +234,28 @@ class BlackDesertBot:
                 self.keys.directKey(key, self.keys.key_release)
         sleep(ability.duration)
 
-    def maid_chest_open(self) -> None:
-        self.keys.directMouse(buttons=self.keys.mouse_lb_press)
-        sleep(random.uniform(*self.rnd_press_range))
-        self.keys.directMouse(buttons=self.keys.mouse_lb_release)
-        sleep(0.3)
-        # open chest
-        pos_x, pos_y = win32api.GetCursorPos()
-        wind_mouse(pos_x, pos_y, 625, 725, move_mouse=win32api.SetCursorPos)
-        sleep(0.2)
+    def maid_chest_open(self) -> bool:
+        """Open maid chest with dynamic coordinates"""
+        find_ui = self.vision.find_ui
+        try:
+            # success if chest opened
+            if find_ui(self.screen, 'chest_opened'):
+                print('- Chest Opened')
+                return True
+            # show cursor
+            if not find_ui(self.screen, 'inventory_opened'):
+                show_cursor()
+            # open maid menu
+            if find_ui(self.screen, 'maid_opened'):
+                result = find_ui(self.screen, 'maid_chest_open', onlyone=True)
+                mouse_move_to(result[0], result[1])
+                mouse_click_lb()
+            else:
+                result = find_ui(self.screen, 'maid_open', onlyone=True)
+                mouse_move_to(result[0], result[1])
+                mouse_click_lb()
+        except ValueError:
+            return False
 
     def camp_open(self) -> None:
         # show mouse

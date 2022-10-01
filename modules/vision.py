@@ -2,6 +2,8 @@ import os
 import cv2 as cv
 import numpy as np
 
+from .utils import calc_rect_middle
+
 
 class Vision:
     def __init__(self, method=cv.TM_CCOEFF_NORMED):
@@ -76,7 +78,7 @@ class Vision:
         interface = interfaces[ui]  # [template, threshhold, crop]
         result = self.find(screen, *interface)
         if onlyone:
-            result = result[0] if result else result
+            result = calc_rect_middle(result[0]) if result else result
         return result
 
     def find_loot(
