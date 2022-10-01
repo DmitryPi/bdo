@@ -63,7 +63,7 @@ class Vision:
             'camp_open': ['assets/ui/camp_btn.png', 0.9, []],
             'camp_opened': ['assets/ui/camp_menu.png', 0.8, []],
             'camp_repair': ['assets/ui/camp_repair_btn.png', 0.8, []],
-            'camp_repair_confirm': ['assets/ui/camp_repair_confirm_btn.png', 0.8, []],
+            'camp_repair_confirm': ['assets/ui/camp_repair_confirm_btn.png', 0.7, []],
             'camp_toofar': ['assets/ui/camp_toofar.png', 0.8, []],
             # monsters
             'kzarka': ['assets/kzarka.png', 0.75, [450, 210, 1585, 930]],

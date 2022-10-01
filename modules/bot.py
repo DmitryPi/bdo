@@ -12,12 +12,12 @@ from .bdo import Ability
 from .vision import Vision
 from .keys import Keys
 from .utils import (
+    press_btn,
     mouse_move_to,
     mouse_click_lb,
     calc_rect_middle,
     get_datetime_passed_seconds,
     send_telegram_msg,
-    show_cursor,
 )
 
 
@@ -242,9 +242,9 @@ class BlackDesertBot:
             if find_ui(self.screen, 'chest_opened'):
                 print('- Chest Opened')
                 return True
-            # show cursor
+            # if not inventory opened - cursor not shown
             if not find_ui(self.screen, 'inventory_opened'):
-                show_cursor()
+                press_btn('i')  # will show cursor
             # open maid menu
             if find_ui(self.screen, 'maid_opened'):
                 result = find_ui(self.screen, 'maid_chest_open', onlyone=True)
@@ -257,48 +257,37 @@ class BlackDesertBot:
         except ValueError:
             return False
 
-    def camp_open(self) -> None:
-        # show mouse
-        self.keys.directKey('i')
-        sleep(random.uniform(*self.rnd_press_range))
-        self.keys.directKey('i', self.keys.key_release)
-        sleep(0.3)
-        # move mouse to camp icon
-        pos_x, pos_y = win32api.GetCursorPos()
-        wind_mouse(pos_x, pos_y, 340, 135, move_mouse=win32api.SetCursorPos)
-        sleep(0.2)
-        self.keys.directMouse(buttons=self.keys.mouse_lb_press)
-        sleep(random.uniform(*self.rnd_press_range))
-        self.keys.directMouse(buttons=self.keys.mouse_lb_release)
-        sleep(0.3)
-        # open camp
-        pos_x, pos_y = win32api.GetCursorPos()
-        wind_mouse(pos_x, pos_y, 660, 535, move_mouse=win32api.SetCursorPos)
-        sleep(0.2)
-        self.keys.directMouse(buttons=self.keys.mouse_lb_press)
-        sleep(random.uniform(*self.rnd_press_range))
-        self.keys.directMouse(buttons=self.keys.mouse_lb_release)
-        sleep(0.3)
+    def camp_open_repair(self) -> bool:
+        find_ui = self.vision.find_ui
+        try:
+            # repair confirm
+            success = self.camp_repair_confirm()
+            if success:
+                return True
+            # if not inventory opened - cursor not shown
+            if not find_ui(self.screen, 'inventory_opened'):
+                press_btn('i')  # will show cursor
+            # open camp menu
+            if find_ui(self.screen, 'camp_opened'):
+                # click repair btn
+                result = find_ui(self.screen, 'camp_repair', onlyone=True)
+                mouse_move_to(result[0], result[1])
+                mouse_click_lb()
+            else:
+                result = find_ui(self.screen, 'camp_open', onlyone=True)
+                mouse_move_to(result[0], result[1])
+                mouse_click_lb()
+        except ValueError:
+            return False
 
-    def camp_run_to(self) -> None:
-        # run to camp
-        self.keys.directKey('n')
-        sleep(random.uniform(*self.rnd_press_range))
-        self.keys.directKey('n', self.keys.key_release)
-
-    def camp_repair(self) -> None:
-        # move mouse to camp rapair icon
-        pos_x, pos_y = win32api.GetCursorPos()
-        wind_mouse(pos_x, pos_y, 860, 1038, move_mouse=win32api.SetCursorPos)
-        sleep(0.2)
-        # repair
-        self.keys.directMouse(buttons=self.keys.mouse_lb_press)
-        sleep(random.uniform(*self.rnd_press_range))
-        self.keys.directMouse(buttons=self.keys.mouse_lb_release)
-        sleep(0.2)
-        self.keys.directKey('space')
-        sleep(random.uniform(*self.rnd_press_range))
-        self.keys.directKey('space', self.keys.key_release)
+    def camp_repair_confirm(self) -> bool:
+        result = self.vision.find_ui(self.screen, 'camp_repair_confirm', onlyone=True)
+        if result:
+            mouse_move_to(result[0], result[1])
+            mouse_click_lb()
+            sleep(0.4)
+            press_btn('space')
+            return True
 
     def set_state(self, state: BotState) -> None:
         print('\n- State changed:', state.name)

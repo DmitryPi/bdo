@@ -182,7 +182,8 @@ def wind_mouse_move_camera(x: int, y: int, step=13, delay=True, screen_size=(192
 def mouse_move_to(x: int, y: int, delay=0.2) -> None:
     pos_x, pos_y = win32api.GetCursorPos()
     wind_mouse(pos_x, pos_y, x, y, move_mouse=win32api.SetCursorPos)
-    sleep(delay)
+    if delay:
+        sleep(delay)
 
 
 def mouse_click_lb(rnd_range=[0.1, 0.25]) -> None:
@@ -197,11 +198,12 @@ def mouse_click_rb(rnd_range=[0.1, 0.25]) -> None:
     keys.directMouse(buttons=keys.mouse_rb_release)
 
 
-def show_cursor(key='i', delay=0.3, rnd_range=[0.1, 0.25]) -> None:
-    keys.directKey('i')
+def press_btn(key, delay=0.3, rnd_range=[0.1, 0.25]) -> None:
+    keys.directKey(key)
     sleep(random.uniform(*rnd_range))
-    keys.directKey('i', keys.key_release)
-    sleep(delay)
+    keys.directKey(key, keys.key_release)
+    if delay:
+        sleep(delay)
 
 
 def calc_rect_middle(rect: list[int]) -> list[int]:

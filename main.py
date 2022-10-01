@@ -43,9 +43,8 @@ if __name__ == '__main__':
 
             bot.update_screen(screen)
 
-            sleep(1)
-            bot.maid_chest_open()
-
+            bot.camp_open_repair()
+            sleep(0.5)
             # bot.update_buff_queue(buff_queue)
             # bot.update_targets(targets)
             # bot.update_character_position(character_position)
