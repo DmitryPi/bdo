@@ -51,22 +51,32 @@ class Vision:
 
         return detected_objects
 
-    def find_ui(self, screen: object, ui: str, threshold=0.8, crop=[]) -> list[list[int]]:
+    def find_ui(self, screen: object, ui: str, onlyone=False) -> list[list[int]]:
         interfaces = {
-            # ui
-            'camp': ['assets/ui/camp.png', 0.8, []],
-            'chest': ['assets/ui/chest.png', 0.8, []],
-            'inventory': ['assets/ui/inventory.png', 0.8, []],
-            'character': ['assets/character.png', 0.8, []],
+            # maid
+            'maid_open': ['assets/ui/maid_btn.png', 0.8, []],
+            'maid_opened': ['assets/ui/maid_menu.png', 0.8, []],
+            'maid_chest_open': ['assets/ui/maid_chest_btn.png', 0.9, []],
+            # camp
+            'camp_open': ['assets/ui/camp_btn.png', 0.9, []],
+            'camp_opened': ['assets/ui/camp_menu.png', 0.8, []],
+            'camp_repair': ['assets/ui/camp_repair_btn.png', 0.8, []],
+            'camp_repair_confirm': ['assets/ui/camp_repair_confirm_btn.png', 0.8, []],
+            'camp_toofar': ['assets/ui/camp_toofar.png', 0.8, []],
             # monsters
             'kzarka': ['assets/kzarka.png', 0.75, [450, 210, 1585, 930]],
             'vessel': ['assets/vessel.png', 0.62, [0, 0, 1900, 500]],
             # misc
+            'chest_opened': ['assets/ui/chest.png', 0.8, []],
+            'inventory_opened': ['assets/ui/inventory.png', 0.8, []],
+            'character': ['assets/character.png', 0.8, []],
             'durability': ['assets/ui/armor_durability.png', 0.8, [1530, 150, 1600, 200]],
             'weight_limit': ['assets/ui/weight_limit.png', 0.68, [1335, 195, 1390, 240]],
         }
         interface = interfaces[ui]  # [template, threshhold, crop]
         result = self.find(screen, *interface)
+        if onlyone:
+            result = result[0] if result else result
         return result
 
     def find_loot(

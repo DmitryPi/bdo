@@ -2,6 +2,7 @@ import configparser
 import codecs
 import cv2
 import numpy as np
+import random
 import win32gui
 import win32ui
 import win32con
@@ -11,6 +12,11 @@ from datetime import datetime
 from time import sleep
 from telegram import Bot, ParseMode
 from telegram.error import BadRequest
+
+from .keys import Keys
+
+
+keys = Keys()
 
 
 def build_config(config_name='config.ini') -> None:
@@ -173,12 +179,25 @@ def wind_mouse_move_camera(x: int, y: int, step=13, delay=True, screen_size=(192
     wind_mouse(pos_x, pos_y, x, y, M_0=step, D_0=step, move_mouse=move_func, delay=delay)
 
 
-def calc_rect_middle(rect: tuple[int]) -> tuple[int]:
+def mouse_move_to(x: int, y: int, delay=0.2) -> None:
+    pos_x, pos_y = win32api.GetCursorPos()
+    wind_mouse(pos_x, pos_y, x, y, move_mouse=win32api.SetCursorPos)
+    sleep(delay)
+
+
+def show_cursor(key='i', rnd_range=[0.1, 0.25]):
+    keys.directKey('i')
+    sleep(random.uniform(*rnd_range))
+    keys.directKey('i', keys.key_release)
+    sleep(0.3)
+
+
+def calc_rect_middle(rect: list[int]) -> list[int]:
     """Calculate middle point of rectangle"""
     x, y, w, h = rect
     x = int((x * 2 + w) / 2)
     y = int((y * 2 + h) / 2)
-    return (x, y, w, h)
+    return [x, y, w, h]
 
 
 def send_telegram_msg(msg: str, photo_path='') -> None:

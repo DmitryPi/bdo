@@ -11,7 +11,13 @@ from enum import Enum, auto
 from .bdo import Ability
 from .vision import Vision
 from .keys import Keys
-from .utils import get_datetime_passed_seconds, send_telegram_msg, wind_mouse
+from .utils import (
+    calc_rect_middle,
+    get_datetime_passed_seconds,
+    send_telegram_msg,
+    wind_mouse,
+    show_cursor,
+)
 
 
 class BotState(Enum):
@@ -98,6 +104,7 @@ class BlackDesertBot:
     buff_queue = []  # when killing check buff icon; add to queue
     ability_cooldowns = []
     main_loop_delay = 0.04
+    rnd_press_range = (0.1, 0.25)
 
     def __init__(self, character='guard'):
         # create a thread lock object
@@ -112,7 +119,7 @@ class BlackDesertBot:
         self.state = BotState.INIT
         # properties
         self.keys = Keys()
-        self.rnd_press_range = (0.1, 0.25)
+        self.vision = Vision()
 
     def load_abilities(self, ability_type='skill') -> list[Ability]:
         path = f'data/{ability_type}s.json'
@@ -226,16 +233,7 @@ class BlackDesertBot:
                 self.keys.directKey(key, self.keys.key_release)
         sleep(ability.duration)
 
-    def chest_open(self) -> None:
-        # show mouse
-        self.keys.directKey('i')
-        sleep(random.uniform(*self.rnd_press_range))
-        self.keys.directKey('i', self.keys.key_release)
-        sleep(0.3)
-        # move mouse to chest icon
-        pos_x, pos_y = win32api.GetCursorPos()
-        wind_mouse(pos_x, pos_y, 285, 135, move_mouse=win32api.SetCursorPos)
-        sleep(0.2)
+    def maid_chest_open(self) -> None:
         self.keys.directMouse(buttons=self.keys.mouse_lb_press)
         sleep(random.uniform(*self.rnd_press_range))
         self.keys.directMouse(buttons=self.keys.mouse_lb_release)
