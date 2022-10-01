@@ -4,7 +4,7 @@
         "keybind": ["space+", "a+", 0.5],
         "type": "dodge",
         "icon": "",
-        "cooldown": 4,
+        "cooldown": 5,
         "duration": 0,
         "disabled": false
     },
@@ -13,7 +13,7 @@
         "keybind": ["space+", "d+", 0.5],
         "type": "dodge",
         "icon": "",
-        "cooldown": 4,
+        "cooldown": 5,
         "duration": 0,
         "disabled": false
     }

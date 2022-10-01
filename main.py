@@ -36,7 +36,7 @@ if __name__ == '__main__':
     running = False
     while True:
         try:
-            screen = grab_screen(region=[0, 0, 1920, 1080])  # window_name='Black Desert - 419022'
+            screen = grab_screen(region=[0, 0, 1920, 1080])
             buff_queue = bot_buffer.buff_queue
             targets = vision.find_vessel(screen)
             character_position = camera.character_position
