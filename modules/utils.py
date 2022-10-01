@@ -185,11 +185,23 @@ def mouse_move_to(x: int, y: int, delay=0.2) -> None:
     sleep(delay)
 
 
-def show_cursor(key='i', rnd_range=[0.1, 0.25]):
+def mouse_click_lb(rnd_range=[0.1, 0.25]) -> None:
+    keys.directMouse(buttons=keys.mouse_lb_press)
+    sleep(random.uniform(*rnd_range))
+    keys.directMouse(buttons=keys.mouse_lb_release)
+
+
+def mouse_click_rb(rnd_range=[0.1, 0.25]) -> None:
+    keys.directMouse(buttons=keys.mouse_rb_press)
+    sleep(random.uniform(*rnd_range))
+    keys.directMouse(buttons=keys.mouse_rb_release)
+
+
+def show_cursor(key='i', delay=0.3, rnd_range=[0.1, 0.25]) -> None:
     keys.directKey('i')
     sleep(random.uniform(*rnd_range))
     keys.directKey('i', keys.key_release)
-    sleep(0.3)
+    sleep(delay)
 
 
 def calc_rect_middle(rect: list[int]) -> list[int]:

@@ -242,9 +242,6 @@ class BlackDesertBot:
         pos_x, pos_y = win32api.GetCursorPos()
         wind_mouse(pos_x, pos_y, 625, 725, move_mouse=win32api.SetCursorPos)
         sleep(0.2)
-        self.keys.directMouse(buttons=self.keys.mouse_lb_press)
-        sleep(random.uniform(*self.rnd_press_range))
-        self.keys.directMouse(buttons=self.keys.mouse_lb_release)
 
     def camp_open(self) -> None:
         # show mouse
