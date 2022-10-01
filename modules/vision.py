@@ -25,9 +25,9 @@ class Vision:
         locations = list(zip(*locations[::-1]))  # remove empty arrays
         return locations
 
-    def find(self, needle_img_path: str, screen: object, threshold=0.65, crop=[]) -> list[list[int]]:
+    def find(self, screen: object, needle_img_path: str, threshold=0.65, crop=[]) -> list[list[int]]:
         """Find grayscaled object on screen by given threshold
-           crop - [x1, y1, x2, y2], screen region crop"""
+           crop - screen region crop [x1, y1, x2, y2] """
         needle_img, needle_w, needle_h = self.process_img(needle_img_path)
         screen_gray = self.cvt_img_gray(screen)
 
@@ -51,49 +51,22 @@ class Vision:
 
         return detected_objects
 
-    def find_character(self, screen: object, threshold=0.8, crop=[]) -> list[list[int]]:
-        needle_img_path = 'assets/character.png'
-        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
-        return result
-
-    def find_kzarka(self, screen: object, threshold=0.75, crop=[450, 210, 1585, 930]) -> list[list[int]]:
-        needle_img_path = 'assets/kzarka.png'
-        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
-        return result
-
-    def find_vessel(self, screen: object, threshold=0.62, crop=[0, 0, 1900, 500]) -> list[list[int]]:
-        needle_img_path = 'assets/vessel.png'
-        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
-        return result
-
-    def find_weight_limit(
-            self, screen: object, threshold=0.68, crop=[1335, 195, 1390, 240]) -> list[list[int]]:
-        needle_img_path = 'assets/ui/weight_limit.png'
-        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
-        return result
-
-    def find_durability(
-            self, screen: object, threshold=0.8, crop=[1530, 150, 1600, 200]) -> list[list[int]]:
-        needle_img_path = 'assets/ui/armor_durability.png'
-        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
-        return result
-
-    def find_inventory(
-            self, screen: object, threshold=0.8, crop=[928, 130, 1690, 200]) -> list[list[int]]:
-        needle_img_path = 'assets/ui/inventory.png'
-        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
-        return result
-
-    def find_chest(
-            self, screen: object, threshold=0.8, crop=[928, 130, 1690, 200]) -> list[list[int]]:
-        needle_img_path = 'assets/ui/chest.png'
-        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
-        return result
-
-    def find_camp(
-            self, screen: object, threshold=0.8, crop=[15, 170, 1435, 830]) -> list[list[int]]:
-        needle_img_path = 'assets/ui/camp.png'
-        result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
+    def find_ui(self, screen: object, ui: str, threshold=0.8, crop=[]) -> list[list[int]]:
+        interfaces = {
+            # ui
+            'camp': ['assets/ui/camp.png', 0.8, []],
+            'chest': ['assets/ui/chest.png', 0.8, []],
+            'inventory': ['assets/ui/inventory.png', 0.8, []],
+            'character': ['assets/character.png', 0.8, []],
+            # monsters
+            'kzarka': ['assets/kzarka.png', 0.75, [450, 210, 1585, 930]],
+            'vessel': ['assets/vessel.png', 0.62, [0, 0, 1900, 500]],
+            # misc
+            'durability': ['assets/ui/armor_durability.png', 0.8, [1530, 150, 1600, 200]],
+            'weight_limit': ['assets/ui/weight_limit.png', 0.68, [1335, 195, 1390, 240]],
+        }
+        interface = interfaces[ui]  # [template, threshhold, crop]
+        result = self.find(screen, *interface)
         return result
 
     def find_loot(
@@ -103,7 +76,7 @@ class Vision:
             needle_img_path = f'assets/loot/{i}.png'
             if not os.path.exists(needle_img_path):
                 break
-            result = self.find(needle_img_path, screen, threshold=threshold, crop=crop)
+            result = self.find(screen, needle_img_path, threshold=threshold, crop=crop)
             end_result += result
         return end_result
 

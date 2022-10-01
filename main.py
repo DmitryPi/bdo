@@ -38,7 +38,7 @@ if __name__ == '__main__':
         try:
             screen = grab_screen(region=[0, 0, 1920, 1080])
             buff_queue = bot_buffer.buff_queue
-            targets = vision.find_vessel(screen)
+            targets = vision.find_ui(screen, 'vessel')
             character_position = camera.character_position
 
             bot.update_screen(screen)
@@ -55,9 +55,9 @@ if __name__ == '__main__':
             bot.filter_ability_cooldowns()
 
             if not i % 100:  # send msg if armor durability low or weight limit
-                if vision.find_durability(screen):
+                if vision.find_ui(screen, 'durability'):
                     send_telegram_msg('Durability low')
-                if vision.find_weight_limit(screen):
+                if vision.find_ui(screen, 'weight_limit'):
                     send_telegram_msg('Weight limit')
 
             if DEBUG:

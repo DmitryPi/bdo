@@ -58,7 +58,7 @@ class BotBuffer:
         """cv2 search buff/food icon"""
         needle_img = buff.icon[0]
         threshold = buff.icon[1]
-        result = self.vision.find(needle_img, self.screen, threshold=threshold, crop=crop)
+        result = self.vision.find(self.screen, needle_img, threshold=threshold, crop=crop)
         return result
 
     def update_screen(self, screen: object) -> None:
