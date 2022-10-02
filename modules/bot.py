@@ -252,7 +252,7 @@ class BlackDesertBot:
 
             if chest_opened:
                 print('- Chest Opened')
-                # self.maid_chest_put_loot()
+                self.maid_chest_put_loot()
                 return True
             else:
                 maid_opened = find_ui(self.screen, 'maid_opened')
@@ -272,6 +272,7 @@ class BlackDesertBot:
             mouse_click_rb()
             sleep(0.5)
             press_btn('space')
+        press_btn('esc')
 
     def camp_repair_manage(self) -> bool:
         find_ui = self.vision.find_ui
