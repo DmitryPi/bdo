@@ -282,7 +282,6 @@ class BlackDesertBot:
 
             if camp_toofar:
                 self.camp_run_to()
-
             if not inventory_opened:  # show cursor
                 press_btn('i')
 
