@@ -15,6 +15,7 @@ from .utils import (
     press_btn,
     mouse_move_to,
     mouse_click_lb,
+    mouse_click_rb,
     calc_rect_middle,
     get_datetime_passed_seconds,
     send_telegram_msg,
@@ -241,28 +242,45 @@ class BlackDesertBot:
             # success if chest opened
             if find_ui(self.screen, 'chest_opened'):
                 print('- Chest Opened')
+                self.maid_chest_put()
                 return True
             # if not inventory opened - cursor not shown
             if not find_ui(self.screen, 'inventory_opened'):
                 press_btn('i')  # will show cursor
             # open maid menu
             if find_ui(self.screen, 'maid_opened'):
+                print('- Maid Opened')
                 result = find_ui(self.screen, 'maid_chest_open', onlyone=True)
+                print(result)
                 mouse_move_to(result[0], result[1])
                 mouse_click_lb()
             else:
+                print('- Maid Opening')
                 result = find_ui(self.screen, 'maid_open', onlyone=True)
                 mouse_move_to(result[0], result[1])
                 mouse_click_lb()
-        except ValueError:
-            return False
+        except (ValueError, IndexError) as e:
+            print(e)
+
+    def maid_chest_put(self) -> bool:
+        """Put loot items to maid stash"""
+        items = self.vision.find_loot(self.screen)
+        for item in items:
+            mouse_move_to(item[0], item[1])
+            sleep(0.3)
+            mouse_click_rb()
+            sleep(0.5)
+            press_btn('space')
 
     def camp_open_repair(self) -> bool:
         find_ui = self.vision.find_ui
         try:
+            # run to camp
+            if find_ui(self.screen, 'camp_toofar'):
+                self.camp_run_to()
             # repair confirm
-            success = self.camp_repair_confirm()
-            if success:
+            if self.camp_repair_confirm():
+                print('- Repair successful')
                 return True
             # if not inventory opened - cursor not shown
             if not find_ui(self.screen, 'inventory_opened'):
@@ -277,8 +295,14 @@ class BlackDesertBot:
                 result = find_ui(self.screen, 'camp_open', onlyone=True)
                 mouse_move_to(result[0], result[1])
                 mouse_click_lb()
-        except ValueError:
-            return False
+        except (ValueError, IndexError) as e:
+            print(e)
+
+    def camp_run_to(self):
+        print('- Run to camp')
+        press_btn('t')
+        sleep(5)
+        mouse_click_lb()
 
     def camp_repair_confirm(self) -> bool:
         result = self.vision.find_ui(self.screen, 'camp_repair_confirm', onlyone=True)
@@ -287,6 +311,8 @@ class BlackDesertBot:
             mouse_click_lb()
             sleep(0.4)
             press_btn('space')
+            press_btn('esc')
+            press_btn('esc')
             return True
 
     def set_state(self, state: BotState) -> None:

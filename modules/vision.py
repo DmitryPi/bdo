@@ -82,7 +82,8 @@ class Vision:
         return result
 
     def find_loot(
-            self, screen: object, threshold=0.85, crop=[1460, 400, 1900, 745]) -> list[list[int]]:
+            self, screen: object, threshold=0.8, crop=[1460, 400, 1900, 745]) -> list[list[int]]:
+        """Find inventory loot from assets/loot/*; Build list of centered items"""
         end_result = []
         for i in range(99):
             needle_img_path = f'assets/loot/{i}.png'
@@ -90,7 +91,7 @@ class Vision:
                 break
             result = self.find(screen, needle_img_path, threshold=threshold, crop=crop)
             end_result += result
-        return end_result
+        return [calc_rect_middle(i) for i in end_result]
 
     def draw_rectangles(self, haystack_img, rectangles):
         """given a list of [x, y, w, h] rectangles and a canvas image to draw on

@@ -38,12 +38,12 @@ if __name__ == '__main__':
         try:
             screen = grab_screen(region=[0, 0, 1920, 1080])
             buff_queue = bot_buffer.buff_queue
-            targets = vision.find_ui(screen, 'camp_toofar')
+            targets = vision.find_ui(screen, 'maid_chest_open')
             character_position = camera.character_position
 
             bot.update_screen(screen)
 
-            bot.camp_open_repair()
+            bot.maid_chest_open()
             sleep(0.5)
             # bot.update_buff_queue(buff_queue)
             # bot.update_targets(targets)
