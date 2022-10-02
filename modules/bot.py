@@ -237,7 +237,7 @@ class BlackDesertBot:
 
     def open_ui(self, ui: str) -> None:
         result = self.vision.find_ui(self.screen, ui, onlyone=True)
-        mouse_move_to(result[0], result[1])
+        mouse_move_to(*result[:2])
         mouse_click_lb()
 
     def maid_chest_manage(self) -> bool:
@@ -251,7 +251,6 @@ class BlackDesertBot:
                 press_btn('i')
 
             if chest_opened:
-                print('- Chest Opened')
                 self.maid_chest_put_loot()
                 return True
             else:
@@ -267,7 +266,7 @@ class BlackDesertBot:
         """Put loot items to maid stash"""
         items = self.vision.find_loot(self.screen)
         for item in items:
-            mouse_move_to(item[0], item[1])
+            mouse_move_to(*item[:2])
             sleep(0.3)
             mouse_click_rb()
             sleep(0.5)
@@ -275,47 +274,43 @@ class BlackDesertBot:
         press_btn('esc')
 
     def camp_repair_manage(self) -> bool:
-        find_ui = self.vision.find_ui
         try:
-            # run to camp
-            if find_ui(self.screen, 'camp_toofar'):
+            find_ui = self.vision.find_ui
+            camp_toofar = find_ui(self.screen, 'camp_toofar')
+            camp_repair_confirm_btn = find_ui(self.screen, 'camp_repair_confirm', onlyone=True)
+            inventory_opened = find_ui(self.screen, 'inventory_opened')
+
+            if camp_toofar:
                 self.camp_run_to()
-            # repair confirm
-            if self.camp_repair_confirm():
-                print('- Repair successful')
+
+            if not inventory_opened:  # show cursor
+                press_btn('i')
+
+            if camp_repair_confirm_btn:
+                self.camp_repair_confirm(*camp_repair_confirm_btn[:2])
                 return True
-            # if not inventory opened - cursor not shown
-            if not find_ui(self.screen, 'inventory_opened'):
-                press_btn('i')  # will show cursor
-            # open camp menu
-            if find_ui(self.screen, 'camp_opened'):
-                # click repair btn
-                result = find_ui(self.screen, 'camp_repair', onlyone=True)
-                mouse_move_to(result[0], result[1])
-                mouse_click_lb()
             else:
-                result = find_ui(self.screen, 'camp_open', onlyone=True)
-                mouse_move_to(result[0], result[1])
-                mouse_click_lb()
+                camp_opened = find_ui(self.screen, 'camp_opened')
+                if camp_opened:
+                    self.open_ui('camp_repair')
+                else:
+                    self.open_ui('camp_open')
         except (ValueError, IndexError) as e:
             print(e)
 
-    def camp_run_to(self):
+    def camp_run_to(self) -> None:
         print('- Run to camp')
         press_btn('t')
         sleep(5)
         mouse_click_lb()
 
-    def camp_repair_confirm(self) -> bool:
-        result = self.vision.find_ui(self.screen, 'camp_repair_confirm', onlyone=True)
-        if result:
-            mouse_move_to(result[0], result[1])
-            mouse_click_lb()
-            sleep(0.4)
-            press_btn('space')
-            press_btn('esc')
-            press_btn('esc')
-            return True
+    def camp_repair_confirm(self, x: int, y: int) -> None:
+        mouse_move_to(x, y)
+        mouse_click_lb()
+        sleep(0.4)
+        press_btn('space')
+        press_btn('esc')
+        press_btn('esc')
 
     def set_state(self, state: BotState) -> None:
         print('\n- State changed:', state.name)
