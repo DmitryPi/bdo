@@ -23,6 +23,8 @@ from .utils import (
 class BotState(Enum):
     INIT = auto()
     SEARCHING = auto()
+    REPAIRING = auto()
+    STASHING = auto()
     KILLING = auto()
 
 
@@ -270,6 +272,7 @@ class BlackDesertBot:
             sleep(0.5)
             press_btn('space')
         press_btn('esc')
+        press_btn('esc')
 
     def camp_repair_manage(self) -> bool:
         try:
@@ -324,7 +327,6 @@ class BlackDesertBot:
         print(f'- {__class__.__name__} stopped')
 
     def run(self):
-        telegram_msg_sent = False
         i = 0
         while not self.stopped:
             if self.state == BotState.INIT:
@@ -334,17 +336,23 @@ class BlackDesertBot:
                 if not self.targets:
                     i += 1
                     self.use_ability(self.skills[1])  # Всплеск Инферно
-                    if i >= 200:
-                        if not telegram_msg_sent:
-                            screen_path = 'assets/last_screen.jpg'
-                            cv.imwrite(screen_path, cv.cvtColor(self.screen, cv.COLOR_BGR2RGB))
-                            send_telegram_msg('\nCant find target', photo_path=screen_path)
-                        telegram_msg_sent = True
-                        sleep(15)
+                    if i >= 60:
+                        i = 0
+                        self.set_state(BotState.REPAIRING)
                 else:
                     i = 0
-                    telegram_msg_sent = False
                     self.set_state(BotState.KILLING)
+            elif self.state == BotState.REPAIRING:
+                result = self.camp_repair_manage()
+                if result:
+                    self.set_state(BotState.STASHING)
+                sleep(.5)
+            elif self.state == BotState.STASHING:
+                result = self.maid_chest_manage()
+                if result:
+                    sleep(60)
+                    self.set_state(BotState.SEARCHING)
+                sleep(.5)
             elif self.state == BotState.KILLING:
                 if not self.targets:
                     self.set_state(BotState.SEARCHING)
