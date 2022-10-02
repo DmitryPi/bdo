@@ -7,7 +7,7 @@ from threading import Thread, Lock
 
 from .bot import BotState
 from .vision import Vision
-from .utils import get_datetime_passed_seconds, wind_mouse_move_camera, calc_rect_middle
+from .utils import wind_mouse_move_camera, calc_rect_middle
 
 
 class Camera:

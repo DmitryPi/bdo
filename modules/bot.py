@@ -1,7 +1,6 @@
 import cv2 as cv
 import json
 import random
-import win32api
 
 from datetime import datetime
 from time import sleep
@@ -16,7 +15,6 @@ from .utils import (
     mouse_move_to,
     mouse_click_lb,
     mouse_click_rb,
-    calc_rect_middle,
     get_datetime_passed_seconds,
     send_telegram_msg,
 )
