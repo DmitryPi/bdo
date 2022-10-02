@@ -235,34 +235,35 @@ class BlackDesertBot:
                 self.keys.directKey(key, self.keys.key_release)
         sleep(ability.duration)
 
-    def maid_chest_open(self) -> bool:
-        """Open maid chest with dynamic coordinates"""
-        find_ui = self.vision.find_ui
+    def open_ui(self, ui: str) -> None:
+        result = self.vision.find_ui(self.screen, ui, onlyone=True)
+        mouse_move_to(result[0], result[1])
+        mouse_click_lb()
+
+    def maid_chest_manage(self) -> bool:
+        """Open maid chest => put loot items into it"""
         try:
-            # success if chest opened
-            if find_ui(self.screen, 'chest_opened'):
+            find_ui = self.vision.find_ui
+            inventory_opened = find_ui(self.screen, 'inventory_opened')
+            chest_opened = find_ui(self.screen, 'chest_opened')
+
+            if not inventory_opened:  # show cursor
+                press_btn('i')
+
+            if chest_opened:
                 print('- Chest Opened')
-                self.maid_chest_put()
+                # self.maid_chest_put_loot()
                 return True
-            # if not inventory opened - cursor not shown
-            if not find_ui(self.screen, 'inventory_opened'):
-                press_btn('i')  # will show cursor
-            # open maid menu
-            if find_ui(self.screen, 'maid_opened'):
-                print('- Maid Opened')
-                result = find_ui(self.screen, 'maid_chest_open', onlyone=True)
-                print(result)
-                mouse_move_to(result[0], result[1])
-                mouse_click_lb()
             else:
-                print('- Maid Opening')
-                result = find_ui(self.screen, 'maid_open', onlyone=True)
-                mouse_move_to(result[0], result[1])
-                mouse_click_lb()
+                maid_opened = find_ui(self.screen, 'maid_opened')
+                if maid_opened:
+                    self.open_ui('maid_chest_open')
+                else:
+                    self.open_ui('maid_open')
         except (ValueError, IndexError) as e:
             print(e)
 
-    def maid_chest_put(self) -> bool:
+    def maid_chest_put_loot(self) -> bool:
         """Put loot items to maid stash"""
         items = self.vision.find_loot(self.screen)
         for item in items:
@@ -272,7 +273,7 @@ class BlackDesertBot:
             sleep(0.5)
             press_btn('space')
 
-    def camp_open_repair(self) -> bool:
+    def camp_repair_manage(self) -> bool:
         find_ui = self.vision.find_ui
         try:
             # run to camp

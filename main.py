@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
             bot.update_screen(screen)
 
-            bot.maid_chest_open()
+            bot.maid_chest_manage()
             sleep(0.5)
             # bot.update_buff_queue(buff_queue)
             # bot.update_targets(targets)
