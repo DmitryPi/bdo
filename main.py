@@ -3,7 +3,7 @@ import logging
 
 from time import sleep
 
-from modules.bot import BlackDesertBot, BotBuffer
+from modules.bot import BotState, BlackDesertBot, BotBuffer
 from modules.camera import Camera
 from modules.vision import Vision
 from modules.keys import KeyListener
@@ -38,9 +38,11 @@ if __name__ == '__main__':
         try:
             screen = grab_screen(region=[0, 0, 1920, 1080])
             buff_queue = bot_buffer.buff_queue
-            # targets = vision.find_ui(screen, 'vessel')
-            targets = []
+            targets = vision.find_ui(screen, 'vessel')
             character_position = camera.character_position
+
+            if bot.state == BotState.REPAIRING or bot.state == BotState.STASHING:
+                targets = []
 
             bot.update_screen(screen)
             bot.update_buff_queue(buff_queue)

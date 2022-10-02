@@ -1,4 +1,3 @@
-import cv2 as cv
 import json
 import random
 
@@ -16,7 +15,6 @@ from .utils import (
     mouse_click_lb,
     mouse_click_rb,
     get_datetime_passed_seconds,
-    send_telegram_msg,
 )
 
 
