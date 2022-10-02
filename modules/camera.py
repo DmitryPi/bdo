@@ -68,6 +68,12 @@ class Camera:
         move_y = move_y + overhead if move_y > 0 else move_y - overhead
         wind_mouse_move_camera(pos_x, move_y)
 
+    def adjust_camera_angle(self):
+        """camera adjustment by character"""
+        self.character_position = self.vision.find_ui(self.screen, 'character', threshold=0.8)
+        if self.character_position:
+            self.adjust_angle(self.character_position[0])
+
     def update_targets(self, targets: list[tuple]) -> None:
         """Threading method: update targets property"""
         self.lock.acquire()
@@ -99,11 +105,6 @@ class Camera:
     def run(self):
         sleep(self.INITIALIZING_SECONDS)
         while not self.stopped:
-            # camera adjustment by character
-            # self.character_position = self.vision.find_ui(self.screen, 'character', threshold=0.8)
-            # if self.character_position:
-            #     self.adjust_angle(self.character_position[0])
-
             if self.targets:
                 self.follow_target(self.targets[0])
 
