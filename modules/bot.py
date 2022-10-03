@@ -257,7 +257,7 @@ class BlackDesertBot:
                     self.open_ui('maid_chest_open')
                 else:
                     self.open_ui('maid_open')
-        except (ValueError, IndexError) as e:
+        except (ValueError, IndexError, TypeError) as e:
             print(e)
 
     def maid_chest_put_loot(self) -> bool:
@@ -293,13 +293,13 @@ class BlackDesertBot:
                     self.open_ui('camp_repair')
                 else:
                     self.open_ui('camp_open')
-        except (ValueError, IndexError) as e:
+        except (ValueError, IndexError, TypeError) as e:
             print(e)
 
     def camp_run_to(self) -> None:
         print('- Run to camp')
         press_btn('t')
-        sleep(5)
+        sleep(10)
         mouse_click_lb()
 
     def camp_repair_confirm(self, x: int, y: int) -> None:
