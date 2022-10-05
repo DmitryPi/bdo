@@ -67,7 +67,7 @@ class Vision:
             'camp_toofar': ['assets/ui/camp_toofar.png', 0.8, []],
             # monsters
             'kzarka': ['assets/kzarka.png', 0.75, [450, 210, 1585, 930]],
-            'vessel': ['assets/vessel.png', 0.62, [0, 0, 1900, 500]],
+            'vessel': ['assets/vessel_1.png', 0.6, [0, 0, 1900, 500]],
             # misc
             'chest_opened': ['assets/ui/chest.png', 0.8, []],
             'inventory_opened': ['assets/ui/inventory.png', 0.8, []],
