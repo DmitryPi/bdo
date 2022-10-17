@@ -1,11 +1,24 @@
-# Black Desert
+# BDO
+> Фарм бот и автоматизиция для игры Black Desert Online
 
-> Bot and automation for Black Desert Online
+
+## Стэк
+
+    numpy
+    openCV (cv2)
+    win32api
+    pytest
 
 
-## 
+## Требования
+- Разрешение: 1920x1080
+- Графика: Очень низкая - Средняя
+- Персонаж: Страж Пробуждение
+- Минимальный Гир: 269 атаки, 350 защиты
+- Интерфейс: избавление от всего лишнего, на что бот может навестись
 
-## Composition
+## Архитектура
+
     | assets
         | buffs
         | foods
@@ -28,7 +41,6 @@
             test_vision.py
     .editorconfig
     .gitignore
-    config.example.ini
     main.py
     requirements.txt
 
