@@ -26,8 +26,8 @@ if __name__ == '__main__':
     bot = BlackDesertBot()
     bot_buffer = BotBuffer(bot.buffs + bot.foods)
     camera = Camera()
-    to_stop = [bot, bot_buffer, camera]
-    key_listener = KeyListener(to_stop=to_stop)
+    threads = [bot, bot_buffer, camera]
+    key_listener = KeyListener(to_stop=threads)
     bot.start()
     bot_buffer.start()
     camera.start()
@@ -63,7 +63,7 @@ if __name__ == '__main__':
                 screen = cv.resize(screen, (1200, 675))
                 cv.imshow('Screen', screen)
                 if cv.waitKey(1) == ord('q'):
-                    [thread.stop() for thread in to_stop]
+                    [thread.stop() for thread in threads]
                     cv.destroyAllWindows()
                     break
             else:
@@ -79,5 +79,5 @@ if __name__ == '__main__':
             i += 1
             sleep(bot.main_loop_delay)
         except Exception as e:
-            [thread.stop() for thread in to_stop]
+            [thread.stop() for thread in threads]
             raise e
