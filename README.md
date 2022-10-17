@@ -6,8 +6,10 @@
 
     numpy
     openCV (cv2)
-    win32api
     pytest
+    pyQt5
+    win32api
+
 
 
 ## Требования
@@ -30,13 +32,13 @@
         bdo.py
         bot.py
         camera.py
+        gui.py
         keys.py
         utils.py
         vision.py
         | tests
             test_bdo.py
             test_bot.py
-            test_camera.py
             test_utils.py
             test_vision.py
     .editorconfig

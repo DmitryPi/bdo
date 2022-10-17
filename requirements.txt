@@ -8,3 +8,4 @@ pywin32==304
 pytest
 pytest-sugar
 python-telegram-bot
+PyQt5
