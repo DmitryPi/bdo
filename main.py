@@ -57,12 +57,6 @@ if __name__ == '__main__':
 
             bot.filter_ability_cooldowns()
 
-            if not i % 100:  # send msg if armor durability low or weight limit
-                if vision.find_ui(screen, 'durability'):
-                    send_telegram_msg('Durability low')
-                if vision.find_ui(screen, 'weight_limit'):
-                    send_telegram_msg('Weight limit')
-
             if DEBUG:
                 result = targets + character_position
                 screen = vision.draw_rectangles(cv.cvtColor(screen, cv.COLOR_BGR2RGB), result)

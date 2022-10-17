@@ -24,9 +24,6 @@ def build_config(config_name='config.ini') -> None:
     config['MAIN'] = {
         'debug': True,
     }
-    config['DB'] = {
-        'table': 'bdo',
-    }
     with open(config_name, 'w') as f:
         print('- Creating new config')
         config.write(f)

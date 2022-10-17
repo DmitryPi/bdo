@@ -1,17 +1,31 @@
 # Black Desert
+
 > Bot and automation for Black Desert Online
 
 
-## Features
+## 
 
 ## Composition
     | assets
+        | buffs
+        | foods
+        | loot
+        | ui
+    | data
+        *.json
     | modules
-        db.py
+        bdo.py
+        bot.py
+        camera.py
+        keys.py
         utils.py
+        vision.py
         | tests
-            test_db.py
+            test_bdo.py
+            test_bot.py
+            test_camera.py
             test_utils.py
+            test_vision.py
     .editorconfig
     .gitignore
     config.example.ini

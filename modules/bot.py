@@ -348,7 +348,7 @@ class BlackDesertBot:
             elif self.state == BotState.STASHING:
                 result = self.maid_chest_manage()
                 if result:
-                    sleep(60)
+                    sleep(50)
                     self.set_state(BotState.SEARCHING)
                 sleep(.5)
             elif self.state == BotState.KILLING:
