@@ -213,8 +213,8 @@ def calc_rect_middle(rect: list[int]) -> list[int]:
 
 def send_telegram_msg(msg: str, photo_path='') -> None:
     try:
-        chat_id = 5156307333
-        bot = Bot('5563804245:AAHK0-VXb4D3FlBwQiFi9w6pJzio_ZqnbhU')
+        chat_id = 123
+        bot = Bot()
         if photo_path:
             bot.send_photo(chat_id, open(photo_path, 'rb'), caption=msg)
         else:
