@@ -11,7 +11,7 @@
 
 ## Жизненный цикл
 
-TODO
+![image](https://i.postimg.cc/CKsLdCkG/bdo-lifecycle.png)
 
 ## Архитектура
 
