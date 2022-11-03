@@ -78,7 +78,29 @@ class MainWindow(QMainWindow):
         # central widget
         wid = QWidget(self)
         self.setCentralWidget(wid)
-        # settings
+        # Layout elements
+        elems = {
+            "settings": (self.layout_settings(), 0, 0, 1, 2),
+            "log_box": (QGroupBox(""), 1, 0, 1, 2),
+            "btn_on": (QPushButton("Start"), 2, 0),
+            "btn_off": (QPushButton("Stop"), 2, 1),
+            "btn_calibrate": (QPushButton("Calibrate"), 3, 0, 1, 2),
+        }
+        # Element styles
+        elems["settings"][0].setStyleSheet(self.settings_styles())
+        elems["log_box"][0].setStyleSheet(self.log_box_styles())
+        [
+            btn[0].setStyleSheet(self.btn_styles())
+            for k, btn in elems.items()
+            if "btn" in k
+        ]
+        # layout
+        layout = QGridLayout()
+        [layout.addWidget(*elem) for k, elem in elems.items()]
+        wid.setLayout(layout)
+
+    def layout_settings(self) -> dict:
+        """GroupBox - раздел настройки"""
         combo = QComboBox()
         combo.addItems(["Страж"])
         setting_elems = {
@@ -90,56 +112,43 @@ class MainWindow(QMainWindow):
         settings_hbox = QHBoxLayout()
         settings.setLayout(settings_hbox)
         [settings_hbox.addWidget(elem) for k, elem in setting_elems.items()]
-        # Layout elements
-        elems = {
-            "settings": (settings, 0, 0, 1, 2),
-            "log_box": (QGroupBox(""), 1, 0, 1, 2),
-            "btn_on": (QPushButton("Start"), 2, 0),
-            "btn_off": (QPushButton("Stop"), 2, 1),
-            "btn_calibrate": (QPushButton("Calibrate"), 3, 0, 1, 2),
-        }
-        # Element styles
-        elems["settings"][0].setStyleSheet(
-            """
-            font-size: 16px;
-            max-height: 70px;
-        """
-        )
-        elems["log_box"][0].setStyleSheet(
-            """
-            font-size: 16px;
-            background-color: white;
-        """
-        )
-        [
-            btn[0].setStyleSheet(
-                """
-                height: 40px;
-                font-size: 18px;
-                text-transform: uppercase;
-                color: white;
-                background-color: #263238;
-                border: none;
-            """
-            )
-            for k, btn in elems.items()
-            if "btn" in k
-        ]
-        # log combobox
-        # layout
-        layout = QGridLayout()
-        [layout.addWidget(*elem) for k, elem in elems.items()]
-        wid.setLayout(layout)
+        return settings
 
     def set_main_styles(self) -> None:
-        """Set styles for main frame/bars"""
-        # self.setStyleSheet('background-color: #121212; color: white;')
+        """Основные стили"""
         self.statusBar().setStyleSheet(
             """
             background-color: #23282A;
             color: white;
         """
         )
+
+    def settings_styles(self) -> str:
+        """Стили для settings GroupBox"""
+        styles = """
+            font-size: 16px;
+            max-height: 70px;
+        """
+        return styles
+
+    def btn_styles(self) -> str:
+        """Стили для основых кнопок"""
+        styles = """
+                height: 40px;
+                font-size: 18px;
+                text-transform: uppercase;
+                color: white;
+                background-color: #263238;
+                border: none;
+        """
+        return styles
+
+    def log_box_styles(self) -> str:
+        styles = """
+            font-size: 16px;
+            background-color: white;
+        """
+        return styles
 
     def set_window(self, size=[550, 500]) -> None:
         """Set window default title/icon/size/position"""
