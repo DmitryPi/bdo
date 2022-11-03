@@ -1,24 +1,47 @@
 import sys
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import (
-    QApplication,
-    QDesktopWidget,
-    QHBoxLayout,
-    QLabel,
-    QMainWindow,
-    QPushButton,
-    QVBoxLayout,
-)
+from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtGui import QIcon, QMovie
+from PyQt5.QtWidgets import QApplication, QDesktopWidget, QLabel, QMainWindow, QWidget
 
 
-class MainApp(QMainWindow):
+class LoadingScreen(QWidget):
+    def __init__(self, window_size=[]):
+        super().__init__()
+        self.setWindowFlags(
+            Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.CustomizeWindowHint
+        )
+        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setFixedSize(200, 200)
+        self.label_animation = QLabel(self)
+        self.movie = QMovie("assets/gui/loading.gif")
+        self.label_animation.setMovie(self.movie)
+        self.init_ui()
+
+    def init_ui(self) -> None:
+        self.animation()
+        self.show()
+
+    def animation(self, ms=500) -> None:
+        timer = QTimer(self)
+        self.start_animation()
+        timer.singleShot(ms, self.stop_animation)
+
+    def start_animation(self) -> None:
+        self.movie.start()
+
+    def stop_animation(self) -> None:
+        self.movie.stop()
+        self.close()
+
+
+class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.app_title = "App title"
         self.app_icon = "assets/gui/logo.png"
         self.app_window_size = [550, 500]
+        self.loading_screen = LoadingScreen(window_size=self.app_window_size)
         self.init_ui()
 
     def init_ui(self) -> None:
@@ -39,29 +62,8 @@ class MainApp(QMainWindow):
     def pause_program(self):
         print("pause program")
 
-    def create_vbox(self, align="top") -> QVBoxLayout:
-        """Build vertical box with alignment"""
-        alignments = {
-            "top": Qt.AlignTop,
-            "center": Qt.AlignCenter,
-            "bottom": Qt.AlignBottom,
-        }
-        vbox = QVBoxLayout()
-        vbox.setAlignment(alignments[align])
-        return vbox
-
-    def create_hbox(self, *args, **kwargs) -> QHBoxLayout:
-        hbox = QHBoxLayout(*args, **kwargs)
-        return hbox
-
     def set_layout(self) -> None:
-
-        button = QPushButton("Click me!")
-        text = QLabel("Hello World", alignment=Qt.AlignCenter)
-
-        layout = QVBoxLayout(self)
-        layout.addWidget(text)
-        layout.addWidget(button)
+        pass
 
     def set_main_styles(self) -> None:
         """Set styles for main frame/bars"""
@@ -97,6 +99,6 @@ class MainApp(QMainWindow):
 
 
 if __name__ == "__main__":
-    qt_app = QApplication(sys.argv)
-    ex = MainApp()
-    sys.exit(qt_app.exec_())
+    app = QApplication(sys.argv)
+    main_window = MainWindow()
+    sys.exit(app.exec_())
