@@ -78,7 +78,7 @@ class MainWindow(QMainWindow):
         # central widget
         wid = QWidget(self)
         self.setCentralWidget(wid)
-        # Layout elements
+        # Grid elements
         elems = {
             "settings": (self.layout_settings(), 0, 0, 1, 2),
             "log_box": (QGroupBox(""), 1, 0, 1, 2),
@@ -86,7 +86,7 @@ class MainWindow(QMainWindow):
             "btn_off": (QPushButton("Stop"), 2, 1),
             "btn_calibrate": (QPushButton("Calibrate"), 3, 0, 1, 2),
         }
-        # Element styles
+        # Styles for elements
         elems["settings"][0].setStyleSheet(self.settings_styles())
         elems["log_box"][0].setStyleSheet(self.log_box_styles())
         [
@@ -94,7 +94,7 @@ class MainWindow(QMainWindow):
             for k, btn in elems.items()
             if "btn" in k
         ]
-        # layout
+        # Layout
         layout = QGridLayout()
         [layout.addWidget(*elem) for k, elem in elems.items()]
         wid.setLayout(layout)
