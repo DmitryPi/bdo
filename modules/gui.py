@@ -6,13 +6,14 @@ from PyQt5.QtWidgets import QApplication, QDesktopWidget, QLabel, QMainWindow, Q
 
 
 class LoadingScreen(QWidget):
-    def __init__(self, window_size=[]):
+    def __init__(self, duration_ms=500):
         super().__init__()
         self.setWindowFlags(
             Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.CustomizeWindowHint
         )
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setFixedSize(200, 200)
+        self.duration_ms = duration_ms
         self.label_animation = QLabel(self)
         self.movie = QMovie("assets/gui/loading.gif")
         self.label_animation.setMovie(self.movie)
@@ -22,10 +23,10 @@ class LoadingScreen(QWidget):
         self.animation()
         self.show()
 
-    def animation(self, ms=500) -> None:
+    def animation(self) -> None:
         timer = QTimer(self)
         self.start_animation()
-        timer.singleShot(ms, self.stop_animation)
+        timer.singleShot(self.duration_ms, self.stop_animation)
 
     def start_animation(self) -> None:
         self.movie.start()
@@ -41,7 +42,6 @@ class MainWindow(QMainWindow):
         self.app_title = "App title"
         self.app_icon = "assets/gui/logo.png"
         self.app_window_size = [550, 500]
-        self.loading_screen = LoadingScreen(window_size=self.app_window_size)
         self.init_ui()
 
     def init_ui(self) -> None:
