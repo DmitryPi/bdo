@@ -2,7 +2,19 @@ import sys
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QIcon, QMovie
-from PyQt5.QtWidgets import QApplication, QDesktopWidget, QLabel, QMainWindow, QWidget
+from PyQt5.QtWidgets import (
+    QApplication,
+    QCheckBox,
+    QComboBox,
+    QDesktopWidget,
+    QGridLayout,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QPushButton,
+    QWidget,
+)
 
 
 class LoadingScreen(QWidget):
@@ -39,9 +51,9 @@ class LoadingScreen(QWidget):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.app_title = "App title"
+        self.app_title = "БДО"
         self.app_icon = "assets/gui/logo.png"
-        self.app_window_size = [550, 500]
+        self.app_window_size = [500, 550]
         self.init_ui()
 
     def init_ui(self) -> None:
@@ -63,14 +75,68 @@ class MainWindow(QMainWindow):
         print("pause program")
 
     def set_layout(self) -> None:
-        pass
+        # central widget
+        wid = QWidget(self)
+        self.setCentralWidget(wid)
+        # settings
+        combo = QComboBox()
+        combo.addItems(["Страж"])
+        setting_elems = {
+            "camp": QCheckBox("Палатка"),
+            "maid": QCheckBox("Горничные"),
+            "char": combo,
+        }
+        settings = QGroupBox("Настройки")
+        settings_hbox = QHBoxLayout()
+        settings.setLayout(settings_hbox)
+        [settings_hbox.addWidget(elem) for k, elem in setting_elems.items()]
+        # Layout elements
+        elems = {
+            "settings": (settings, 0, 0, 1, 2),
+            "log_box": (QGroupBox(""), 1, 0, 1, 2),
+            "btn_on": (QPushButton("Start"), 2, 0),
+            "btn_off": (QPushButton("Stop"), 2, 1),
+            "btn_calibrate": (QPushButton("Calibrate"), 3, 0, 1, 2),
+        }
+        # Element styles
+        elems["settings"][0].setStyleSheet(
+            """
+            font-size: 16px;
+            max-height: 70px;
+        """
+        )
+        elems["log_box"][0].setStyleSheet(
+            """
+            font-size: 16px;
+            background-color: white;
+        """
+        )
+        [
+            btn[0].setStyleSheet(
+                """
+                height: 40px;
+                font-size: 18px;
+                text-transform: uppercase;
+                color: white;
+                background-color: #263238;
+                border: none;
+            """
+            )
+            for k, btn in elems.items()
+            if "btn" in k
+        ]
+        # log combobox
+        # layout
+        layout = QGridLayout()
+        [layout.addWidget(*elem) for k, elem in elems.items()]
+        wid.setLayout(layout)
 
     def set_main_styles(self) -> None:
         """Set styles for main frame/bars"""
         # self.setStyleSheet('background-color: #121212; color: white;')
         self.statusBar().setStyleSheet(
             """
-            background-color: #181818;
+            background-color: #23282A;
             color: white;
         """
         )
@@ -101,4 +167,4 @@ class MainWindow(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     main_window = MainWindow()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
