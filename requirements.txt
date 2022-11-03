@@ -8,7 +8,7 @@ pywin32==304
 pytest
 pytest-sugar
 python-telegram-bot
-PyQt5
 pre-commit
 flake8
 isort
+PySide6==6.4.0.1

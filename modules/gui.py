@@ -1,7 +1,16 @@
 import sys
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QApplication, QDesktopWidget, QMainWindow
+from PyQt5.QtWidgets import (
+    QApplication,
+    QDesktopWidget,
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QPushButton,
+    QVBoxLayout,
+)
 
 
 class MainApp(QMainWindow):
@@ -24,8 +33,35 @@ class MainApp(QMainWindow):
         # show
         self.show()
 
+    def start_program(self):
+        print("started program")
+
+    def pause_program(self):
+        print("pause program")
+
+    def create_vbox(self, align="top") -> QVBoxLayout:
+        """Build vertical box with alignment"""
+        alignments = {
+            "top": Qt.AlignTop,
+            "center": Qt.AlignCenter,
+            "bottom": Qt.AlignBottom,
+        }
+        vbox = QVBoxLayout()
+        vbox.setAlignment(alignments[align])
+        return vbox
+
+    def create_hbox(self, *args, **kwargs) -> QHBoxLayout:
+        hbox = QHBoxLayout(*args, **kwargs)
+        return hbox
+
     def set_layout(self) -> None:
-        pass
+
+        button = QPushButton("Click me!")
+        text = QLabel("Hello World", alignment=Qt.AlignCenter)
+
+        layout = QVBoxLayout(self)
+        layout.addWidget(text)
+        layout.addWidget(button)
 
     def set_main_styles(self) -> None:
         """Set styles for main frame/bars"""
