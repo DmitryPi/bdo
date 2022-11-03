@@ -134,12 +134,12 @@ class MainWindow(QMainWindow):
     def btn_styles(self) -> str:
         """Стили для основых кнопок"""
         styles = """
-                height: 40px;
-                font-size: 18px;
-                text-transform: uppercase;
-                color: white;
-                background-color: #263238;
-                border: none;
+            height: 40px;
+            font-size: 18px;
+            text-transform: uppercase;
+            color: white;
+            background-color: #263238;
+            border: none;
         """
         return styles
 
