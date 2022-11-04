@@ -68,6 +68,7 @@ class MainPage(QWidget):
 
     def set_layout(self) -> None:
         layout = QGridLayout()
+        QPushButton
         self.elems = {
             "settings": [self.layout_settings(), 0, 0, 1, 2],
             "log_box": [QGroupBox(""), 1, 0, 1, 2],
@@ -146,13 +147,29 @@ class MainWindow(QMainWindow):
         self.set_statusbar()
         # layout
         self.set_layout()
+        # events
+        self.set_events()
         # styles
         self.set_styles()
         # show
         self.show()
 
-    def switch_page(self):
+    def switch_page(self) -> None:
         self.stacked_layout.setCurrentIndex(self.page_combo.currentIndex())
+
+    def btn_on(self):
+        print("btn on event")
+
+    def btn_off(self):
+        print("btn off event")
+
+    def set_events(self) -> None:
+        # page_combo
+        self.page_combo.activated.connect(self.switch_page)
+        # btn_on
+        self.elems["btn_on"][0].clicked.connect(self.btn_on)
+        # btn_off
+        self.elems["btn_off"][0].clicked.connect(self.btn_off)
 
     def set_layout(self) -> None:
         # central widget
@@ -163,7 +180,6 @@ class MainWindow(QMainWindow):
         # Create and connect the combo box to switch between pages
         self.page_combo = QComboBox()
         self.page_combo.addItems(["Бот", "Активация"])
-        self.page_combo.activated.connect(self.switch_page)
         # Create the stacked layout
         self.stacked_layout = QStackedLayout()
         # Create the first page
