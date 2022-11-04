@@ -56,7 +56,7 @@ class MainPage(QWidget):
         self.set_layout()
 
     def set_layout(self) -> None:
-        self.layout = QGridLayout()
+        layout = QGridLayout()
         elems = {
             "settings": (self.layout_settings(), 0, 0, 1, 2),
             "log_box": (QGroupBox(""), 1, 0, 1, 2),
@@ -72,7 +72,8 @@ class MainPage(QWidget):
             for k, btn in elems.items()
             if "btn" in k
         ]
-        [self.layout.addWidget(*elem) for k, elem in elems.items()]
+        [layout.addWidget(*elem) for k, elem in elems.items()]
+        self.setLayout(layout)
 
     def layout_settings(self) -> dict:
         """GroupBox - раздел настройки"""
@@ -117,6 +118,17 @@ class MainPage(QWidget):
         return styles
 
 
+class ActivationPage(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.set_layout()
+
+    def set_layout(self) -> None:
+        layout = QVBoxLayout()
+        layout.setAlignment(Qt.AlignCenter)
+        self.setLayout(layout)
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -154,10 +166,9 @@ class MainWindow(QMainWindow):
         self.stacked_layout = QStackedLayout()
         # Create the first page
         self.page1 = MainPage()
-        self.page1.setLayout(self.page1.layout)
         self.stacked_layout.addWidget(self.page1)
         # Create the second page
-        self.page2 = QWidget()
+        self.page2 = ActivationPage()
         self.stacked_layout.addWidget(self.page2)
         # Add the combo box and the stacked layout to the top-level layout
         layout.addWidget(self.page_combo)
