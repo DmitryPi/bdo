@@ -7,10 +7,12 @@ from PyQt5.QtWidgets import (
     QCheckBox,
     QComboBox,
     QDesktopWidget,
+    QFormLayout,
     QGridLayout,
     QGroupBox,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QMainWindow,
     QPushButton,
     QStackedLayout,
@@ -103,7 +105,6 @@ class MainPage(QWidget):
         styles = """
             height: 40px;
             font-size: 18px;
-            text-transform: uppercase;
             color: white;
             background-color: #263238;
             border: none;
@@ -124,8 +125,12 @@ class ActivationPage(QWidget):
         self.set_layout()
 
     def set_layout(self) -> None:
-        layout = QVBoxLayout()
-        layout.setAlignment(Qt.AlignCenter)
+        layout = QFormLayout()
+        layout.setFormAlignment(Qt.AlignCenter)
+        layout.addRow(QLabel("Введите код активации"))
+        layout.addRow(QLineEdit())
+        layout.addRow(QPushButton("Активировать"))
+        layout.addRow(QPushButton("Купить код"))
         self.setLayout(layout)
 
 
@@ -160,7 +165,7 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout()
         # Create and connect the combo box to switch between pages
         self.page_combo = QComboBox()
-        self.page_combo.addItems(["Page 1", "Page 2"])
+        self.page_combo.addItems(["Бот", "Активация"])
         self.page_combo.activated.connect(self.switch_page)
         # Create the stacked layout
         self.stacked_layout = QStackedLayout()
