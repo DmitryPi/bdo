@@ -1,24 +1,24 @@
-import cv2 as cv
+import cv2 as cv  # noqa isort:skip
 import logging
 
-from time import sleep
-
-from modules.bot import BotState, BlackDesertBot, BotBuffer
+from modules.bot import BlackDesertBot, BotBuffer, BotState
 from modules.camera import Camera
-from modules.vision import Vision
 from modules.keys import KeyListener
-from modules.utils import load_config, grab_screen, send_telegram_msg
+from modules.utils import grab_screen, load_config
+from modules.vision import Vision
+
+from time import sleep  # noqa isort:skip
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     config = load_config()
-    DEBUG = config.getboolean('MAIN', 'DEBUG')
+    DEBUG = config.getboolean("MAIN", "DEBUG")
 
-    if config['MAIN']['DEBUG']:
+    if config["MAIN"]["DEBUG"]:
         logging.basicConfig(
-            level=logging.INFO,
-            format='%(name)s - %(levelname)s - %(message)s')
-        logging.info('DEBUG')
+            level=logging.INFO, format="%(name)s - %(levelname)s - %(message)s"
+        )
+        logging.info("DEBUG")
     else:
         pass
 
@@ -32,13 +32,12 @@ if __name__ == '__main__':
     bot_buffer.start()
     camera.start()
 
-    i = 0
     running = False
     while True:
         try:
             screen = grab_screen(region=[0, 0, 1920, 1080])
             buff_queue = bot_buffer.buff_queue
-            targets = vision.find_ui(screen, 'vessel')
+            targets = vision.find_ui(screen, "vessel")
             character_position = camera.character_position
 
             if bot.state == BotState.REPAIRING or bot.state == BotState.STASHING:
@@ -59,10 +58,12 @@ if __name__ == '__main__':
 
             if DEBUG:
                 result = targets + character_position
-                screen = vision.draw_rectangles(cv.cvtColor(screen, cv.COLOR_BGR2RGB), result)
+                screen = vision.draw_rectangles(
+                    cv.cvtColor(screen, cv.COLOR_BGR2RGB), result
+                )
                 screen = cv.resize(screen, (1200, 675))
-                cv.imshow('Screen', screen)
-                if cv.waitKey(1) == ord('q'):
+                cv.imshow("Screen", screen)
+                if cv.waitKey(1) == ord("q"):
                     [thread.stop() for thread in threads]
                     cv.destroyAllWindows()
                     break
@@ -71,12 +72,11 @@ if __name__ == '__main__':
                     key_listener.start()
                     running = True
                 if key_listener.pause:
-                    print('- Pause')
+                    print("- Pause")
                     sleep(1)
                 if key_listener.stopped:
-                    print('- Main loop stopped')
+                    print("- Main loop stopped")
                     break
-            i += 1
             sleep(bot.main_loop_delay)
         except Exception as e:
             [thread.stop() for thread in threads]
