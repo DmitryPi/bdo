@@ -13,6 +13,8 @@ from PyQt5.QtWidgets import (
     QLabel,
     QMainWindow,
     QPushButton,
+    QStackedLayout,
+    QVBoxLayout,
     QWidget,
 )
 
@@ -48,37 +50,13 @@ class LoadingScreen(QWidget):
         self.close()
 
 
-class MainWindow(QMainWindow):
+class MainPage(QWidget):
     def __init__(self):
         super().__init__()
-        self.app_title = "БДО"
-        self.app_icon = "assets/gui/logo.png"
-        self.app_window_size = [500, 550]
-        self.init_ui()
-
-    def init_ui(self) -> None:
-        # window
-        self.set_window(size=self.app_window_size)
-        # status
-        self.set_statusbar()
-        # styles
-        self.set_main_styles()
-        # layout
         self.set_layout()
-        # show
-        self.show()
-
-    def start_program(self):
-        print("started program")
-
-    def pause_program(self):
-        print("pause program")
 
     def set_layout(self) -> None:
-        # central widget
-        wid = QWidget(self)
-        self.setCentralWidget(wid)
-        # Grid elements
+        self.layout = QGridLayout()
         elems = {
             "settings": (self.layout_settings(), 0, 0, 1, 2),
             "log_box": (QGroupBox(""), 1, 0, 1, 2),
@@ -94,10 +72,7 @@ class MainWindow(QMainWindow):
             for k, btn in elems.items()
             if "btn" in k
         ]
-        # Layout
-        layout = QGridLayout()
-        [layout.addWidget(*elem) for k, elem in elems.items()]
-        wid.setLayout(layout)
+        [self.layout.addWidget(*elem) for k, elem in elems.items()]
 
     def layout_settings(self) -> dict:
         """GroupBox - раздел настройки"""
@@ -113,15 +88,6 @@ class MainWindow(QMainWindow):
         settings.setLayout(settings_hbox)
         [settings_hbox.addWidget(elem) for k, elem in setting_elems.items()]
         return settings
-
-    def set_main_styles(self) -> None:
-        """Основные стили"""
-        self.statusBar().setStyleSheet(
-            """
-            background-color: #23282A;
-            color: white;
-        """
-        )
 
     def settings_styles(self) -> str:
         """Стили для settings GroupBox"""
@@ -149,6 +115,64 @@ class MainWindow(QMainWindow):
             background-color: white;
         """
         return styles
+
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.app_title = "БДО"
+        self.app_icon = "assets/gui/logo.png"
+        self.app_window_size = [500, 550]
+        self.init_ui()
+
+    def init_ui(self) -> None:
+        # window
+        self.set_window(size=self.app_window_size)
+        # status
+        self.set_statusbar()
+        # styles
+        self.set_main_styles()
+        # layout
+        self.set_layout()
+        # show
+        self.show()
+
+    def switch_page(self):
+        self.stacked_layout.setCurrentIndex(self.page_combo.currentIndex())
+
+    def set_layout(self) -> None:
+        # central widget
+        wid = QWidget(self)
+        self.setCentralWidget(wid)
+        # Create a top-level layout
+        layout = QVBoxLayout()
+        # Create and connect the combo box to switch between pages
+        self.page_combo = QComboBox()
+        self.page_combo.addItems(["Page 1", "Page 2"])
+        self.page_combo.activated.connect(self.switch_page)
+        # Create the stacked layout
+        self.stacked_layout = QStackedLayout()
+        # Create the first page
+        self.page1 = MainPage()
+        self.page1.setLayout(self.page1.layout)
+        self.stacked_layout.addWidget(self.page1)
+        # Create the second page
+        self.page2 = QWidget()
+        self.stacked_layout.addWidget(self.page2)
+        # Add the combo box and the stacked layout to the top-level layout
+        layout.addWidget(self.page_combo)
+        layout.addLayout(self.stacked_layout)
+
+        wid.setLayout(layout)
+
+    def set_main_styles(self) -> None:
+        """Основные стили"""
+        self.statusBar().setStyleSheet(
+            """
+            background-color: #23282A;
+            color: white;
+        """
+        )
 
     def set_window(self, size=[550, 500]) -> None:
         """Set window default title/icon/size/position"""
