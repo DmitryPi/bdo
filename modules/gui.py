@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import QObject, Qt, QThread, QTimer, pyqtSignal
 from PyQt5.QtGui import QIcon, QMovie
 from PyQt5.QtWidgets import (
     QApplication,
@@ -19,6 +19,13 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+
+class BotWorker(QObject):
+    finished = pyqtSignal()
+
+    def run(self) -> None:
+        self.finished.emit()
 
 
 class LoadingScreen(QWidget):
@@ -55,11 +62,13 @@ class LoadingScreen(QWidget):
 class MainPage(QWidget):
     def __init__(self):
         super().__init__()
+        self.elems = {}
+        self.setting_elems = {}
         self.set_layout()
 
     def set_layout(self) -> None:
         layout = QGridLayout()
-        elems = {
+        self.elems = {
             "settings": (self.layout_settings(), 0, 0, 1, 2),
             "log_box": (QGroupBox(""), 1, 0, 1, 2),
             "btn_on": (QPushButton("Start"), 2, 0),
@@ -67,21 +76,21 @@ class MainPage(QWidget):
             "btn_calibrate": (QPushButton("Calibrate"), 3, 0, 1, 2),
         }
         # Styles for elements
-        elems["settings"][0].setStyleSheet(self.settings_styles())
-        elems["log_box"][0].setStyleSheet(self.log_box_styles())
+        self.elems["settings"][0].setStyleSheet(self.settings_styles())
+        self.elems["log_box"][0].setStyleSheet(self.log_box_styles())
         [
             btn[0].setStyleSheet(self.btn_styles())
-            for k, btn in elems.items()
+            for k, btn in self.elems.items()
             if "btn" in k
         ]
-        [layout.addWidget(*elem) for k, elem in elems.items()]
+        [layout.addWidget(*elem) for k, elem in self.elems.items()]
         self.setLayout(layout)
 
     def layout_settings(self) -> dict:
         """GroupBox - раздел настройки"""
         combo = QComboBox()
         combo.addItems(["Страж"])
-        setting_elems = {
+        self.setting_elems = {
             "camp": QCheckBox("Палатка"),
             "maid": QCheckBox("Горничные"),
             "char": combo,
@@ -89,7 +98,7 @@ class MainPage(QWidget):
         settings = QGroupBox("Настройки")
         settings_hbox = QHBoxLayout()
         settings.setLayout(settings_hbox)
-        [settings_hbox.addWidget(elem) for k, elem in setting_elems.items()]
+        [settings_hbox.addWidget(elem) for k, elem in self.setting_elems.items()]
         return settings
 
     def settings_styles(self) -> str:
@@ -140,7 +149,25 @@ class MainWindow(QMainWindow):
         self.app_title = "БДО"
         self.app_icon = "assets/gui/logo.png"
         self.app_window_size = [500, 550]
+        self.elems = {}
         self.init_ui()
+        print(self.elems)
+
+    def run_long_task(self) -> None:
+        # Create QThread/Worker object
+        self.thread = QThread()
+        self.worker = BotWorker()
+        # Move worker to the thread
+        self.worker.moveToThread(self.thread)
+        # Connect signals and slots
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        # Start the thread
+        self.thread.start()
+        # Final resets
+        self.longRunningBtn.setEnabled(False)
 
     def init_ui(self) -> None:
         # window
@@ -170,11 +197,13 @@ class MainWindow(QMainWindow):
         # Create the stacked layout
         self.stacked_layout = QStackedLayout()
         # Create the first page
-        self.page1 = MainPage()
-        self.stacked_layout.addWidget(self.page1)
+        self.main_page = MainPage()
+        self.elems.update(self.main_page.elems)
+        self.elems.update(self.main_page.setting_elems)
+        self.stacked_layout.addWidget(self.main_page)
         # Create the second page
-        self.page2 = ActivationPage()
-        self.stacked_layout.addWidget(self.page2)
+        self.activation_page = ActivationPage()
+        self.stacked_layout.addWidget(self.activation_page)
         # Add the combo box and the stacked layout to the top-level layout
         layout.addWidget(self.page_combo)
         layout.addLayout(self.stacked_layout)
