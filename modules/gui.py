@@ -69,20 +69,12 @@ class MainPage(QWidget):
     def set_layout(self) -> None:
         layout = QGridLayout()
         self.elems = {
-            "settings": (self.layout_settings(), 0, 0, 1, 2),
-            "log_box": (QGroupBox(""), 1, 0, 1, 2),
-            "btn_on": (QPushButton("Start"), 2, 0),
-            "btn_off": (QPushButton("Stop"), 2, 1),
-            "btn_calibrate": (QPushButton("Calibrate"), 3, 0, 1, 2),
+            "settings": [self.layout_settings(), 0, 0, 1, 2],
+            "log_box": [QGroupBox(""), 1, 0, 1, 2],
+            "btn_on": [QPushButton("Start"), 2, 0],
+            "btn_off": [QPushButton("Stop"), 2, 1],
+            "btn_calibrate": [QPushButton("Calibrate"), 3, 0, 1, 2],
         }
-        # Styles for elements
-        self.elems["settings"][0].setStyleSheet(self.settings_styles())
-        self.elems["log_box"][0].setStyleSheet(self.log_box_styles())
-        [
-            btn[0].setStyleSheet(self.btn_styles())
-            for k, btn in self.elems.items()
-            if "btn" in k
-        ]
         [layout.addWidget(*elem) for k, elem in self.elems.items()]
         self.setLayout(layout)
 
@@ -91,55 +83,33 @@ class MainPage(QWidget):
         combo = QComboBox()
         combo.addItems(["Страж"])
         self.setting_elems = {
-            "camp": QCheckBox("Палатка"),
-            "maid": QCheckBox("Горничные"),
-            "char": combo,
+            "camp_repair": [QCheckBox("Палатка")],
+            "maid_chest": [QCheckBox("Горничные")],
+            "character_choose": [combo],
         }
         settings = QGroupBox("Настройки")
         settings_hbox = QHBoxLayout()
         settings.setLayout(settings_hbox)
-        [settings_hbox.addWidget(elem) for k, elem in self.setting_elems.items()]
+        [settings_hbox.addWidget(elem[0]) for k, elem in self.setting_elems.items()]
         return settings
-
-    def settings_styles(self) -> str:
-        """Стили для settings GroupBox"""
-        styles = """
-            font-size: 16px;
-            max-height: 70px;
-        """
-        return styles
-
-    def btn_styles(self) -> str:
-        """Стили для основых кнопок"""
-        styles = """
-            height: 40px;
-            font-size: 18px;
-            color: white;
-            background-color: #263238;
-            border: none;
-        """
-        return styles
-
-    def log_box_styles(self) -> str:
-        styles = """
-            font-size: 16px;
-            background-color: white;
-        """
-        return styles
 
 
 class ActivationPage(QWidget):
     def __init__(self):
         super().__init__()
+        self.elems = {}
         self.set_layout()
 
     def set_layout(self) -> None:
+        self.elems = {
+            "code_label": [QLabel("Введите код активации")],
+            "code_input": [QLineEdit()],
+            "btn_code_activate": [QPushButton("Активировать")],
+            "btn_code_buy": [QPushButton("Купить код")],
+        }
         layout = QFormLayout()
         layout.setFormAlignment(Qt.AlignCenter)
-        layout.addRow(QLabel("Введите код активации"))
-        layout.addRow(QLineEdit())
-        layout.addRow(QPushButton("Активировать"))
-        layout.addRow(QPushButton("Купить код"))
+        [layout.addRow(elem[0]) for k, elem in self.elems.items()]
         self.setLayout(layout)
 
 
@@ -174,10 +144,10 @@ class MainWindow(QMainWindow):
         self.set_window(size=self.app_window_size)
         # status
         self.set_statusbar()
-        # styles
-        self.set_main_styles()
         # layout
         self.set_layout()
+        # styles
+        self.set_styles()
         # show
         self.show()
 
@@ -203,6 +173,7 @@ class MainWindow(QMainWindow):
         self.stacked_layout.addWidget(self.main_page)
         # Create the second page
         self.activation_page = ActivationPage()
+        self.elems.update(self.activation_page.elems)
         self.stacked_layout.addWidget(self.activation_page)
         # Add the combo box and the stacked layout to the top-level layout
         layout.addWidget(self.page_combo)
@@ -210,14 +181,33 @@ class MainWindow(QMainWindow):
 
         wid.setLayout(layout)
 
-    def set_main_styles(self) -> None:
+    def set_styles(self) -> None:
         """Основные стили"""
-        self.statusBar().setStyleSheet(
-            """
-            background-color: #23282A;
+        # global styles
+        self.setStyleSheet("font-size: 15px;")
+        # statusbar styles
+        self.statusBar().setStyleSheet("background-color: #23282A; color: white;")
+        # btn styles
+        [
+            btn[0].setStyleSheet(self.btn_styles())
+            for k, btn in self.elems.items()
+            if "btn" in k
+        ]
+        # settings styles
+        self.elems["settings"][0].setStyleSheet("max-height: 70px")
+        # logbox styles
+        self.elems["log_box"][0].setStyleSheet("background-color: white;")
+
+    def btn_styles(self) -> str:
+        """Стили для основых кнопок"""
+        styles = """
+            height: 40px;
+            font-size: 18px;
             color: white;
+            background-color: #263238;
+            border: none;
         """
-        )
+        return styles
 
     def set_window(self, size=[550, 500]) -> None:
         """Set window default title/icon/size/position"""
